@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Spec validated — PO decisions 2026-11-17 |
+| **Status** | Spec validated — v1.1, 2026-11-17 |
 | **Backlog items** | F01 Tasks |
 | **Release** | R1 — Usable |
 | **Depends on** | [001 Foundation](../001-foundation/spec.md) (Delivered) |
@@ -88,7 +88,7 @@ Put my **obligations** (homework, appointments, job applications) in the app, so
 | BR-3 | Open tasks sort: tasks **with** a due date first, by date; on the same date, **timed tasks first by time, then date-only tasks** (a date-only task means "by end of day"); then tasks **without** a date, oldest created first. Ties keep creation order. |
 | BR-4 | Marking a task done records its **completion date** (local date), kept for the sprint retro (F06). Undo clears it. |
 | BR-5 | A task is **overdue** when it is open and: date-only → its date is before today; timed → its date + time is before now. |
-| BR-6 | Due label: "Today" / "Tomorrow" / short date ("Thu, Nov 20"), followed by the time when set ("2:00 p.m."). Overdue tasks prefix "Was due" ("Was due today 2:00 p.m.", "Was due Mon, Nov 17"). |
+| BR-6 | Due label: "Today" / "Tomorrow" / short date ("Thu, Nov 20"), followed by the time when set ("2:00 p.m."). The year is added only when it differs from the current year ("Fri, Jan 8, 2027"). Overdue tasks prefix "Was due" ("Was due today 2:00 p.m.", "Was due Mon, Nov 17"). |
 | BR-7 | Urgency level: **overdue** (red) per BR-5; else **soon** (amber) when the due date is today or tomorrow; else **none**. Tasks without a date are always none. |
 | BR-8 | A deleted task is excluded from every list and every count. |
 
@@ -150,3 +150,4 @@ To be run on production, with the real phone:
 |---|---|---|
 | 0.1 | 2026-11-17 | First draft — 4 open questions for the PO |
 | 1.0 | 2026-11-17 | PO decisions: edit + delete, undo bar, home page, "Was due …", urgency colours (2 levels), optional time; UAT checklist |
+| 1.1 | 2026-11-17 | BR-6: year shown when it differs from the current year (plan 002 D-3) |

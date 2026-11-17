@@ -1,6 +1,6 @@
 # ADR-0013 — Store task due date and time as local wall-clock values
 
-- **Status:** Proposed
+- **Status:** Accepted (PO, 2026-11-17 — plan 002 D-1)
 - **Date:** 2026-11-17
 - **Deciders:** Alexis (PO)
 - **Builds on:** architecture §4 (all "day" logic in `America/Toronto`)
@@ -28,5 +28,5 @@ PostgreSQL offers two ways to store "Thursday at 2 p.m.":
 - ➕ The rules in spec 002 (BR-2, BR-3, BR-5 to BR-7) are pure string comparisons, tested in milliseconds.
 - ➕ No daylight-saving conversion in the task code at all.
 - ➖ If the owner travels to another time zone, times stay Toronto times. Out of scope (spec 002 §5).
-- ➖ Supporting several time zones later means a new ADR and a migration to option B.
+- ➖ Supporting several time zones later means a new ADR and a migration to option B. PO note: if travel becomes a need, plan that migration then.
 - During the autumn daylight-saving switch, 1:00–2:00 a.m. happens twice; a task due at 1:30 a.m. that night is overdue after the first one. Accepted.

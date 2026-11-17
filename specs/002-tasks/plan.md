@@ -2,9 +2,9 @@
 
 | | |
 |---|---|
-| **Status** | Draft v0.1 — awaiting PO validation (§9) |
-| **Spec** | [spec.md](spec.md) (Spec validated, v1.0) |
-| **Decisions used** | ADR-0003, 0007, 0009, 0010, **0013 (proposed)** |
+| **Status** | Validated — 2026-11-17 |
+| **Spec** | [spec.md](spec.md) (Spec validated, v1.1) |
+| **Decisions used** | ADR-0003, 0007, 0009, 0010, **0013** |
 | **Last updated** | 2026-11-17 |
 
 This plan describes **how** spec 002 will be built. It doesn't change **what** the spec asks for. If something here contradicts the spec, the spec wins and this plan gets fixed.
@@ -45,7 +45,7 @@ All in `src/domain/task.ts`, tests named after the BR id. "Now" is passed in as 
 | BR-3 Sort | `compareOpenTasks(a, b)` | dated before undated; earlier date first; same date: timed by time, then date-only; undated oldest created first; equal → creation order |
 | BR-4 Completion | `completionDate(now)` → today | completed at 23:59 Toronto = 04:59 UTC next day → **Toronto date** |
 | BR-5 Overdue | `isOverdue(due, now)` | date-only yesterday → true; date-only today → false; today 09:00 at 09:01 → true; today 09:00 at 09:00 → false; no date → false |
-| BR-6 Label | `dueLabel(due, now)` | "Today"; "Tomorrow 9:00 a.m."; "Thu, Nov 20"; "Thu, Nov 20 2:00 p.m."; "Was due today 2:00 p.m."; "Was due Mon, Nov 17"; 12:00 → "12:00 p.m."; 00:30 → "12:30 a.m." |
+| BR-6 Label | `dueLabel(due, now)` | "Today"; "Fri, Jan 8, 2027" when the year differs; "Tomorrow 9:00 a.m."; "Thu, Nov 20"; "Thu, Nov 20 2:00 p.m."; "Was due today 2:00 p.m."; "Was due Mon, Nov 17"; 12:00 → "12:00 p.m."; 00:30 → "12:30 a.m." |
 | BR-7 Urgency | `urgency(due, now)` → `"overdue" \| "soon" \| "none"` | overdue wins over today; today/tomorrow → soon; day after tomorrow → none; no date → none; month and year boundaries (Dec 31 → Jan 1) |
 | BR-8 Deleted | enforced in the repository (§4) | checked on the `dev` database, like BR-3 of spec 001 |
 
@@ -143,13 +143,15 @@ The home page now runs two small queries: usage count and open tasks. They run *
 
 None. No new account, no new environment variable.
 
-## 9. Decisions needed from the PO
+## 9. Decisions — resolved by the PO on 2026-11-17
 
-| # | Decision | Options | Recommendation |
+All three recommendations accepted.
+
+| # | Decision | Options | Recommendation → **Resolution** |
 |---|---|---|---|
-| D-1 | Accept **ADR-0013** (store due date/time as Toronto wall-clock)? | A. wall-clock · B. UTC instant | **A** — every rule becomes a string comparison, no daylight-saving code. Only downside: travelling, which is out of scope. |
-| D-2 | What does "delete" do in the database? | A. **Soft delete** (`deleted_at`; row kept, never shown or counted) · B. Hard delete after the 5 s undo window | **A** — undo is exact and survives closing the app. The row is invisible everywhere; a real "purge" can come with data export (C07) if ever needed. |
-| D-3 | A due date in **another year**: show the year? The spec's format ("Thu, Nov 20") doesn't say. | A. Add the year only when it differs from this year ("Fri, Jan 8, 2027") · B. Never show the year | **A** — a January deadline set in November would otherwise be ambiguous. Small spec edit (BR-6, v1.1). |
+| D-1 | Accept **ADR-0013** (store due date/time as Toronto wall-clock)? | A. wall-clock · B. UTC instant | **A** — every rule becomes a string comparison, no daylight-saving code. Only downside: travelling, which is out of scope. → **Accepted**; travel would get its own ADR + migration. |
+| D-2 | What does "delete" do in the database? | A. **Soft delete** (`deleted_at`; row kept, never shown or counted) · B. Hard delete after the 5 s undo window | **A** — undo is exact and survives closing the app. The row is invisible everywhere. → **Accepted**; PO asked to watch storage (risk in §10). |
+| D-3 | A due date in **another year**: show the year? The spec's format ("Thu, Nov 20") doesn't say. | A. Add the year only when it differs from this year ("Fri, Jan 8, 2027") · B. Never show the year | **A** — a January deadline set in November would otherwise be ambiguous. → **Accepted**; spec BR-6 updated (v1.1). |
 
 ## 10. Risks
 
@@ -158,6 +160,7 @@ None. No new account, no new environment variable.
 | iOS date/time inputs behave oddly (clearing, empty display, styling) | AC-1.2, AC-4.2 | Explicit "Add date" / "Remove date" buttons (§5.4); PO tries slice 1 on the phone before slice 2 |
 | Optimistic UI and undo race (undo before the first action finished) | Wrong final state | Undo waits for the pending action (§5.2); tested by tapping fast during UAT |
 | A second query slows the home page | NFR-03 | Parallel queries (§5.7); re-measured in UAT |
+| Soft-deleted and done tasks fill the free database (PO question) | NFR-08 ($0) | Measured 2026-11-17: the whole `dev` database is **7.9 MB**, mostly PostgreSQL's own catalog. A task row is ~200 bytes with its index entry: 20 tasks a day for a year ≈ **1.5 MB**. Far below the Neon Free storage limit (checked at each spec's setup, AR1). If it ever matters, a purge of soft-deleted rows older than N days is a one-line job — backlog idea, not now. |
 | Slice 2 not ready by Sun 2026-11-22 | R1 target | Slice 1 alone already replaces adding to the note; "cut from the end" rule of the release plan |
 
 ## Revision history
@@ -165,3 +168,4 @@ None. No new account, no new environment variable.
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | 2026-11-17 | First draft — 3 decisions for the PO, ADR-0013 proposed |
+| 1.0 | 2026-11-17 | Validated by PO: ADR-0013 accepted, soft delete, year when different; storage risk measured |

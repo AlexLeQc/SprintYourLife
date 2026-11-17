@@ -171,4 +171,4 @@ Every NFR from the vision has an answer here, so none gets lost.
 | 0.1 | 2026-11-16 | First proposal |
 | 1.0 | 2026-11-16 | PO accepted ADR-0007 (option A), ADR-0008, ADR-0009 |
 | 1.1 | 2026-11-16 | ADR-0011 (Better Auth) supersedes ADR-0008; Neon restore window verified |
-| 1.2 | 2026-11-17 | Task model from plan 002: due time, `completed_on` date, soft delete (ADR-0013 proposed) |
+| 1.2 | 2026-11-17 | Task model from plan 002: due time, `completed_on` date, soft delete (ADR-0013) |
