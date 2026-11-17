@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 3 / 13 |
+| **Status** | In progress — 6 / 13 — T07 waiting for merge |
 | **Spec** | [spec.md](spec.md) (v1.2) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/002-tasks-add` (slice 1), `feat/002-tasks-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-17 |
@@ -27,15 +27,15 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   `compareOpenTasks`, `isOverdue`, `dueLabel`, `urgency` + tests from plan §3, incl. "p.m." formatting, the year only when it differs (D-3), and Dec 31 → Jan 1.
   *Done when:* tests pass.
 
-- [ ] **T04** 🤖 **`task` table and migration**
+- [x] **T04** 🤖 **`task` table and migration**
   Drizzle schema from plan §4 (incl. the two `CHECK` constraints), `npm run db:generate`, apply to Neon `dev`.
   *Done when:* the migration file is committed; on `dev`, inserting a time without a date and a 201-character title are both refused by the database.
 
-- [ ] **T05** 🤖 **Repository: create and list open**
+- [x] **T05** 🤖 **Repository: create and list open**
   `server/task-repository.ts`: `createTask`, `listOpenTasks` (excludes done and deleted, BR-8), sorted with `compareOpenTasks`.
   *Done when:* checked on `dev`: a created task is listed; a row with `deleted_at` or `completed_on` set is not.
 
-- [ ] **T06** 🤖 **Server action `createTask`** (AC-1.x, AC-S.1)
+- [x] **T06** 🤖 **Server action `createTask`** (AC-1.x, AC-S.1)
   `app/(app)/task-actions.ts`: `getAllowedSession()` first, re-validate with BR-1/BR-2, create, `refresh()`.
   *Done when:* a direct POST to the action without a cookie and with a fake cookie is refused and creates no row.
 
@@ -76,3 +76,5 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | Date | Tasks | Note |
 |---|---|---|
 | 2026-11-17 | T01–T03 ✅ | `localTime` / `localNow` (one clock reading, `h23` so midnight is never "24:00"; both daylight-saving days tested). `domain/task.ts`: BR-1 to BR-7 (BR-4 as `completionDate`), 47 new tests, 65 in total. Title length counted in code points to match PostgreSQL `char_length`. Tests showed the spec's example weekdays were wrong for 2026 → spec v1.2 (examples only). |
+| 2026-11-17 | T04–T06 ✅ | Migration `0002_create_task` applied to `dev`. Database refuses a time without a date, a 201-character title and an empty title; a valid row is accepted (`due_time` comes back as `HH:MM:SS`, the repository trims it). Repository on `dev`: open tasks in BR-3 order, done and deleted rows excluded (BR-8). AC-S.1: `createTask` without a cookie → 307 to `/sign-in`; with a fake cookie → the action throws "Not allowed" before any query, 0 rows created; same request from the signed-in browser → 200 (control). |
+| 2026-11-17 | T07 (code) | Home page: usage line, add form, colour-coded list, empty state. Checked in the browser on desktop and at 375 px, dark and light: order and labels match BR-3/BR-6 for 8 cases (incl. "Was due today 12:05 a.m." and "Fri, Jan 8, 2027 2:00 p.m."), no horizontal scroll, inputs 16 px, no console errors. **Bug found and fixed:** React resets a form after its `action` runs, so a refused 202-character title was wiped; now a submit handler resets only on success. Test rows deleted from `dev`. Waiting: PR merge + deploy. |
