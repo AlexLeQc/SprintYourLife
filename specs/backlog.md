@@ -27,7 +27,7 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 
 | ID | Feature | Summary | Depends on | Status |
 |---|---|---|---|---|
-| F01 | **Tasks** | Create a task (title, optional due date), mark it done, done tasks are archived. | E01, E02 | Idea |
+| F01 | **Tasks** | Create a task (title, optional due date), mark it done, done tasks are archived. | E01, E02 | Spec draft — [002](002-tasks/spec.md) |
 | F02 | **Sidequest bank** | Create sidequests (title + category from a fixed list), browse them. | E01, E02 | Idea |
 | F03 | **One-tap log** | Mark that I did a sidequest. Optional duration and free-text note (e.g. "best time 1:42"). | F02 | Idea |
 | F04 | **"What can I do now?" screen** | Phone-first screen: urgent tasks on top, a few sidequests below, nothing else. Default screen on mobile. | F01, F02 | Idea |
