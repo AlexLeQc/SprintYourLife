@@ -1,30 +1,24 @@
 "use client";
 
 import { startTransition, useRef, useState } from "react";
-import { normalizeTitle, parseDue } from "@/domain/task";
+import { NO_DUE, normalizeTitle, parseDue } from "@/domain/task";
+import { DueFields, field } from "./due-fields";
 import { createTask } from "./task-actions";
 import type { TaskView } from "./task-list";
 
 /**
- * AC-1.1 to AC-1.5. Title first; the date is hidden behind "Add date" and the time behind
- * "Add time" (principle 3: minimal input; BR-2: no time without a date). Native pickers on
- * the iPhone (plan §5.4). Inputs use 16 px text so iOS doesn't zoom in on focus (AC-2.8).
+ * AC-1.1 to AC-1.5. Title first; date and time are optional and hidden until asked for
+ * (principle 3: minimal input). Inputs use 16 px text so iOS doesn't zoom in (AC-2.8).
  */
 export function AddTaskForm({ today, onAdd }: { today: string; onAdd: (task: TaskView) => void }) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [withDate, setWithDate] = useState(false);
-  const [withTime, setWithTime] = useState(false);
+  const [dueKey, setDueKey] = useState(0); // remounting DueFields collapses it after an add
   const [error, setError] = useState<string | null>(null);
-
-  function removeDate() {
-    setWithDate(false);
-    setWithTime(false);
-  }
 
   async function submit(formData: FormData) {
     const rawTitle = String(formData.get("title") ?? "");
-    const dueDate = withDate ? String(formData.get("dueDate") ?? "") : "";
-    const dueTime = withDate && withTime ? String(formData.get("dueTime") ?? "") : "";
+    const dueDate = String(formData.get("dueDate") ?? "");
+    const dueTime = String(formData.get("dueTime") ?? "");
 
     const title = normalizeTitle(rawTitle);
     if (!title.ok) {
@@ -48,17 +42,15 @@ export function AddTaskForm({ today, onAdd }: { today: string; onAdd: (task: Tas
       pending: true,
     });
     setError(null);
-    setWithDate(false);
-    setWithTime(false);
+    setDueKey((k) => k + 1);
 
-    const result = await createTask({ title: title.value, dueDate, dueTime });
-    if (!result.ok) setError(result.error);
+    try {
+      const result = await createTask({ title: title.value, dueDate, dueTime });
+      if (!result.ok) setError(result.error);
+    } catch {
+      setError("Couldn't save. Check your connection and try again.");
+    }
   }
-
-  const secondaryButton =
-    "rounded-full border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 dark:border-zinc-700 dark:text-zinc-300";
-  const field =
-    "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base dark:border-zinc-700 dark:bg-zinc-950";
 
   return (
     <form
@@ -93,35 +85,7 @@ export function AddTaskForm({ today, onAdd }: { today: string; onAdd: (task: Tas
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
-        {!withDate ? (
-          <button type="button" className={secondaryButton} onClick={() => setWithDate(true)}>
-            Add date
-          </button>
-        ) : (
-          <>
-            <label className="sr-only" htmlFor="new-task-date">
-              Due date
-            </label>
-            <input id="new-task-date" name="dueDate" type="date" defaultValue={today} required className={field} />
-            {!withTime ? (
-              <button type="button" className={secondaryButton} onClick={() => setWithTime(true)}>
-                Add time
-              </button>
-            ) : (
-              <>
-                <label className="sr-only" htmlFor="new-task-time">
-                  Due time
-                </label>
-                <input id="new-task-time" name="dueTime" type="time" className={field} />
-              </>
-            )}
-            <button type="button" className={secondaryButton} onClick={removeDate}>
-              Remove date
-            </button>
-          </>
-        )}
-      </div>
+      <DueFields key={dueKey} idPrefix="new-task" today={today} initial={NO_DUE} />
 
       {error && (
         <p role="alert" className="text-sm text-red-700 dark:text-red-400">

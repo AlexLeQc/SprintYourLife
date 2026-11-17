@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 6 / 13 — T07 waiting for merge |
+| **Status** | In progress — 10 / 13 — T11 waiting for merge |
 | **Spec** | [spec.md](spec.md) (v1.2) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/002-tasks-add` (slice 1), `feat/002-tasks-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-17 |
@@ -39,21 +39,21 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   `app/(app)/task-actions.ts`: `getAllowedSession()` first, re-validate with BR-1/BR-2, create, `refresh()`.
   *Done when:* a direct POST to the action without a cookie and with a fake cookie is refused and creates no row.
 
-- [ ] **T07** 🤖 **Home page: list and add form** (AC-1.1 to AC-2.8)
+- [x] **T07** 🤖 **Home page: list and add form** (AC-1.1 to AC-2.8)
   Remove the placeholder text. Usage line, then the add form (title + "Add date" → date + "Add time" → time, "Remove date"), then the list with labels and colours (plan §5.4, §5.5), empty state "Nothing to do.". Queries in parallel (§5.7). Optimistic add (§5.2).
   *Done when:* works locally on desktop and in a phone-sized viewport; colours checked in light and dark mode; typecheck, lint, tests pass; PR merged and deployed.
 
-- [ ] **T08** 👤 **Try slice 1 on the iPhone** ⛳
+- [x] **T08** 👤 **Try slice 1 on the iPhone** ⛳
   In the installed app: add a task with only a title, one with a date, one with a date + time; check the order and the colours. Tell Claude anything awkward about the date/time input.
   *Done when:* the PO says the input flow is OK (or Claude has adjusted it).
 
 ## Slice 2 — Done, edit, delete, undo
 
-- [ ] **T09** 🤖 **Repository + actions: complete, reopen, update, delete, restore**
+- [x] **T09** 🤖 **Repository + actions: complete, reopen, update, delete, restore**
   Repository functions and server actions, each with `getAllowedSession()` first, UUID check and BR-1/BR-2 re-validation (update). `completeTask` stores the Toronto date (BR-4); `deleteTask` sets `deleted_at` (D-2).
   *Done when:* checked on `dev` (complete → `completed_on` = today, reopen clears it; delete → not listed, restore → listed again unchanged); direct POSTs without a session are refused.
 
-- [ ] **T10** 🤖 **Mark done + undo bar** (AC-3.1, AC-6.1, AC-6.3)
+- [x] **T10** 🤖 **Mark done + undo bar** (AC-3.1, AC-6.1, AC-6.3)
   Checkbox (thumb-sized, labelled for screen readers), optimistic removal, "Task done · Undo" for 5 s; undo waits for the pending action (plan §5.2).
   *Done when:* works locally, including tapping Undo immediately.
 
@@ -78,3 +78,6 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-17 | T01–T03 ✅ | `localTime` / `localNow` (one clock reading, `h23` so midnight is never "24:00"; both daylight-saving days tested). `domain/task.ts`: BR-1 to BR-7 (BR-4 as `completionDate`), 47 new tests, 65 in total. Title length counted in code points to match PostgreSQL `char_length`. Tests showed the spec's example weekdays were wrong for 2026 → spec v1.2 (examples only). |
 | 2026-11-17 | T04–T06 ✅ | Migration `0002_create_task` applied to `dev`. Database refuses a time without a date, a 201-character title and an empty title; a valid row is accepted (`due_time` comes back as `HH:MM:SS`, the repository trims it). Repository on `dev`: open tasks in BR-3 order, done and deleted rows excluded (BR-8). AC-S.1: `createTask` without a cookie → 307 to `/sign-in`; with a fake cookie → the action throws "Not allowed" before any query, 0 rows created; same request from the signed-in browser → 200 (control). |
 | 2026-11-17 | T07 (code) | Home page: usage line, add form, colour-coded list, empty state. Checked in the browser on desktop and at 375 px, dark and light: order and labels match BR-3/BR-6 for 8 cases (incl. "Was due today 12:05 a.m." and "Fri, Jan 8, 2027 2:00 p.m."), no horizontal scroll, inputs 16 px, no console errors. **Bug found and fixed:** React resets a form after its `action` runs, so a refused 202-character title was wiped; now a submit handler resets only on success. Test rows deleted from `dev`. Waiting: PR merge + deploy. |
+| 2026-11-17 | T07 ✅, T08 ⛳ **GO** | PR #10 merged; Vercel production deployment and CI green (migration applied by `vercel-build`). PO on iPhone: slice 1 looks good; iOS date and time pickers are nice; add field stays at the top (simpler with the keyboard). |
+| 2026-11-17 | T09 ✅ | Repository on `dev`: complete → `completed_on` = 2026-11-17, not listed; reopen → cleared, listed; update with date removed → date and time null; delete → `deleted_at` set, not listed; a deleted task can't be completed or edited; restore → listed again, row identical to before. AC-S.1: `completeTask`, `deleteTask`, `updateTask`, `restoreTask`, `reopenTask` with a fake cookie → all "Not allowed", rows unchanged. |
+| 2026-11-17 | T10 ✅, T11 (code) | Browser (desktop + 375 px, dark + light): done → row leaves at once, "Task done · Undo" for 5 s, then final; **Undo tapped 50 ms after done** → task back, database open (undo waited for the done request). Edit: fields prefilled, title changed + date removed → saved, re-sorted into the undated group. Delete → "Task deleted · Undo" → undo restores it with its date; delete again → gone after 5 s, `deleted_at` set. No console errors, no horizontal scroll. Test rows removed; PO's own `dev` tasks left as they were. Waiting: PR merge + deploy. |
