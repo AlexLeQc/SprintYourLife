@@ -131,7 +131,7 @@ Notes:
 | Environment | Where | Database | Who |
 |---|---|---|---|
 | Local | `npm run dev` on my machine | Neon **dev branch** (a free copy of the schema, separate data) | Development |
-| Production | Vercel, deployed automatically on push to `main` | Neon **main branch** | Me, daily use |
+| Production | Vercel, deployed automatically on push to `main` | Neon **`production` branch** (the project default) | Me, daily use |
 
 - Pull requests run CI (ADR-0010). Vercel preview deployments may exist, but Google sign-in is only configured for production and localhost.
 - Database schema changes are applied through versioned migration files committed in the repo.

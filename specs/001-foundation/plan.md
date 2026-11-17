@@ -103,7 +103,7 @@ Both use "insert if not exists", so repeated calls are harmless (BR-3).
 
 | Variable | Purpose |
 |---|---|
-| `DATABASE_URL` | Neon connection (dev branch locally, main branch in production) |
+| `DATABASE_URL` | Neon connection (`dev` branch locally and in Preview, `production` branch in Production) |
 | `BETTER_AUTH_SECRET` | Signs sessions (random, generated once per environment) |
 | `BETTER_AUTH_URL` | App base URL (`http://localhost:3000` / production URL) |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google OAuth client |
@@ -113,7 +113,7 @@ Both use "insert if not exists", so repeated calls are harmless (BR-3).
 
 ### 5.7 Database migrations
 
-Vercel's build runs the migrations before building, against **that environment's** database. Production uses the Neon `main` branch; previews and local use `dev`. A bad migration therefore fails the deployment instead of breaking the live app halfway.
+Vercel's build runs the migrations before building, against **that environment's** database. Production uses the Neon `production` branch (the default branch; Neon no longer names it `main`); previews and local use `dev`. A bad migration therefore fails the deployment instead of breaking the live app halfway.
 
 ### 5.8 CI and branch flow (US-6)
 
@@ -157,7 +157,7 @@ Claude gives exact click-by-click instructions at the right moment in tasks.md. 
 | When | Where | What |
 |---|---|---|
 | Step 2 | **Vercel** (Hobby) | Sign in with GitHub, import `SprintYourLife`, keep the default `*.vercel.app` URL, function region `iad1`. |
-| Step 3 | **Neon** (Free) | Create a project in AWS us-east-1; create a `dev` branch; copy both connection strings into Vercel (Production → `main`, Preview → `dev`) and into the local `.env` (`dev`). |
+| Step 3 | **Neon** (Free) | Create a project in AWS us-east-1; create a `dev` branch; copy both connection strings into Vercel (Production → `production`, Preview → `dev`) and into the local `.env` (`dev`). |
 | Step 4 | **Google Cloud** | Create a project → OAuth consent screen with basic scopes only (email, profile), published "In production". This is fine for basic scopes, and it means **our** allowlist is what refuses strangers, which is what we want to test. Then create a Web OAuth client with redirect URIs for `localhost:3000` and the production URL. Put the ID and secret into Vercel and `.env`. |
 | Step 7 | **GitHub** | Settings → Branches → protect `main`: require the CI check, no direct pushes. |
 

@@ -1,0 +1,10 @@
+import { date, pgTable } from "drizzle-orm/pg-core";
+
+/**
+ * One row per local calendar date (America/Toronto) on which the app was opened.
+ * The primary key enforces BR-3: at most one usage day per date.
+ * No user_id: single-user app (vision §3).
+ */
+export const usageDay = pgTable("usage_day", {
+  day: date("day", { mode: "string" }).primaryKey(),
+});
