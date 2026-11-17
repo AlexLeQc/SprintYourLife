@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 16 / 19 done |
+| **Status** | In progress — 18 / 19 done — UAT next |
 | **Spec** | [spec.md](spec.md) · **Plan** | [plan.md](plan.md) |
 | **Branch** | `feat/001-foundation` → pull requests into `main` |
 | **Last updated** | 2026-11-16 |
@@ -110,13 +110,13 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   On `visibilitychange` → visible, call a small server action that records today and refreshes the home line.
   *Done when:* locally, switching tabs and coming back records the day without a reload.
 
-- [ ] **T17** 🤖 **"Used N of the last 7 days" on home** (AC-5.5)
+- [x] **T17** 🤖 **"Used N of the last 7 days" on home** (AC-5.5)
   Placeholder home page: app name, the neutral line using `countUsedLastNDays` (T04), and the sign-out button. No colours that judge, no streak.
   *Done when:* merged and deployed; the number matches the rows in Neon.
 
 ## Phase F — Lock down and accept
 
-- [ ] **T18** 👤 **Protect `main` on GitHub** (AC-6.2)
+- [x] **T18** 👤 **Protect `main` on GitHub** (AC-6.2)
   GitHub repo → **Settings → Rules → Rulesets → New branch ruleset**: target `main`, enable **Require a pull request before merging** (0 approvals: you're solo), **Require status checks to pass** → select the CI check, **Block force pushes**. Save as **Active**.
   *Done when:* a direct push to `main` is refused.
 
@@ -142,3 +142,5 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-16 | T14 ⛳ **GO** | PR #4 merged. PO on iPhone: reinstalled from Safari, signed in with Google from the installed app → signed in inside the app; after fully closing and reopening, still signed in. AC-2.3 passes; risk OQ-3 closed. |
 | 2026-11-16 | T15 ✅, T16–T17 (code) | `usage-repository.ts`: idempotent `recordUsageDay` (2 calls → 1 row on `dev`), `countUsageDays(7)` via `countUsedLastNDays`. Recorded inside `requireAllowedSession()`. AC-5.4 checked: no row created by a visit without a cookie or with a fake cookie. T16: `visibilitychange` → server action `recordVisit()` (checks session, records, `refresh()`). T17: neutral "Used N of the last 7 days" line. Pending: PO tab-switch check (T16), production check (T17). |
 | 2026-11-16 | T16 ✅ | Claude deleted today's row on `dev` (0 rows); PO switched tabs and came back **without reloading**; the row was recreated (1 row). The resume path records the day. |
+| 2026-11-16 | T17 ✅ | PR #5 merged. iPhone shows "Used 1 of the last 7 days"; Neon `production` has exactly 1 usage day (2026-11-16) and 1 user account. Matches. |
+| 2026-11-16 | T18 ✅ | PO created the `main` ruleset. Verified via GitHub API: deletion and force-push blocked, pull request required (0 approvals), required check `Typecheck, lint, test`. |
