@@ -95,7 +95,7 @@ Have a real app on my phone's home screen that **only I can open**, that **keeps
 These need my accounts; Claude cannot do them. The plan will give step-by-step instructions.
 
 1. Create a **Vercel** account (Hobby) and link the GitHub repository.
-2. Create a **Neon** account (Free) and a project with `main` and `dev` branches.
+2. Create a **Neon** account (Free) and a project with `production` (default) and `dev` branches.
 3. Create a **Google Cloud** OAuth client (redirect URLs for localhost and production).
 4. Enter secrets and the allowlist as environment variables (Vercel + local `.env`).
 
