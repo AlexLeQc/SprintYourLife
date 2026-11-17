@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 12 / 13 — ⛳ UAT next |
+| **Status** | In UAT — 12 / 13 — daily-use check pending |
 | **Spec** | [spec.md](spec.md) (v1.2) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/002-tasks-add` (slice 1), `feat/002-tasks-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-17 |
@@ -84,3 +84,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-17 | T11 ✅ | PR #11 merged; CI and Vercel production deployment green. |
 | 2026-11-17 | T12 ✅ | PO created "T12 Done" and "T12 Delete" in the installed app, marked one done and deleted the other. PO ran the query in the Neon SQL Editor on `production` (Claude was refused production credentials by Claude Code's safety check): "T12 Done" → `completed_on` = 2026-11-17, not deleted; "T12 Delete" → `completed_on` empty, deleted = true. Matches BR-4 and D-2. |
 | 2026-11-17 | — | ADR-0014: PO created a read-only `claude_readonly` role on `production` (all tables except `session`, `account`, `verification`). Claude verified it: reads allowed, sign-in secrets and every write refused. Future production checks no longer need the PO. |
+| 2026-11-17 | T13 ⛳ (day 1) | PO ran the UAT checklist on production with the iPhone: everything works. Claude cross-checked production with the read-only role (ADR-0014): 3 open, 2 done (`completed_on` 2026-11-17), 7 deleted, 4 timed, 0 time-without-date, longest title 23. Pending: a few days of real use instead of the to-do note, with friction noted; warm-open time not reported. |
