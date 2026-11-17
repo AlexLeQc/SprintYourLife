@@ -40,12 +40,12 @@ All in `src/domain/task.ts`, tests named after the BR id. "Now" is passed in as 
 
 | Rule | Function | Example tests |
 |---|---|---|
-| BR-1 Title | `normalizeTitle(raw)` → title or error | `"  Buy milk "` → `"Buy milk"`; `"   "` → empty; 200 chars ok; 201 → too long; emoji counted as characters the user sees |
+| BR-1 Title | `normalizeTitle(raw)` → title or error | `"  Buy milk "` → `"Buy milk"`; `"   "` → empty; 200 chars ok; 201 → too long; an emoji counts as one character (code points, like PostgreSQL `char_length`, so the app and the database `CHECK` agree) |
 | BR-2 Due | `parseDue(date?, time?)` → `{date, time}` or error | none ok; date ok; date + time ok; time without date → error; `"2026-02-30"` → error; `"24:00"` → error; past date ok |
 | BR-3 Sort | `compareOpenTasks(a, b)` | dated before undated; earlier date first; same date: timed by time, then date-only; undated oldest created first; equal → creation order |
 | BR-4 Completion | `completionDate(now)` → today | completed at 23:59 Toronto = 04:59 UTC next day → **Toronto date** |
 | BR-5 Overdue | `isOverdue(due, now)` | date-only yesterday → true; date-only today → false; today 09:00 at 09:01 → true; today 09:00 at 09:00 → false; no date → false |
-| BR-6 Label | `dueLabel(due, now)` | "Today"; "Fri, Jan 8, 2027" when the year differs; "Tomorrow 9:00 a.m."; "Thu, Nov 20"; "Thu, Nov 20 2:00 p.m."; "Was due today 2:00 p.m."; "Was due Mon, Nov 17"; 12:00 → "12:00 p.m."; 00:30 → "12:30 a.m." |
+| BR-6 Label | `dueLabel(due, now)` | "Today"; "Fri, Jan 8, 2027" when the year differs; "Tomorrow 9:00 a.m."; "Fri, Nov 20"; "Fri, Nov 20 2:00 p.m."; "Was due today 2:00 p.m."; "Was due Tue, Nov 17"; 12:00 → "12:00 p.m."; 00:30 → "12:30 a.m." |
 | BR-7 Urgency | `urgency(due, now)` → `"overdue" \| "soon" \| "none"` | overdue wins over today; today/tomorrow → soon; day after tomorrow → none; no date → none; month and year boundaries (Dec 31 → Jan 1) |
 | BR-8 Deleted | enforced in the repository (§4) | checked on the `dev` database, like BR-3 of spec 001 |
 
@@ -151,7 +151,7 @@ All three recommendations accepted.
 |---|---|---|---|
 | D-1 | Accept **ADR-0013** (store due date/time as Toronto wall-clock)? | A. wall-clock · B. UTC instant | **A** — every rule becomes a string comparison, no daylight-saving code. Only downside: travelling, which is out of scope. → **Accepted**; travel would get its own ADR + migration. |
 | D-2 | What does "delete" do in the database? | A. **Soft delete** (`deleted_at`; row kept, never shown or counted) · B. Hard delete after the 5 s undo window | **A** — undo is exact and survives closing the app. The row is invisible everywhere. → **Accepted**; PO asked to watch storage (risk in §10). |
-| D-3 | A due date in **another year**: show the year? The spec's format ("Thu, Nov 20") doesn't say. | A. Add the year only when it differs from this year ("Fri, Jan 8, 2027") · B. Never show the year | **A** — a January deadline set in November would otherwise be ambiguous. → **Accepted**; spec BR-6 updated (v1.1). |
+| D-3 | A due date in **another year**: show the year? The spec's format ("Fri, Nov 20") doesn't say. | A. Add the year only when it differs from this year ("Fri, Jan 8, 2027") · B. Never show the year | **A** — a January deadline set in November would otherwise be ambiguous. → **Accepted**; spec BR-6 updated (v1.1). |
 
 ## 10. Risks
 

@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Status** | Not started — 0 / 13 |
-| **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
+| **Status** | In progress — 3 / 13 |
+| **Spec** | [spec.md](spec.md) (v1.2) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/002-tasks-add` (slice 1), `feat/002-tasks-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-17 |
 
@@ -15,15 +15,15 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Slice 1 — Add and see tasks
 
-- [ ] **T01** 🤖 **Local time in Toronto**
+- [x] **T01** 🤖 **Local time in Toronto**
   `domain/local-date.ts`: add `localTime(instant)` → `"HH:MM"` in `America/Toronto`, and a `localNow(instant)` → `{ date, time }` helper. Tests: 23:59 Toronto = 04:59 UTC next day → same Toronto date; both daylight-saving switch days.
   *Done when:* tests pass.
 
-- [ ] **T02** 🤖 **BR-1, BR-2: title and due**
+- [x] **T02** 🤖 **BR-1, BR-2: title and due**
   `domain/task.ts`: `normalizeTitle`, `parseDue` + tests from plan §3 (trim, 1–200, time needs a date, invalid dates and times refused, past allowed).
   *Done when:* tests pass.
 
-- [ ] **T03** 🤖 **BR-3, BR-5, BR-6, BR-7: sort, overdue, label, urgency**
+- [x] **T03** 🤖 **BR-3, BR-5, BR-6, BR-7: sort, overdue, label, urgency**
   `compareOpenTasks`, `isOverdue`, `dueLabel`, `urgency` + tests from plan §3, incl. "p.m." formatting, the year only when it differs (D-3), and Dec 31 → Jan 1.
   *Done when:* tests pass.
 
@@ -75,4 +75,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 | Date | Tasks | Note |
 |---|---|---|
-| | | |
+| 2026-11-17 | T01–T03 ✅ | `localTime` / `localNow` (one clock reading, `h23` so midnight is never "24:00"; both daylight-saving days tested). `domain/task.ts`: BR-1 to BR-7 (BR-4 as `completionDate`), 47 new tests, 65 in total. Title length counted in code points to match PostgreSQL `char_length`. Tests showed the spec's example weekdays were wrong for 2026 → spec v1.2 (examples only). |
