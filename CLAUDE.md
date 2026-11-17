@@ -7,6 +7,7 @@
 - **Read before planning:** `docs/vision.md` (design principles, NFRs), `docs/architecture.md`, `docs/decisions/` (ADRs are immutable; a change of decision = a new ADR that supersedes).
 - **Architecture:** business rules live in `src/domain/` as pure TypeScript (no Next.js, React, database, or auth imports; enforced by ESLint). Each rule has Vitest tests named after its BR/AC id.
 - **Access control:** every page, server action, and route calls `requireAllowedSession()` / `getAllowedSession()` (`src/server/session.ts`) **before** reading or rendering anything private. Never rely on a layout check: Next.js renders layouts and pages in parallel, so the page's content is still produced. `src/proxy.ts` is a UX redirect only.
+- **Production data:** read it only through `PROD_READONLY_DATABASE_URL` (ADR-0014, read-only role, no sign-in secrets). Never write to production outside a merged migration. A plan that adds a table holding secrets must revoke `SELECT` on it for `claude_readonly`.
 - **Time:** every "day" uses `America/Toronto` via `src/domain/local-date.ts`, never the server's time zone.
 - **Privacy:** public repo. No real emails, secrets, or user data in code, tests, fixtures, or commits. Test data uses `@example.com`.
 - **Language:** English for UI, code, and docs. The PO may write in French.
