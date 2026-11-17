@@ -26,8 +26,7 @@ Create a Next.js (TypeScript) app with a framework-free `domain/` folder for bus
 │   ├── app/                       # Next.js routes (UI + server entry points)
 │   │   ├── manifest.ts            # PWA manifest
 │   │   ├── sign-in/page.tsx       # "Sign in with Google" + "This app is private."
-│   │   ├── (app)/layout.tsx       # guard: session required, records usage day
-│   │   ├── (app)/page.tsx         # placeholder home + "Used N of the last 7 days"
+│   │   ├── (app)/page.tsx         # home: requireAllowedSession() first, then content
 │   │   └── api/auth/[...all]/     # Better Auth endpoints
 │   ├── domain/                    # pure TypeScript — NO Next.js, NO database
 │   │   ├── allowlist.ts (+ .test.ts)
@@ -71,7 +70,7 @@ The schema is defined in TypeScript with Drizzle. Each change generates a SQL mi
 ### 5.1 Private access (US-2, US-3) — defense in depth
 
 1. **At sign-in:** a Better Auth hook refuses to create a user or session when `isAllowed` is false. The sign-in page then shows "This app is private." (AC-3.1)
-2. **On every server entry point:** the `(app)` layout and every server action check that a session exists **and** that its email is still allowed (AC-3.2). Removing an email from `ALLOWED_EMAILS` locks it out on the next request.
+2. **On every server entry point:** every page, server action, and route calls `requireAllowedSession()` / `getAllowedSession()` **before** rendering or reading anything private: a session must exist **and** its email must still be allowed (AC-3.2). Removing an email from `ALLOWED_EMAILS` locks it out on the next request. *Changed during T13: a check in the `(app)` layout is not enough, because Next.js renders layouts and pages in parallel and the page content was still sent (found by a fake-cookie test).*
 3. **Optimistic redirect:** an unauthenticated visit to any page goes to `/sign-in` (AC-2.1). This step is for UX only; real security is points 1 and 2.
 
 ### 5.2 Long session (US-4)
@@ -88,7 +87,7 @@ Session lifetime of **90 days, extended on use** (renewed at most once a day). S
 ### 5.4 Recording usage days reliably (US-5) — a trap found while planning
 
 An installed iPhone app often **resumes from the background without reloading**. If the usage day is recorded only on page load, opening the app in the morning after using it the night before may record **nothing**. So the usage day is recorded in two places:
-1. On page load, in the `(app)` layout (server side).
+1. On page load, inside `requireAllowedSession()` (server side), so only an allowed session can record a day.
 2. **When the app becomes visible again** (browser `visibilitychange` event), with a small server call that records today and refreshes the "Used N of 7" line.
 
 Both use "insert if not exists", so repeated calls are harmless (BR-3).
@@ -134,7 +133,7 @@ Vercel's build runs the migrations before building, against **that environment's
 | AC-4.1, AC-4.2 | UAT (next day; sign out) |
 | AC-5.1, AC-5.2 | Repository behaviour (idempotent insert) + UAT |
 | AC-5.3 | **Unit test** (BR-2) |
-| AC-5.4 | Design: usage is recorded only inside the session-guarded layout |
+| AC-5.4 | Design: usage is recorded only inside `requireAllowedSession()`, after the session and allowlist checks |
 | AC-5.5 | Unit test (BR-4) + UAT |
 | AC-6.1 to AC-6.3 | UAT: a PR with a deliberately failing test |
 | AC-NF-1 | UAT timing (warm / cold) |
@@ -158,7 +157,7 @@ Claude gives exact click-by-click instructions at the right moment in tasks.md. 
 |---|---|---|
 | Step 2 | **Vercel** (Hobby) | Sign in with GitHub, import `SprintYourLife`, keep the default `*.vercel.app` URL, function region `iad1`. |
 | Step 3 | **Neon** (Free) | Create a project in AWS us-east-1; create a `dev` branch; copy both connection strings into Vercel (Production → `production`, Preview → `dev`) and into the local `.env` (`dev`). |
-| Step 4 | **Google Cloud** | Create a project → OAuth consent screen with basic scopes only (email, profile), published "In production". This is fine for basic scopes, and it means **our** allowlist is what refuses strangers, which is what we want to test. Then create a Web OAuth client with redirect URIs for `localhost:3000` and the production URL. Put the ID and secret into Vercel and `.env`. |
+| Step 4 | **Google Cloud** | Create a project → OAuth consent screen with basic scopes only (email, profile), kept in **Testing** mode with the owner and one UAT account as test users ([ADR-0012](../../docs/decisions/0012-google-oauth-testing-mode.md): Google requires a privacy policy to publish). The UAT account passes Google but must be refused by **our** allowlist. Then create a Web OAuth client with redirect URIs for `localhost:3000` and the production URL. Put the ID and secret into Vercel and `.env`. |
 | Step 7 | **GitHub** | Settings → Branches → protect `main`: require the CI check, no direct pushes. |
 
 ## 9. Decisions needed from the PO
