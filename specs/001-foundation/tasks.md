@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 18 / 19 done — UAT next |
+| **Status** | Done — 19 / 19 — spec 001 Delivered |
 | **Spec** | [spec.md](spec.md) · **Plan** | [plan.md](plan.md) |
 | **Branch** | `feat/001-foundation` → pull requests into `main` |
-| **Last updated** | 2026-11-16 |
+| **Last updated** | 2026-11-17 |
 
 **Legend:** 🤖 Claude · 👤 PO (Alexis: needs your accounts or your phone) · ⛳ checkpoint (stop until the PO confirms)
 
@@ -120,7 +120,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   GitHub repo → **Settings → Rules → Rulesets → New branch ruleset**: target `main`, enable **Require a pull request before merging** (0 approvals: you're solo), **Require status checks to pass** → select the CI check, **Block force pushes**. Save as **Active**.
   *Done when:* a direct push to `main` is refused.
 
-- [ ] **T19** 👤 **UAT** ⛳
+- [x] **T19** 👤 **UAT** ⛳
   Run the [UAT checklist in the spec](spec.md#8-uat-checklist-for-the-po) on production with the iPhone, and write the warm/cold timings in the UAT notes. To test AC-6.2, Claude opens a PR with a deliberately failing test. Check that it's red and can't be merged, then close it.
   *Done when:* every box is ticked → spec 001 status becomes **Delivered**, and backlog E01–E03 become **Delivered**.
 
@@ -144,3 +144,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-16 | T16 ✅ | Claude deleted today's row on `dev` (0 rows); PO switched tabs and came back **without reloading**; the row was recreated (1 row). The resume path records the day. |
 | 2026-11-16 | T17 ✅ | PR #5 merged. iPhone shows "Used 1 of the last 7 days"; Neon `production` has exactly 1 usage day (2026-11-16) and 1 user account. Matches. |
 | 2026-11-16 | T18 ✅ | PO created the `main` ruleset. Verified via GitHub API: deletion and force-push blocked, pull request required (0 approvals), required check `Typecheck, lint, test`. |
+| 2026-11-17 | T19 ⛳ ✅ | UAT day 2 by PO: still signed in the next day (AC-4.1); "Used 2 of the last 7 days" (AC-5); warm open 1.08 s, cold open 3.66 s (AC-NF-1, cold < 5 s so ADR-0007 stands). All UAT boxes ticked → spec 001 **Delivered**; E01–E03 Delivered. |
