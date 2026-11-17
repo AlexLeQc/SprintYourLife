@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 10 / 13 — T11 waiting for merge |
+| **Status** | In progress — 12 / 13 — ⛳ UAT next |
 | **Spec** | [spec.md](spec.md) (v1.2) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/002-tasks-add` (slice 1), `feat/002-tasks-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-17 |
@@ -57,11 +57,11 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   Checkbox (thumb-sized, labelled for screen readers), optimistic removal, "Task done · Undo" for 5 s; undo waits for the pending action (plan §5.2).
   *Done when:* works locally, including tapping Undo immediately.
 
-- [ ] **T11** 🤖 **Inline edit + delete with undo** (AC-4.1 to AC-5.2, AC-6.2)
+- [x] **T11** 🤖 **Inline edit + delete with undo** (AC-4.1 to AC-5.2, AC-6.2)
   Tap a title → fields, Save / Cancel / Delete; clearing the date clears the time; "Task deleted · Undo" restores the task exactly.
   *Done when:* works locally; typecheck, lint, tests pass; PR merged and deployed.
 
-- [ ] **T12** 🤖 **Production check**
+- [x] **T12** 🤖 **Production check**
   On production: a task done in the app has `completed_on` = today (Toronto) in Neon `production`; a deleted task has `deleted_at` set and is not shown.
   *Done when:* checked and noted in the progress log.
 
@@ -81,3 +81,6 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-17 | T07 ✅, T08 ⛳ **GO** | PR #10 merged; Vercel production deployment and CI green (migration applied by `vercel-build`). PO on iPhone: slice 1 looks good; iOS date and time pickers are nice; add field stays at the top (simpler with the keyboard). |
 | 2026-11-17 | T09 ✅ | Repository on `dev`: complete → `completed_on` = 2026-11-17, not listed; reopen → cleared, listed; update with date removed → date and time null; delete → `deleted_at` set, not listed; a deleted task can't be completed or edited; restore → listed again, row identical to before. AC-S.1: `completeTask`, `deleteTask`, `updateTask`, `restoreTask`, `reopenTask` with a fake cookie → all "Not allowed", rows unchanged. |
 | 2026-11-17 | T10 ✅, T11 (code) | Browser (desktop + 375 px, dark + light): done → row leaves at once, "Task done · Undo" for 5 s, then final; **Undo tapped 50 ms after done** → task back, database open (undo waited for the done request). Edit: fields prefilled, title changed + date removed → saved, re-sorted into the undated group. Delete → "Task deleted · Undo" → undo restores it with its date; delete again → gone after 5 s, `deleted_at` set. No console errors, no horizontal scroll. Test rows removed; PO's own `dev` tasks left as they were. Waiting: PR merge + deploy. |
+| 2026-11-17 | T11 ✅ | PR #11 merged; CI and Vercel production deployment green. |
+| 2026-11-17 | T12 ✅ | PO created "T12 Done" and "T12 Delete" in the installed app, marked one done and deleted the other. PO ran the query in the Neon SQL Editor on `production` (Claude was refused production credentials by Claude Code's safety check): "T12 Done" → `completed_on` = 2026-11-17, not deleted; "T12 Delete" → `completed_on` empty, deleted = true. Matches BR-4 and D-2. |
+| 2026-11-17 | — | ADR-0014: PO created a read-only `claude_readonly` role on `production` (all tables except `session`, `account`, `verification`). Claude verified it: reads allowed, sign-in secrets and every write refused. Future production checks no longer need the PO. |

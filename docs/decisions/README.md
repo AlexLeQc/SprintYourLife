@@ -19,5 +19,6 @@ Format: lightweight [Nygard style](https://cognitect.com/blog/2011/11/15/documen
 | [0011](0011-auth-library-better-auth.md) | Authentication library: Better Auth (supersedes 0008) | Accepted |
 | [0012](0012-google-oauth-testing-mode.md) | Keep the Google OAuth app in "Testing" mode | Accepted |
 | [0013](0013-due-date-time-as-local-wall-clock.md) | Store task due date and time as local wall-clock values | Accepted |
+| [0014](0014-read-only-production-access-for-claude.md) | Read-only production access for Claude, without sign-in secrets | Accepted |
 
 To add one: copy the structure of an existing ADR, take the next number, add a row here.
