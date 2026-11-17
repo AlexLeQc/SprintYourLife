@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Spec validated — v1.1, 2026-11-17 |
+| **Status** | Spec validated — v1.2, 2026-11-17 |
 | **Backlog items** | F01 Tasks |
 | **Release** | R1 — Usable |
 | **Depends on** | [001 Foundation](../001-foundation/spec.md) (Delivered) |
@@ -45,8 +45,8 @@ Put my **obligations** (homework, appointments, job applications) in the app, so
 ### US-2 — See open tasks
 
 - **AC-2.1** — **Given** I have open tasks, **When** I open the home page, **Then** they are listed below the "Used N of the last 7 days" line, sorted per BR-3.
-- **AC-2.2** — **Given** a task with a due date, **Then** it shows its due label per BR-6 (e.g. "Today", "Tomorrow 9:00 a.m.", "Thu, Nov 20").
-- **AC-2.3** — **Given** an overdue task (BR-5), **Then** it shows "Was due …" (e.g. "Was due Mon, Nov 17", "Was due today 2:00 p.m.") in **red**.
+- **AC-2.2** — **Given** a task with a due date, **Then** it shows its due label per BR-6 (e.g. "Today", "Tomorrow 9:00 a.m.", "Fri, Nov 20").
+- **AC-2.3** — **Given** an overdue task (BR-5), **Then** it shows "Was due …" (e.g. "Was due Tue, Nov 17", "Was due today 2:00 p.m.") in **red**.
 - **AC-2.4** — **Given** a task that is not overdue and is due today or tomorrow, **Then** its due label is shown in **amber**.
 - **AC-2.5** — **Given** any other task (due later, or no date), **Then** it has no urgency colour.
 - **AC-2.6** — Colour is never the only signal: every coloured task also shows its due label as text (WCAG 1.4.1).
@@ -88,7 +88,7 @@ Put my **obligations** (homework, appointments, job applications) in the app, so
 | BR-3 | Open tasks sort: tasks **with** a due date first, by date; on the same date, **timed tasks first by time, then date-only tasks** (a date-only task means "by end of day"); then tasks **without** a date, oldest created first. Ties keep creation order. |
 | BR-4 | Marking a task done records its **completion date** (local date), kept for the sprint retro (F06). Undo clears it. |
 | BR-5 | A task is **overdue** when it is open and: date-only → its date is before today; timed → its date + time is before now. |
-| BR-6 | Due label: "Today" / "Tomorrow" / short date ("Thu, Nov 20"), followed by the time when set ("2:00 p.m."). The year is added only when it differs from the current year ("Fri, Jan 8, 2027"). Overdue tasks prefix "Was due" ("Was due today 2:00 p.m.", "Was due Mon, Nov 17"). |
+| BR-6 | Due label: "Today" / "Tomorrow" / short date ("Fri, Nov 20"), followed by the time when set ("2:00 p.m."). The year is added only when it differs from the current year ("Fri, Jan 8, 2027"). Overdue tasks prefix "Was due" ("Was due today 2:00 p.m.", "Was due Tue, Nov 17"). |
 | BR-7 | Urgency level: **overdue** (red) per BR-5; else **soon** (amber) when the due date is today or tomorrow; else **none**. Tasks without a date are always none. |
 | BR-8 | A deleted task is excluded from every list and every count. |
 
@@ -122,7 +122,7 @@ Storing local wall-clock values (BR-2) is an architecture choice; the plan recor
 | OQ-1 | Edit and delete in this spec? | **Yes, both** (US-4, US-5). Without delete, a cancelled task could only leave the list as a fake "done", which would distort the retro. |
 | OQ-2 | How to recover a mis-tapped "done"? | **Undo bar** (US-6), also used for delete. A Done list ("trophy list") is wanted later → backlog **C08**. |
 | OQ-3 | Where does the task list live? | **Home page** for now. F04 will rework it; PO layout ideas noted on F04. |
-| OQ-4 | Overdue wording? | **"Was due Mon, Nov 17"** — in red (see OQ-5). |
+| OQ-4 | Overdue wording? | **"Was due Tue, Nov 17"** — in red (see OQ-5). |
 | OQ-5 | Urgency colours on tasks (raised by the PO, against principle 1 v0.2)? | **Yes, two levels**: red = overdue, amber = due today or tomorrow, always with a text label. Vision principle 1 amended (v0.3). |
 | OQ-6 | Due time (raised by the PO)? | **Optional time** on a dated task (BR-2, BR-3, BR-5). |
 
@@ -151,3 +151,4 @@ To be run on production, with the real phone:
 | 0.1 | 2026-11-17 | First draft — 4 open questions for the PO |
 | 1.0 | 2026-11-17 | PO decisions: edit + delete, undo bar, home page, "Was due …", urgency colours (2 levels), optional time; UAT checklist |
 | 1.1 | 2026-11-17 | BR-6: year shown when it differs from the current year (plan 002 D-3) |
+| 1.2 | 2026-11-17 | Examples only: weekdays corrected to the 2026 calendar (Fri, Nov 20; Tue, Nov 17), found by the BR-6 tests. No rule changed. |
