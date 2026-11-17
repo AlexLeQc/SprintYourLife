@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Validated — 2026-11-16 |
+| **Status** | In UAT — started 2026-11-16 (2 checks need day 2, 1 needs timings) |
 | **Backlog items** | E01 Walking skeleton · E02 Private access · E03 Usage days · E04 CI (baseline) |
 | **Release** | R1 — Usable |
 | **Related** | [vision](../../docs/vision.md) · [architecture](../../docs/architecture.md) · ADR-0003, 0006, 0007, 0008, 0009, 0010 |
@@ -114,19 +114,37 @@ All resolved by the PO on 2026-11-16 (recommendations accepted).
 
 To be run on production, with the real phone:
 
-- [ ] AC-1.1, AC-1.2 — install, opens full-screen
-- [ ] AC-2.1 to AC-2.3 — sign in from Safari **and** from the installed app
-- [ ] AC-3.1 — try with a second Google account → refused
-- [ ] AC-3.3 — search the repo for my email
+- [x] AC-1.1, AC-1.2 — install, opens full-screen
+- [x] AC-2.1 to AC-2.3 — sign in from Safari **and** from the installed app
+- [x] AC-3.1 — try with a second Google account → refused *(done with an allowlist swap; see notes)*
+- [x] AC-3.3 — search the repo for my email
 - [ ] AC-4.1 — still signed in the next day without doing anything
-- [ ] AC-4.2 — sign out works
+- [x] AC-4.2 — sign out works
 - [ ] AC-5.1, AC-5.2, AC-5.5 — open twice in a day; count increases by one only
-- [ ] AC-5.3 — covered by an automated test (BR-2)
-- [ ] AC-6.1 to AC-6.3 — break a test in a PR: CI is red, merge blocked
+- [x] AC-5.3 — covered by an automated test (BR-2)
+- [x] AC-6.1 to AC-6.3 — break a test in a PR: CI is red, merge blocked
 - [ ] AC-NF-1 — time a warm and a cold open, write both numbers below
-- [ ] AC-NF-2 — billing pages at $0
+- [x] AC-NF-2 — billing pages at $0
 
-**UAT notes:** *(to be filled in)*
+**UAT notes** — PO: Alexis · started 2026-11-16 · production (`sprintyourlife.vercel.app`) + iPhone
+
+| AC | Result | Evidence |
+|---|---|---|
+| AC-1.1, 1.2 | ✅ Pass | T08: icon "SprintYourLife", opens full-screen |
+| AC-2.1, 2.2 | ✅ Pass | T13: redirect to `/sign-in`; sign-in with the allowlisted Gmail → "Signed in as …" |
+| AC-2.3 | ✅ Pass | T14: sign-in from the installed app stays in the app; survives a full close/reopen |
+| AC-3.1 | ✅ Pass (partial) | Allowlist swapped to a fake address → same Gmail refused with "This app is private." (Google passed it as a test user; our allowlist refused it). A never-seen account (user-creation hook) not tested: no second account. Covered by unit tests on BR-1. |
+| AC-3.2 | ✅ Pass | No cookie → redirect; fake cookie → 0 private content in HTML; `get-session` → `null` |
+| AC-3.3 | ✅ Pass | Repo and full history scanned: no allowlisted email, no secret. Note: commit author email (school address) is public via git metadata; not the allowlisted email. |
+| AC-4.1 | ⏳ Pending | Re-check on 2026-11-17 |
+| AC-4.2 | ✅ Pass | T13: sign-out returns to `/sign-in` |
+| AC-5.1, 5.2, 5.5 | ✅ Pass (day 1) · ⏳ day 2 | Day 1: "Used 1 of the last 7 days"; production has exactly 1 row. Re-check on 2026-11-17: count = 2, still 2 after a second open. |
+| AC-5.3 | ✅ Pass | Automated test (BR-2), incl. daylight-saving switches |
+| AC-5.4 | ✅ Pass | No row created by visits without a cookie or with a fake cookie |
+| AC-6.1, 6.2 | ✅ Pass | PR #7 with a deliberately failing test: check red, merge blocked by the `main` ruleset; closed without merging |
+| AC-6.3 | ✅ Pass | Every merge (PRs #1–#5) deployed automatically |
+| AC-NF-1 | ⏳ Pending | Warm: … s · Cold (≥ 1 h idle): … s |
+| AC-NF-2 | ✅ Pass | Vercel Hobby and Neon Free plans: $0 |
 
 ## Revision history
 
