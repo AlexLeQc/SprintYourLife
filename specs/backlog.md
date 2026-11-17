@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Draft v0.1 — awaiting Product Owner validation |
-| **Last updated** | 2026-11-16 |
+| **Last updated** | 2026-11-17 |
 | **Source** | [`docs/vision.md`](../docs/vision.md) |
 
 Prioritization: **MoSCoW**, rated by **value to the user**, not by effort. Rule: at most 6 Musts in the MVP.
@@ -27,10 +27,10 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 
 | ID | Feature | Summary | Depends on | Status |
 |---|---|---|---|---|
-| F01 | **Tasks** | Create a task (title, optional due date), mark it done, done tasks are archived. | E01, E02 | Spec draft — [002](002-tasks/spec.md) |
+| F01 | **Tasks** | Create a task (title, optional due date and time), edit, delete, mark done with undo; urgency colours; done tasks are archived. | E01, E02 | Spec validated — [002](002-tasks/spec.md) |
 | F02 | **Sidequest bank** | Create sidequests (title + category from a fixed list), browse them. | E01, E02 | Idea |
 | F03 | **One-tap log** | Mark that I did a sidequest. Optional duration and free-text note (e.g. "best time 1:42"). | F02 | Idea |
-| F04 | **"What can I do now?" screen** | Phone-first screen: urgent tasks on top, a few sidequests below, nothing else. Default screen on mobile. | F01, F02 | Idea |
+| F04 | **"What can I do now?" screen** | Phone-first screen: urgent tasks on top, a few sidequests below, nothing else. Default screen on mobile. *PO layout ideas (spec 002 OQ-3): Now content on top with tasks below on scroll, or bottom tabs "Tasks / Sidequests".* | F01, F02 | Idea |
 | F05 | **Sprint + measurable goal** | Start a 2-week sprint, pick one sidequest as its goal, which **requires** a measurable criterion. Planning view shows tasks due during the sprint. | F01, F02 | Idea |
 | F06 | **Sprint retro** | At sprint end: auto summary (tasks done / not done, sessions logged, usage days), "goal reached?", 2 free-text fields. Goal is then reached, carried over, or returned to the Bank. | F03, F05, E03 | Idea |
 
@@ -68,6 +68,7 @@ E04 (CI) starts with the first business rule and grows with each feature.
 | C05 | Stats and progress charts | Use the free-text log notes to learn which data is worth structuring. |
 | C06 | Integrated AI coach | Starts from the Claude Project's instructions as system prompt. Needs its own ADR (model, cost, privacy). |
 | C07 | Data export (JSON/CSV) | Cheap insurance for accepted risk R1 (no custom backups). |
+| C08 | Done list | Page of done tasks, newest completion first ("trophy list"). Serves M4 (motivation). Data already stored by spec 002 (`completed_on`). |
 
 ### Won't (for the MVP)
 
@@ -95,3 +96,4 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 |---|---|---|
 | 0.1 | 2026-11-16 | First draft from discovery |
 | 0.2 | 2026-11-16 | E03 backups → usage days; release plan R1/R2; streaks and custom backups moved to Won't |
+| 0.3 | 2026-11-17 | F01 scope from spec 002 (edit, delete, undo, time, urgency colours); C08 Done list; F04 layout ideas |
