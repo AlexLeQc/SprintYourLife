@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Spec validated — v1.2, 2026-11-17 |
+| **Status** | In UAT — started 2026-11-17 (only the "use it for a few days" check left) |
 | **Backlog items** | F01 Tasks |
 | **Release** | R1 — Usable |
 | **Depends on** | [001 Foundation](../001-foundation/spec.md) (Delivered) |
@@ -130,19 +130,31 @@ Storing local wall-clock values (BR-2) is an architecture choice; the plan recor
 
 To be run on production, with the real phone:
 
-- [ ] AC-1.1 to AC-1.5 — add tasks: title only, with a date, with a date + time; blank title ignored; 201 characters refused
-- [ ] AC-2.1, AC-2.2 — order and labels match BR-3 / BR-6 with a mix: no date, today, today 9 a.m., tomorrow, next week
-- [ ] AC-2.3 to AC-2.6 — a task due yesterday is red with "Was due …"; a task due today at a time already passed is red; today/tomorrow is amber; next week has no colour; every coloured one has text
-- [ ] AC-2.7 — empty list shows "Nothing to do."
-- [ ] AC-2.8 — everything reachable one-handed on the iPhone
-- [ ] AC-3.1, AC-3.2 — mark done → leaves the list; Claude checks `completed_on` in the database
-- [ ] AC-4.1 to AC-4.3 — edit title, date and time; clearing the date clears the time
-- [ ] AC-5.1, AC-5.2 — delete without a dialog; gone from the list
-- [ ] AC-6.1 to AC-6.3 — undo a done and a delete within 5 s; after the bar is gone, the action is final
-- [ ] AC-S.1 — Claude shows a direct server-action request without a session is refused
+- [x] AC-1.1 to AC-1.5 — add tasks: title only, with a date, with a date + time; blank title ignored; 201 characters refused
+- [x] AC-2.1, AC-2.2 — order and labels match BR-3 / BR-6 with a mix: no date, today, today 9 a.m., tomorrow, next week
+- [x] AC-2.3 to AC-2.6 — a task due yesterday is red with "Was due …"; a task due today at a time already passed is red; today/tomorrow is amber; next week has no colour; every coloured one has text
+- [x] AC-2.7 — empty list shows "Nothing to do."
+- [x] AC-2.8 — everything reachable one-handed on the iPhone
+- [x] AC-3.1, AC-3.2 — mark done → leaves the list; Claude checks `completed_on` in the database
+- [x] AC-4.1 to AC-4.3 — edit title, date and time; clearing the date clears the time
+- [x] AC-5.1, AC-5.2 — delete without a dialog; gone from the list
+- [x] AC-6.1 to AC-6.3 — undo a done and a delete within 5 s; after the bar is gone, the action is final
+- [x] AC-S.1 — Claude shows a direct server-action request without a session is refused
 - [ ] Use it instead of the to-do note for a few days; note any friction (input for C03, C08)
 
-**UAT notes** — *to be filled during UAT.*
+**UAT notes** — PO: Alexis · started 2026-11-17 · production (`sprintyourlife.vercel.app`) + iPhone
+
+| AC | Result | Evidence |
+|---|---|---|
+| AC-1.1 to AC-1.5 | ✅ Pass | PO, iPhone. Production data: no task with a time but no date; longest stored title 23 characters (nothing over 200 got in) |
+| AC-2.1 to AC-2.8 | ✅ Pass | PO, iPhone: order, labels, red/amber colours, empty state, one-handed use. T08: iOS pickers "nice", add field at the top is fine |
+| AC-3.1, AC-3.2 | ✅ Pass | PO, iPhone. Production: 2 done tasks, both `completed_on` = 2026-11-17 (Toronto); not listed |
+| AC-4.1 to AC-4.3 | ✅ Pass | PO, iPhone |
+| AC-5.1, AC-5.2 | ✅ Pass | PO, iPhone. Production: 7 deleted rows, none listed (T12 query) |
+| AC-6.1 to AC-6.3 | ✅ Pass | PO, iPhone. Fast undo (50 ms) also checked by Claude locally (T10) |
+| AC-S.1 | ✅ Pass | Claude: all 6 task actions refuse a fake session ("Not allowed"), no row changed (T06, T09) |
+| Warm-open timing (plan §5.7) | ⏳ Not reported | Spec 001 baseline: 1.08 s |
+| Use instead of the to-do note for a few days | ⏳ Pending | PO notes friction; input for C03 (recurring) and C08 (Done list) |
 
 ## Revision history
 
@@ -152,3 +164,4 @@ To be run on production, with the real phone:
 | 1.0 | 2026-11-17 | PO decisions: edit + delete, undo bar, home page, "Was due …", urgency colours (2 levels), optional time; UAT checklist |
 | 1.1 | 2026-11-17 | BR-6: year shown when it differs from the current year (plan 002 D-3) |
 | 1.2 | 2026-11-17 | Examples only: weekdays corrected to the 2026 calendar (Fri, Nov 20; Tue, Nov 17), found by the BR-6 tests. No rule changed. |
+| 1.3 | 2026-11-17 | UAT day 1: all ACs pass; status In UAT; daily-use check pending |
