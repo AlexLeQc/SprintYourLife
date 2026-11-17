@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Ready — 0 / 19 done |
+| **Status** | In progress — 4 / 19 done |
 | **Spec** | [spec.md](spec.md) · **Plan** | [plan.md](plan.md) |
 | **Branch** | `feat/001-foundation` → pull requests into `main` |
 | **Last updated** | 2026-11-16 |
@@ -15,19 +15,19 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Phase A — Code with no accounts needed
 
-- [ ] **T01** 🤖 **Scaffold the app**
+- [x] **T01** 🤖 **Scaffold the app**
   Next.js + TypeScript + ESLint; Node 24 LTS (`.nvmrc`); the folder structure from plan §2; `.gitignore` that covers `.env*` except `.env.example`; `.env.example` with variable names only; a README (what the app is, how it's built — spec-driven, AI-assisted — and links to `docs/` and `specs/`).
   *Done when:* `npm run dev` shows a placeholder page locally; `npm run typecheck` and `npm run lint` pass.
 
-- [ ] **T02** 🤖 **BR-2: local date in America/Toronto**
+- [x] **T02** 🤖 **BR-2: local date in America/Toronto**
   `domain/local-date.ts` + tests, including Saturday 23:30 Toronto = Sunday 04:30 UTC → Saturday (AC-5.3) and both daylight-saving switch days.
   *Done when:* tests pass.
 
-- [ ] **T03** 🤖 **BR-1: allowlist**
+- [x] **T03** 🤖 **BR-1: allowlist**
   `domain/allowlist.ts` + tests: exact match, case and spaces ignored, unknown refused, empty allowlist refuses everyone.
   *Done when:* tests pass.
 
-- [ ] **T04** 🤖 **BR-4: "used N of the last 7 days"**
+- [x] **T04** 🤖 **BR-4: "used N of the last 7 days"**
   `domain/usage.ts` + tests: today included, the 8th day back excluded, empty → 0.
   *Done when:* tests pass.
 
@@ -129,4 +129,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 | Date | Tasks | Note |
 |---|---|---|
-| | | |
+| 2026-11-16 | T01–T04 | Next.js 16.4 scaffold, domain rules BR-1, BR-2, BR-4 (27 tests), lint rule keeping `src/domain` pure. T05 workflow written; done once CI is green on the PR. |
