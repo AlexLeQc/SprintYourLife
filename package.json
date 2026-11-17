@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "icons": "npx --yes tsx scripts/generate-icons.tsx"
   },
   "dependencies": {
     "next": "16.4.6",
@@ -28,6 +29,6 @@
     "vitest": "^5.1.0"
   },
   "engines": {
-    "node": ">=24"
+    "node": "24.x"
   }
 }
