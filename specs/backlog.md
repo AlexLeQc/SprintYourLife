@@ -18,10 +18,10 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 
 | ID | Item | Why | Status |
 |---|---|---|---|
-| E01 | **Walking skeleton**: React app + Node API + SQL database, deployed at $0, installable PWA | NFR-01, NFR-08 — every feature builds on it | Idea |
-| E02 | **Private access**: Google sign-in restricted to an allowlist, long-lived session | NFR-02, NFR-05 | Idea |
-| E03 | **Usage days**: record one usage day per calendar day the app is opened | Measures M1 (displayed in the retro, F06) | Idea |
-| E04 | **CI**: tests on business rules run on every push | Quality bar (option b) | Idea |
+| E01 | **Walking skeleton**: React app + Node API + SQL database, deployed at $0, installable PWA | NFR-01, NFR-08 — every feature builds on it | Planned — [001](001-foundation/spec.md) |
+| E02 | **Private access**: Google sign-in restricted to an allowlist, long-lived session | NFR-02, NFR-05 | Planned — [001](001-foundation/spec.md) |
+| E03 | **Usage days**: record one usage day per calendar day the app is opened | Measures M1 (displayed in the retro, F06) | Planned — [001](001-foundation/spec.md) |
+| E04 | **CI**: tests on business rules run on every push | Quality bar (option b) | Baseline in [001](001-foundation/spec.md), grows with each feature |
 
 ### Must (6)
 
