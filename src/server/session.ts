@@ -2,6 +2,7 @@ import "server-only";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth, isEmailAllowed } from "./auth";
+import { recordUsageDay } from "./usage-repository";
 
 /**
  * Plan §5.1, layer 2: returns the session only if it exists AND its email is still allowed.
@@ -21,5 +22,7 @@ export async function getAllowedSession() {
 export async function requireAllowedSession() {
   const session = await getAllowedSession();
   if (!session) redirect("/sign-in");
+  // T15: opening any page counts as a usage day. Only reached with an allowed session (AC-5.4).
+  await recordUsageDay();
   return session;
 }
