@@ -17,5 +17,6 @@ Format: lightweight [Nygard style](https://cognitect.com/blog/2011/11/15/documen
 | [0009](0009-typescript-and-drizzle.md) | TypeScript and Drizzle ORM | Accepted |
 | [0010](0010-testing-and-ci.md) | Testing strategy and CI | Accepted |
 | [0011](0011-auth-library-better-auth.md) | Authentication library: Better Auth (supersedes 0008) | Accepted |
+| [0012](0012-google-oauth-testing-mode.md) | Keep the Google OAuth app in "Testing" mode | Accepted |
 
 To add one: copy the structure of an existing ADR, take the next number, add a row here.

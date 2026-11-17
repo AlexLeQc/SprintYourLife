@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 8 / 19 done |
+| **Status** | In progress — 13 / 19 done |
 | **Spec** | [spec.md](spec.md) · **Plan** | [plan.md](plan.md) |
 | **Branch** | `feat/001-foundation` → pull requests into `main` |
 | **Last updated** | 2026-11-16 |
@@ -57,7 +57,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Phase C — Database
 
-- [ ] **T09** 👤🤖 **Create the Neon database**
+- [x] **T09** 👤🤖 **Create the Neon database**
   1. ✅ PO created the project in **AWS US East 1 (N. Virginia)**, Free plan. Its default branch is named **`production`** (Neon's current default, not `main`).
   2. ✅ Claude linked the repo with the Neon CLI (`npx neon@latest`, agent setup skipped): `neon.ts` committed, `.neon` git-ignored. `neon.ts` exempts `dev` from the default 7-day expiry for new branches.
   3. ✅ Claude created the **`dev`** branch (`neon checkout dev --create`) and pulled its variables into the local `.env` (git-ignored).
@@ -67,17 +67,17 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
      Never paste these strings in chat or commit them.
   *Done when:* both variables are in Vercel and the local `.env` exists.
 
-- [ ] **T10** 🤖 **Drizzle + `usage_day` table + migrations in the build**
+- [x] **T10** 🤖 **Drizzle + `usage_day` table + migrations in the build**
   Drizzle with the Neon serverless driver; `server/db/schema.ts` with `usage_day (day DATE PRIMARY KEY)`; first migration generated and committed; the build command runs migrations before `next build` (plan §5.7).
   *Done when:* after deploy, the `usage_day` table exists in both Neon branches.
 
 ## Phase D — Private sign-in
 
-- [ ] **T11** 👤 **Create the Google OAuth client**
+- [x] **T11** 👤 **Create the Google OAuth client**
   1. console.cloud.google.com → create a project `SprintYourLife`.
   2. **Google Auth Platform** (formerly "OAuth consent screen") → **Get started**: app name, your support email, audience **External**, your contact email.
   3. Scopes: leave the defaults (email, profile, openid). Add nothing sensitive.
-  4. **Audience → Publish app** ("In production"). With only basic scopes, no Google review is needed.
+  4. ~~Publish app~~ → Google requires a privacy policy to publish. **Stay in Testing** ([ADR-0012](../../docs/decisions/0012-google-oauth-testing-mode.md)): **Audience → Test users → Add users**: your Gmail + a second Google account for the UAT refusal test.
   5. **Clients → Create client → Web application**. Authorized redirect URIs:
      - `http://localhost:3000/api/auth/callback/google`
      - `https://<your-app>.vercel.app/api/auth/callback/google`
@@ -87,12 +87,12 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
      `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `BETTER_AUTH_SECRET` (a different one per environment), `BETTER_AUTH_URL` (`http://localhost:3000` locally, production URL in Vercel), `ALLOWED_EMAILS` (your Gmail address).
   *Done when:* all variables are set in both places. (Labels in the Google console change often: if a step doesn't match, tell Claude what you see.)
 
-- [ ] **T12** 🤖 **Better Auth setup** (AC-2.2, AC-3.1, AC-4.1)
+- [x] **T12** 🤖 **Better Auth setup** (AC-2.2, AC-3.1, AC-4.1)
   `server/auth.ts`: Google provider, Drizzle adapter, auth tables migration, 90-day session renewed on use, hook that refuses non-allowlisted emails using `isAllowed` (T03); route `app/api/auth/[...all]`.
   *Done when:* sign-in works locally with the allowlisted account.
 
-- [ ] **T13** 🤖 **Sign-in page, guard, sign-out** (AC-2.1, AC-3.1, AC-3.2, AC-4.2)
-  `/sign-in` with one "Sign in with Google" button and the message "This app is private." for refused accounts; redirect to `/sign-in` when not signed in; the `(app)` layout checks session **and** allowlist; "Sign out" button on home.
+- [x] **T13** 🤖 **Sign-in page, guard, sign-out** (AC-2.1, AC-3.1, AC-3.2, AC-4.2)
+  `/sign-in` with one "Sign in with Google" button and the message "This app is private." for refused accounts; redirect to `/sign-in` when not signed in; each page calls `requireAllowedSession()` (session **and** allowlist) before rendering; "Sign out" button on home.
   *Done when:* locally, a non-allowlisted account is refused and sign-out works; merged and deployed.
 
 - [ ] **T14** 👤🤖 **Spike: sign in from the installed iPhone app** (AC-2.3, OQ-3) ⛳ **go / no-go**
@@ -103,7 +103,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 ## Phase E — Usage days
 
 - [ ] **T15** 🤖 **Record today on page load** (AC-5.1, AC-5.2, AC-5.4)
-  `server/usage-repository.ts`: "insert today if not exists" using `localDate` (T02); called from the session-guarded `(app)` layout only.
+  `server/usage-repository.ts`: "insert today if not exists" using `localDate` (T02); called from `requireAllowedSession()` only, after the session and allowlist checks.
   *Done when:* opening the app twice in a day creates exactly one row.
 
 - [ ] **T16** 🤖 **Record today when the app comes back to the screen** (plan §5.4)
@@ -135,3 +135,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-16 | T07 | Web manifest (standalone, scope `/`), placeholder icons generated by `npm run icons`, Apple home-screen metadata. Next: T08 on the iPhone. |
 | 2026-11-16 | T08 ⛳ | PO confirmed on iPhone: icon "SprintYourLife" on the home screen, opens full-screen. AC-1.1 and AC-1.2 pass. |
 | 2026-11-16 | T09 (partly), T10 (dev) | Neon linked via CLI; `dev` branch created (no expiry). Drizzle + Neon HTTP driver, `usage_day` migration applied to `dev` with the pooled URL only (as on Vercel); re-run is a no-op. End-to-end probe with the app driver: double insert → 1 row (BR-3), warm query 39 ms. `vercel-build` runs migrations then `next build`. Waiting on Vercel `DATABASE_URL` (T09 step 4) before merge. |
+| 2026-11-16 | T09, T10 ✅ | PO set `DATABASE_URL` in Vercel (Production → `production`, Preview → `dev`); PR #3 preview went green after redeploy, then merged. Verified: `usage_day` exists on `production` with 1 recorded migration; site responds 200. |
+| 2026-11-16 | T11 ✅ | Google refused "Publish app" without a privacy policy URL. PO chose to stay in Testing mode with 2 test users (ADR-0012). Client created; local `.env` and Vercel Production variables set (local `BETTER_AUTH_SECRET` generated by Claude). |
+| 2026-11-16 | T12, T13 (code) | Better Auth 1.7 + Google + Drizzle adapter (checked: no transactions on PostgreSQL, so the Neon HTTP driver works); allowlist refused at user **and** session creation; OAuth tokens encrypted; 90-day session. Proxy (UX redirect), sign-in page, sign-out. **Fix found by testing:** a layout guard let page content through with a fake cookie (Next renders layouts and pages in parallel) → each page now calls `requireAllowedSession()` first; rule added to CLAUDE.md and plan §5.1. Verified locally: redirect without cookie, no private HTML with a fake cookie, `get-session` → null, Google request uses the right redirect URI and basic scopes. **Pending PO:** a real Google sign-in (allowed and refused accounts). |
+| 2026-11-16 | T12, T13 ✅ | PO tested locally: signed in with the allowlisted Gmail ("Signed in as …"), sign-out returned to `/sign-in`; with `ALLOWED_EMAILS` temporarily set to a fake address, the same account got "This app is private." (Google passed it as a test user, our allowlist refused it: session-creation hook). Refusal of a brand-new account (user-creation hook) left for UAT if a second account is available. |
