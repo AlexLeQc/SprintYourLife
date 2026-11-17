@@ -1,5 +1,6 @@
 import "server-only";
-import { and, isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull } from "drizzle-orm";
+import type { LocalDate } from "@/domain/local-date";
 import { compareOpenTasks, type Due } from "@/domain/task";
 import { db } from "./db/client";
 import { task } from "./db/schema";
@@ -46,4 +47,35 @@ export async function listOpenTasks(): Promise<OpenTask[]> {
       createdAt: row.createdAt,
     }))
     .sort(compareOpenTasks);
+}
+
+/** Matches an open task: not done, not deleted. */
+const isOpen = (id: string) => and(eq(task.id, id), isNull(task.completedOn), isNull(task.deletedAt));
+
+/** AC-3.1, BR-4: mark an open task done on `completedOn` (Toronto date). */
+export async function completeTask(id: string, completedOn: LocalDate): Promise<void> {
+  await db.update(task).set({ completedOn }).where(isOpen(id));
+}
+
+/** AC-6.1: undo "done" — back to open, completion date cleared. Deleted tasks stay deleted. */
+export async function reopenTask(id: string): Promise<void> {
+  await db
+    .update(task)
+    .set({ completedOn: null })
+    .where(and(eq(task.id, id), isNotNull(task.completedOn), isNull(task.deletedAt)));
+}
+
+/** AC-4.1 to AC-4.3: change title and due of an open task. */
+export async function updateTask(id: string, title: string, due: Due): Promise<void> {
+  await db.update(task).set({ title, dueDate: due.date, dueTime: due.time }).where(isOpen(id));
+}
+
+/** AC-5.1, D-2: soft delete. The row stays but is never listed or counted again (BR-8). */
+export async function deleteTask(id: string): Promise<void> {
+  await db.update(task).set({ deletedAt: new Date() }).where(isOpen(id));
+}
+
+/** AC-6.2: undo "delete" — the task comes back exactly as it was. */
+export async function restoreTask(id: string): Promise<void> {
+  await db.update(task).set({ deletedAt: null }).where(and(eq(task.id, id), isNotNull(task.deletedAt)));
 }
