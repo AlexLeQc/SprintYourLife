@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Draft v0.1 — awaiting Product Owner validation |
-| **Last updated** | 2026-11-16 |
+| **Last updated** | 2026-11-17 |
 | **Product Owner / BA** | Alexis |
 | **Implementation** | AI-assisted (Claude Code), driven by specs in `specs/` |
 
@@ -57,7 +57,7 @@ Priority order: **useful to me first**, portfolio second. If a feature is useful
 
 These principles guide every spec. A feature that breaks one of them must justify it.
 
-1. **Help, don't add stress.** Deadlines exist only where I chose them: tasks with a due date, and the skill I chose to develop as a sprint goal (it gets a deadline *and* a measurable criterion). Free sidequests never have deadlines, goals, or penalties. No streaks that can be "broken", no red "you failed" states — usage is shown as a neutral count. A week with zero activity is a valid week.
+1. **Help, don't add stress.** Pressure exists only where I chose it: tasks with a due date, and the skill I chose to develop as a sprint goal (it gets a deadline *and* a measurable criterion). **Tasks with a due date may show urgency with colour (due soon, overdue), always with a text label.** Free sidequests never have deadlines, urgency colours, or penalties. No streaks; usage is shown as a neutral count. A week with zero activity is a valid week.
 2. **Decide in seconds.** The phone experience competes with TikTok. Opening the app and seeing what to do must be faster than deciding to scroll.
 3. **Minimal input.** Every field slows down entry. A field must earn its place. Logging is one tap, with details optional.
 4. **The human plans, the app informs.** The app shows the facts (deadlines, what's done); I make the trade-offs. No automatic capacity planning.
@@ -68,7 +68,7 @@ These principles guide every spec. A feature that breaks one of them must justif
 
 | Term | Definition |
 |---|---|
-| **Task** | An obligation (homework, appointment, job application). Title, optional due date, done / not done. Not tied to a sprint. Archived when done. |
+| **Task** | An obligation (homework, appointment, job application). Title, optional due date (with optional time), done / not done. Not tied to a sprint. Archived when done. |
 | **Sidequest** | Something I'd like to do or learn (Lego, Catan online, drawing, Rubik's cube). Has a title and a category. Lives in the **Bank** by default. |
 | **Bank** | The list of all sidequests that are not the current sprint goal. Can be done freely, any time, with no deadline. |
 | **Category** | Fixed list of 5: **Create** (drawing, video editing, Lego) · **Learn** (general knowledge, Rubik's cube, reading) · **Play** (Catan online, games) · **Connect** (calling a friend, seeing people) · **Move** (walk, outdoors — not workouts, which stay in Bevel). |
@@ -151,3 +151,4 @@ The documentation is the source of truth. The repo is transparent about this spl
 |---|---|---|
 | 0.1 | 2026-11-16 | First draft from discovery blocks 1–6 |
 | 0.2 | 2026-11-16 | PO feedback: M1 measured by usage days, categories, sprint calendar, backup risk accepted, open questions resolved |
+| 0.3 | 2026-11-17 | Principle 1: tasks with a due date may show urgency colours (with a text label); still none on sidequests. Task due date may have a time. Source: spec 002 OQ-5, OQ-6 |
