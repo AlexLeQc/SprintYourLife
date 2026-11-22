@@ -27,7 +27,7 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 
 | ID | Feature | Summary | Depends on | Status |
 |---|---|---|---|---|
-| F01 | **Tasks** | Create a task (title, optional due date and time), edit, delete, mark done with undo; urgency colours; done tasks are archived. | E01, E02 | In UAT — [002](002-tasks/spec.md) |
+| F01 | **Tasks** | Create a task (title, optional due date and time), edit, delete, mark done with undo; urgency colours; done tasks are archived. | E01, E02 | Delivered — [002](002-tasks/spec.md) |
 | F02 | **Sidequest bank** | Create sidequests (title + category from a fixed list), browse them. | E01, E02 | Idea |
 | F03 | **One-tap log** | Mark that I did a sidequest. Optional duration and free-text note (e.g. "best time 1:42"). | F02 | Idea |
 | F04 | **"What can I do now?" screen** | Phone-first screen: urgent tasks on top, a few sidequests below, nothing else. Default screen on mobile. *PO layout ideas (spec 002 OQ-3): Now content on top with tasks below on scroll, or bottom tabs "Tasks / Sidequests".* | F01, F02 | Idea |
@@ -89,6 +89,9 @@ E04 (CI) starts with the first business rule and grows with each feature.
 New ideas land here first, unprioritized. They are reviewed at each retro and either moved into the backlog or dropped.
 
 - Purge soft-deleted tasks older than N days, if database storage ever becomes a concern (plan 002 §10: ~1.5 MB/year expected).
+- **Daily checklist** (from spec 002 UAT, 2026-11-22): a short list of routine items to tick every day, reset each morning. Close to C03 (recurring tasks). Check against principle 1: no streak, no "missed yesterday" state.
+- **Quick entry of many sidequests** (for the F02 spec): the PO already has a list of ~26 ideas to enter; adding them one by one on the phone would be the first friction of the Bank.
+- **Portfolio readiness** (PO priority to decide): README with screenshots, end-to-end tests (Playwright) in CI, a case-study page. Related: "Recruiter demo mode" is a Won't today.
 
 ## Revision history
 
@@ -97,3 +100,4 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 | 0.1 | 2026-11-16 | First draft from discovery |
 | 0.2 | 2026-11-16 | E03 backups → usage days; release plan R1/R2; streaks and custom backups moved to Won't |
 | 0.3 | 2026-11-17 | F01 scope from spec 002 (edit, delete, undo, time, urgency colours); C08 Done list; F04 layout ideas |
+| 0.4 | 2026-11-22 | F01 Delivered; idea inbox: daily checklist, quick sidequest entry, portfolio readiness |
