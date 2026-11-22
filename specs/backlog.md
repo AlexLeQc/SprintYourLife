@@ -22,8 +22,8 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 | E02 | **Private access**: Google sign-in restricted to an allowlist, long-lived session | NFR-02, NFR-05 | Delivered — [001](001-foundation/spec.md) |
 | E03 | **Usage days**: record one usage day per calendar day the app is opened | Measures M1 (displayed in the retro, F06) | Delivered — [001](001-foundation/spec.md) |
 | E04 | **CI**: tests on business rules run on every push | Quality bar (option b) | Baseline in [001](001-foundation/spec.md), grows with each feature |
-| E05 | **End-to-end tests in CI**: Playwright on the main user flows, on every pull request | G2 + protects G1 from regressions (vision v0.4) | Spec validated — [003](003-portfolio-ready/spec.md) |
-| E06 | **Portfolio README**: screenshots, spec-driven workflow, quality layers, one traced AC | G2, metric M5 | Spec validated — [003](003-portfolio-ready/spec.md) |
+| E05 | **End-to-end tests in CI**: Playwright on the main user flows, on every pull request | G2 + protects G1 from regressions (vision v0.4) | Planned — [003](003-portfolio-ready/spec.md) |
+| E06 | **Portfolio README**: screenshots, spec-driven workflow, quality layers, one traced AC | G2, metric M5 | Planned — [003](003-portfolio-ready/spec.md) |
 
 **G2 exception (vision v0.4 §4), 2026-11-22:** E05 + E06 go before F02. Reason: interviews possible from early December (A2). Time box: done before Sun 2026-12-06; F02 resumes right after.
 

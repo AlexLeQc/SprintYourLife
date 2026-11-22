@@ -1,6 +1,6 @@
 # ADR-0010 — Testing strategy and CI
 
-- **Status:** Accepted (level chosen by PO; tools follow ADR-0007/0009)
+- **Status:** Superseded by [ADR-0015](0015-testing-levels-unit-e2e-uat.md)
 - **Date:** 2026-11-16
 - **Deciders:** Alexis (PO)
 

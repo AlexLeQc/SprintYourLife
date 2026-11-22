@@ -1,8 +1,11 @@
 name: CI
 
+# Plan 003 §5.8: pull requests, and pushes to main only.
+# (Before: every push too, so each push to a PR branch ran CI twice.)
 on:
-  push:
   pull_request:
+  push:
+    branches: [main]
 
 permissions:
   contents: read
