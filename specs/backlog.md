@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Draft v0.1 — awaiting Product Owner validation |
-| **Last updated** | 2026-11-17 |
+| **Last updated** | 2026-11-22 |
 | **Source** | [`docs/vision.md`](../docs/vision.md) |
 
 Prioritization: **MoSCoW**, rated by **value to the user**, not by effort. Rule: at most 6 Musts in the MVP.
@@ -22,6 +22,10 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 | E02 | **Private access**: Google sign-in restricted to an allowlist, long-lived session | NFR-02, NFR-05 | Delivered — [001](001-foundation/spec.md) |
 | E03 | **Usage days**: record one usage day per calendar day the app is opened | Measures M1 (displayed in the retro, F06) | Delivered — [001](001-foundation/spec.md) |
 | E04 | **CI**: tests on business rules run on every push | Quality bar (option b) | Baseline in [001](001-foundation/spec.md), grows with each feature |
+| E05 | **End-to-end tests in CI**: Playwright on the main user flows, on every pull request | G2 + protects G1 from regressions (vision v0.4) | Spec validated — [003](003-portfolio-ready/spec.md) |
+| E06 | **Portfolio README**: screenshots, spec-driven workflow, quality layers, one traced AC | G2, metric M5 | Spec validated — [003](003-portfolio-ready/spec.md) |
+
+**G2 exception (vision v0.4 §4), 2026-11-22:** E05 + E06 go before F02. Reason: interviews possible from early December (A2). Time box: done before Sun 2026-12-06; F02 resumes right after.
 
 ### Must (6)
 
@@ -91,7 +95,7 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 - Purge soft-deleted tasks older than N days, if database storage ever becomes a concern (plan 002 §10: ~1.5 MB/year expected).
 - **Daily checklist** (from spec 002 UAT, 2026-11-22): a short list of routine items to tick every day, reset each morning. Close to C03 (recurring tasks). Check against principle 1: no streak, no "missed yesterday" state.
 - **Quick entry of many sidequests** (for the F02 spec): the PO already has a list of ~26 ideas to enter; adding them one by one on the phone would be the first friction of the Bank.
-- **Portfolio readiness** (PO priority to decide): README with screenshots, end-to-end tests (Playwright) in CI, a case-study page. Related: "Recruiter demo mode" is a Won't today.
+- ~~Portfolio readiness~~ → E05, E06, spec 003 (PO decision 2026-11-22). Case-study page: built in the PO's website project, not here (spec 003 OQ-3).
 
 ## Revision history
 
@@ -101,3 +105,4 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 | 0.2 | 2026-11-16 | E03 backups → usage days; release plan R1/R2; streaks and custom backups moved to Won't |
 | 0.3 | 2026-11-17 | F01 scope from spec 002 (edit, delete, undo, time, urgency colours); C08 Done list; F04 layout ideas |
 | 0.4 | 2026-11-22 | F01 Delivered; idea inbox: daily checklist, quick sidequest entry, portfolio readiness |
+| 0.5 | 2026-11-22 | E05, E06 (spec 003) from the inbox; first G2 exception recorded |

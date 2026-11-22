@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Status** | Draft v0.1 — awaiting Product Owner validation |
-| **Last updated** | 2026-11-17 |
+| **Status** | Draft v0.4 — awaiting Product Owner validation (v0.3 validated) |
+| **Last updated** | 2026-11-22 |
 | **Product Owner / BA** | Alexis |
 | **Implementation** | AI-assisted (Claude Code), driven by specs in `specs/` |
 
@@ -38,13 +38,18 @@
 | Sprint planning (every 2 weeks) | Desktop (mostly) | Pick a sprint goal, see upcoming deadlines | ~15 min |
 | Sprint retro (every 2 weeks) | Desktop or phone | See what got done, reflect briefly | ~10 min |
 
-**Secondary user (post-MVP):** a recruiter viewing a demo. Not served by the MVP — see Out of scope.
+**Secondary user — a reviewer of the repository** (recruiter, hiring manager, interviewer). They never sign in to the app: they judge the project from the **public repository** — README, specs, decisions, tests and CI. Served by the portfolio goal G2 (§4). A demo of the app itself with fake data stays out of scope (§7).
 
 **Accepted limit:** scrolling before sleep will probably remain. The app targets **transitions**, not all screen time.
 
 ## 4. Goals and success metrics
 
-Priority order: **useful to me first**, portfolio second. If a feature is useful but not impressive, usefulness wins.
+Two goals:
+
+- **G1 — Useful to me.** The app replaces scrolling during transitions (M1–M4).
+- **G2 — Portfolio-ready.** A reviewer can see, from the repository alone, how the product was analysed, decided, built and verified (M5).
+
+Priority order: **G1 first**. If a feature is useful but not impressive, usefulness wins. **Exception rule:** work for G2 may go before the next G1 feature only when (a) it has a dated external need (e.g. an interview), (b) it is time-boxed, and (c) it also protects G1 (e.g. end-to-end tests catch regressions in features I use daily). Each such exception is recorded in the backlog with its reason.
 
 | # | Metric | Target | How it is measured |
 |---|---|---|---|
@@ -52,6 +57,7 @@ Priority order: **useful to me first**, portfolio second. If a feature is useful
 | M2 | The cycle holds | A retro is completed at the end of every sprint | Retro records in the app |
 | M3 | Learning happens | The sprint goal's measurable criterion is met (e.g. Rubik's cube < 60 s) | "Goal reached?" answer in the retro |
 | M4 | Motivation lasts | Still motivated after the first 2 sprints | Qualitative — answered in the 2nd retro |
+| M5 | Portfolio-ready (G2) | A reviewer who opens the repository can, **within 5 minutes and without running anything**: see what the app does (screenshots), understand the spec-driven workflow, follow one acceptance criterion to its automated test, and see CI green with end-to-end tests | PO checklist in the spec that delivers it; checked again by someone who doesn't know the project |
 
 ## 5. Design principles
 
@@ -120,7 +126,7 @@ These principles guide every spec. A feature that breaks one of them must justif
 - Budget: $0 / month.
 - Stack preference: **Node + React**, **SQL** database.
 - Public GitHub repository (portfolio).
-- Quality bar: automated tests on business rules + CI running them on every push.
+- Quality bar: automated tests on business rules + **end-to-end browser tests on the main user flows** (from spec 003), all run by CI on every push. Manual UAT by the PO stays the final acceptance.
 
 ## 10. How this project is built
 
@@ -138,6 +144,7 @@ The documentation is the source of truth. The repo is transparent about this spl
 | # | Item | Status |
 |---|---|---|
 | A1 | Available time is low (a few hours/week). Features are built one at a time, smallest first. | Assumption |
+| A2 | The repository is used as evidence in job applications (QA / analyst roles), with interviews possible from early December 2026. This is the dated need behind the first G2 exception (spec 003). | Assumption, 2026-11-22 |
 | Q1 | Target date for daily use? | **Resolved** — two releases, see the release plan in [`specs/backlog.md`](../specs/backlog.md). Release 1 target: Sunday 2026-11-22 (stretch). |
 | Q2 | Final list of categories. | **Resolved** — 5 categories, see glossary. |
 | Q3 | How to measure M1 (app opened 4/7 days)? | **Resolved** — the app records one usage day per day it is opened. No streaks (principle 1). |
@@ -152,3 +159,4 @@ The documentation is the source of truth. The repo is transparent about this spl
 | 0.1 | 2026-11-16 | First draft from discovery blocks 1–6 |
 | 0.2 | 2026-11-16 | PO feedback: M1 measured by usage days, categories, sprint calendar, backup risk accepted, open questions resolved |
 | 0.3 | 2026-11-17 | Principle 1: tasks with a due date may show urgency colours (with a text label); still none on sidequests. Task due date may have a time. Source: spec 002 OQ-5, OQ-6 |
+| 0.4 | 2026-11-22 | Goal G2 "portfolio-ready" + metric M5; priority stays G1 first, with an exception rule for dated, time-boxed G2 work; secondary user = repository reviewer; quality bar adds end-to-end tests; assumption A2. Source: PO decision after spec 002 (option A) |
