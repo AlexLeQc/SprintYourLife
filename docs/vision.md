@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft v0.4 — awaiting Product Owner validation (v0.3 validated) |
+| **Status** | Validated v0.4 — PO, 2026-11-22 |
 | **Last updated** | 2026-11-22 |
 | **Product Owner / BA** | Alexis |
 | **Implementation** | AI-assisted (Claude Code), driven by specs in `specs/` |
@@ -159,4 +159,4 @@ The documentation is the source of truth. The repo is transparent about this spl
 | 0.1 | 2026-11-16 | First draft from discovery blocks 1–6 |
 | 0.2 | 2026-11-16 | PO feedback: M1 measured by usage days, categories, sprint calendar, backup risk accepted, open questions resolved |
 | 0.3 | 2026-11-17 | Principle 1: tasks with a due date may show urgency colours (with a text label); still none on sidequests. Task due date may have a time. Source: spec 002 OQ-5, OQ-6 |
-| 0.4 | 2026-11-22 | Goal G2 "portfolio-ready" + metric M5; priority stays G1 first, with an exception rule for dated, time-boxed G2 work; secondary user = repository reviewer; quality bar adds end-to-end tests; assumption A2. Source: PO decision after spec 002 (option A) |
+| 0.4 | 2026-11-22 | Goal G2 "portfolio-ready" + metric M5; priority stays G1 first, with an exception rule for dated, time-boxed G2 work; secondary user = repository reviewer; quality bar adds end-to-end tests; assumption A2. Source: PO decision after spec 002 (option A). Validated by the PO the same day |
