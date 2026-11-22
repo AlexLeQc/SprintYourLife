@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In UAT — started 2026-11-17 (only the "use it for a few days" check left) |
+| **Status** | Delivered — 2026-11-22 |
 | **Backlog items** | F01 Tasks |
 | **Release** | R1 — Usable |
 | **Depends on** | [001 Foundation](../001-foundation/spec.md) (Delivered) |
@@ -140,9 +140,9 @@ To be run on production, with the real phone:
 - [x] AC-5.1, AC-5.2 — delete without a dialog; gone from the list
 - [x] AC-6.1 to AC-6.3 — undo a done and a delete within 5 s; after the bar is gone, the action is final
 - [x] AC-S.1 — Claude shows a direct server-action request without a session is refused
-- [ ] Use it instead of the to-do note for a few days; note any friction (input for C03, C08)
+- [x] Use it instead of the to-do note for a few days; note any friction (input for C03, C08)
 
-**UAT notes** — PO: Alexis · started 2026-11-17 · production (`sprintyourlife.vercel.app`) + iPhone
+**UAT notes** — PO: Alexis · 2026-11-17 → 2026-11-22 · production (`sprintyourlife.vercel.app`) + iPhone
 
 | AC | Result | Evidence |
 |---|---|---|
@@ -153,8 +153,8 @@ To be run on production, with the real phone:
 | AC-5.1, AC-5.2 | ✅ Pass | PO, iPhone. Production: 7 deleted rows, none listed (T12 query) |
 | AC-6.1 to AC-6.3 | ✅ Pass | PO, iPhone. Fast undo (50 ms) also checked by Claude locally (T10) |
 | AC-S.1 | ✅ Pass | Claude: all 6 task actions refuse a fake session ("Not allowed"), no row changed (T06, T09) |
-| Warm-open timing (plan §5.7) | ⏳ Not reported | Spec 001 baseline: 1.08 s |
-| Use instead of the to-do note for a few days | ⏳ Pending | PO notes friction; input for C03 (recurring) and C08 (Done list) |
+| Warm-open timing (plan §5.7) | ✅ Pass | 2026-11-22, iPhone: warm **0.5 s** (spec 001: 1.08 s), cold **3.84 s** (spec 001: 3.66 s); varies from one try to the next. The second query didn't slow the open down. |
+| Use instead of the to-do note for a few days | ✅ Pass | Used **7 of the last 7 days** (production: a usage day for every day 2026-11-16 → 22; 7 tasks done across 4 days). The app took the social-media app's place on the home screen. Little friction. One new need: a daily checklist of routine items (backlog idea inbox). |
 
 ## Revision history
 
@@ -165,3 +165,4 @@ To be run on production, with the real phone:
 | 1.1 | 2026-11-17 | BR-6: year shown when it differs from the current year (plan 002 D-3) |
 | 1.2 | 2026-11-17 | Examples only: weekdays corrected to the 2026 calendar (Fri, Nov 20; Tue, Nov 17), found by the BR-6 tests. No rule changed. |
 | 1.3 | 2026-11-17 | UAT day 1: all ACs pass; status In UAT; daily-use check pending |
+| 1.4 | 2026-11-22 | UAT complete; status Delivered |

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In UAT — 12 / 13 — daily-use check pending |
+| **Status** | Done — 13 / 13 — spec 002 Delivered |
 | **Spec** | [spec.md](spec.md) (v1.2) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/002-tasks-add` (slice 1), `feat/002-tasks-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-17 |
@@ -65,7 +65,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   On production: a task done in the app has `completed_on` = today (Toronto) in Neon `production`; a deleted task has `deleted_at` set and is not shown.
   *Done when:* checked and noted in the progress log.
 
-- [ ] **T13** 👤 **UAT** ⛳
+- [x] **T13** 👤 **UAT** ⛳
   Run the [UAT checklist in the spec](spec.md#8-uat-checklist-for-the-po) on production with the iPhone; re-time a warm open (plan §5.7).
   *Done when:* every box is ticked → spec 002 status becomes **Delivered**, backlog F01 becomes **Delivered**.
 
@@ -85,3 +85,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-17 | T12 ✅ | PO created "T12 Done" and "T12 Delete" in the installed app, marked one done and deleted the other. PO ran the query in the Neon SQL Editor on `production` (Claude was refused production credentials by Claude Code's safety check): "T12 Done" → `completed_on` = 2026-11-17, not deleted; "T12 Delete" → `completed_on` empty, deleted = true. Matches BR-4 and D-2. |
 | 2026-11-17 | — | ADR-0014: PO created a read-only `claude_readonly` role on `production` (all tables except `session`, `account`, `verification`). Claude verified it: reads allowed, sign-in secrets and every write refused. Future production checks no longer need the PO. |
 | 2026-11-17 | T13 ⛳ (day 1) | PO ran the UAT checklist on production with the iPhone: everything works. Claude cross-checked production with the read-only role (ADR-0014): 3 open, 2 done (`completed_on` 2026-11-17), 7 deleted, 4 timed, 0 time-without-date, longest title 23. Pending: a few days of real use instead of the to-do note, with friction noted; warm-open time not reported. |
+| 2026-11-22 | T13 ⛳ ✅ | Daily use: 7 of the last 7 days (checked on production with the read-only role), little friction; warm open 0.5 s, cold 3.84 s. Spec 002 **Delivered**, backlog F01 Delivered. New need (daily checklist) logged in the backlog idea inbox. |
