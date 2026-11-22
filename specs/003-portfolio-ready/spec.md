@@ -37,7 +37,8 @@ Make the repository **convincing evidence of QA and analysis skills** for a revi
 
 ### US-1 — End-to-end tests in CI
 
-- **AC-1.1** — **Given** a pull request or a push to any branch, **When** CI runs, **Then** an end-to-end job builds the app, starts it, and runs the Playwright suite in a headless browser, in addition to the existing typecheck, lint and unit-test job.
+- **AC-1.1** — **Given** a pull request, or a push to `main`, that changes anything other than documentation, **When** CI runs, **Then** an end-to-end job builds the app, starts it, and runs the Playwright suite in a headless browser, in addition to the existing typecheck, lint and unit-test job.
+- **AC-1.1b** — **Given** a pull request that changes **only documentation** (`docs/`, `specs/`, Markdown files), **Then** the end-to-end job is skipped and reported as skipped, the pull request can still be merged, and the typecheck, lint and unit-test job still runs. *(PO request, plan 003 D-4: planning work shouldn't wait for browser tests.)*
 - **AC-1.2** — **Given** any end-to-end test fails, **Then** the CI run is red and merging to `main` is blocked (same rule as ADR-0010 for unit tests).
 - **AC-1.3** — The suite covers at least these flows from spec 002, each test named after the AC ids it checks (same convention as the unit tests):
 
@@ -191,3 +192,4 @@ The idea inbox lists "a case-study page". *Recommendation:* **not in 003.** A we
 |---|---|---|
 | 0.1 | 2026-11-22 | First draft — 5 open questions for the PO |
 | 1.0 | 2026-11-22 | PO decisions: seeded session, Playwright screenshots (reusable, AC-3.4), case study in the PO's website project, strict accessibility check (US-6), slice order A. Status: Spec validated |
+| 1.1 | 2026-11-22 | AC-1.1 narrowed and AC-1.1b added: end-to-end tests skipped on documentation-only pull requests (plan 003 D-4). Validated by the PO |
