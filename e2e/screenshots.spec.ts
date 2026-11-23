@@ -51,12 +51,18 @@ for (const [device, options] of [
   }
 }
 
-test.describe("sign-in", () => {
-  test.use({ ...IPHONE, colorScheme: "light", storageState: { cookies: [], origins: [] } });
+// sign-in.png (light) keeps its original name; sign-in-dark.png is for GitHub's dark theme (AC-3.3).
+for (const [colorScheme, file] of [
+  ["light", "sign-in.png"],
+  ["dark", "sign-in-dark.png"],
+] as const) {
+  test.describe(`sign-in ${colorScheme}`, () => {
+    test.use({ ...IPHONE, colorScheme, storageState: { cookies: [], origins: [] } });
 
-  test("sign-in.png", async ({ page }) => {
-    await page.goto("/sign-in");
-    await expect(page.getByRole("button", { name: "Sign in with Google" })).toBeVisible();
-    await page.screenshot({ path: `${DIR}/sign-in.png`, animations: "disabled" });
+    test(file, async ({ page }) => {
+      await page.goto("/sign-in");
+      await expect(page.getByRole("button", { name: "Sign in with Google" })).toBeVisible();
+      await page.screenshot({ path: `${DIR}/${file}`, animations: "disabled" });
+    });
   });
-});
+}

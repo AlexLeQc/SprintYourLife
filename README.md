@@ -12,7 +12,10 @@ It's also a case study in **spec-driven development**. Every feature starts as a
     <img src="docs/screenshots/tasks-phone-light.png" width="250" alt="The task list on a phone: an overdue task in red, two tasks due today and tomorrow in amber, then tasks due later or without a date">
   </picture>
   &nbsp;&nbsp;
-  <img src="docs/screenshots/sign-in.png" width="250" alt="The sign-in page: the app name and a single &quot;Sign in with Google&quot; button">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/sign-in-dark.png">
+    <img src="docs/screenshots/sign-in.png" width="250" alt="The sign-in page: the app name and a single &quot;Sign in with Google&quot; button">
+  </picture>
 </p>
 <p align="center">
   <picture>
