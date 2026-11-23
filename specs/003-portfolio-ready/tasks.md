@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 9 / 14 (+ T00) |
+| **Status** | In progress — 11 / 14 (+ T00) — slice 3 done |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -60,11 +60,11 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   `accessibility.spec.ts` on the states of plan §5.6, both projects, light and dark.
   *Done when:* every finding is listed below in "Accessibility findings" with page, rule and impact. If the list looks larger than the time box allows: ⛳ stop and ask (AC-6.3).
 
-- [ ] **T10** 🤖 **Accessibility fixes** (AC-6.2 to AC-6.4)
+- [x] **T10** 🤖 **Accessibility fixes** (AC-6.2 to AC-6.4)
   Markup and style fixes only.
   *Done when:* the scan has zero violations; every flow test still green; PR merged and deployed.
 
-- [ ] **T11** 🤖 **Flaky detection** (AC-2.2, D-3)
+- [x] **T11** 🤖 **Flaky detection** (AC-2.2, D-3)
   `retries: 1` + `failOnFlakyTests` (or the JSON report check); proof on a throwaway branch with a deliberately flaky test.
   *Done when:* that run is red and labels the test "flaky"; the throwaway branch is deleted.
 
@@ -112,3 +112,5 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T08 (PR open) | 4 spec files, **16 new tests** (names start with the spec 002 AC ids), every row of spec AC-1.3's table covered: `add-task` (AC-1.1 ×2, 1.2, 1.3, 1.4, 1.5), `list` (AC-2.1 to 2.6 with 6 dues: yesterday, today 00:00, today, tomorrow 9:00, +7, none; AC-2.7 with a done and a deleted task still showing "Nothing to do."), `done-undo` (AC-3.1 + 6.1, `completed_on` = Toronto today, then null), `edit-delete` (AC-4.1 + 4.3 re-sort and re-colour, Cancel and blank title, AC-4.2, AC-5.1 + 6.2 with any dialog failing the test and the row back identical). `@phone` on add (AC-1.1, AC-1.3) and done + undo. `data-urgency` on the due label (plan §5.4, markup only). Locators by role, label and text only (`e2e/support/tasks-page.ts`). **Suite: 23 passed in ~32 s** (17 desktop + 6 phone). **Mutation check:** reversed sort → the list test fails ("Pay rent" not first), restored. **Order dependence found by `--shuffle 2026`:** "the Add button works too" ended before its save reached the server, which then inserted "Call the bank" after the next test's reset → AC-2.7 red. Fixed twice: that test now waits for the save, and a new automatic `settleRequests` fixture makes every test wait for the browser's requests to finish (shown fixing seed 2026 on its own). Seeds 1, 42, 2026, 7, 99 and the fixed order → 23 passed each. Typecheck, lint, 83 unit tests pass. |
 | 2026-11-23 | T09 ✅ | `@axe-core/playwright` **4.14.0** (Oct 15) pinned, with an npm override pinning `axe-core` to 4.14.0 (4.14.1 is 7 days old). `e2e/support/accessibility.ts`: tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, no rule disabled; the full axe report is attached and the error lists one line per finding. `e2e/accessibility.spec.ts`: sign-in, mixed list, empty, edit view, undo bar × light/dark × desktop/phone = **20 scans**. **First run: 10 failed, 10 passed** → 3 findings, 2 rules, all "serious" (table above). Sign-in page clean everywhere; light mode only has A1. Small, well within the time box: no ⛳ needed (AC-6.3). |
 | 2026-11-23 | T10 (fixes pushed) | **AC-6.2 shown live:** PR #22's first commit (scan only) → CI **End-to-end tests failed** (10 failed, 33 passed; 4 min 20 s because each failing scan was retried once), PR **BLOCKED**; the CI error lists A1 and A2/A3 by rule. **Fixes (markup and styles only, AC-6.4):** A1: Edit button without `aria-label`, hidden "Edit" + title + due label → name "Edit Dentist Tomorrow 9:00 a.m." (asserted in `list.spec.ts`); A2/A3: footer `dark:text-zinc-400`. Tests find the Edit button with one `editButton()` helper (name starts with "Edit <title>"). Locally: **43 passed** (23 flows + 20 scans), shuffle seeds 2026 and 7 → 43 passed; typecheck, lint, 83 unit tests pass. Still to do: CI green, merge, deploy. |
+| 2026-11-23 | T10 ✅ | PR #22 merged; CI on the PR's fix commit: **43 passed (2.6 min)**, End-to-end tests **3 min 44 s** (under 5 min, AC-1.7; the 20 scans add about 1.5 min). On `main` after merge: End-to-end tests ✅ 3 min 32 s; Vercel production deploy "Deployment has completed". The fixes are behind sign-in, so the PO sees them live in UAT (T14). |
+| 2026-11-23 | T11 ✅ | `retries: 1` + `failOnFlakyTests` were already in `playwright.config.ts` (T03, Playwright 1.65.0 has the option: no JSON-report script needed). **Proof:** throwaway branch with a test that fails on its first attempt and passes on the retry. Locally with `CI=1`: "1 flaky", exit code 1. On GitHub, draft PR #23, run 45231479117: **1 flaky, 43 passed**, End-to-end tests **failed**, PR **BLOCKED**, `playwright-report` artifact uploaded (893 KB, trace included). PR #23 closed and branch `throwaway/003-t11-flaky-proof` deleted (local and remote). **Slice 3 done.** |
