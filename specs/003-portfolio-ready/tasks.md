@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 6 / 14 (+ T00) — slice 2 done |
+| **Status** | In progress — 7 / 14 (+ T00) |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -48,9 +48,9 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Slice 3 — Task flows and accessibility (plan §5)
 
-- [ ] **T07** 🤖 **Fixtures** (AC-1.5, AC-1.6)
+- [x] **T07** 🤖 **Fixtures** (AC-1.5, AC-1.6)
   Reset before each test; seed helpers; Toronto dates from `local-date.ts`; midnight guard; browser time zone `America/Toronto`.
-  *Done when:* fixtures used by T04's tests; suite passes when run in reversed order.
+  *Done when:* fixtures used by T04's tests; suite passes when run in shuffled order (`npm run e2e:shuffle`, 3 seeds; PO decision 2026-11-23, replaces "reversed").
 
 - [ ] **T08** 🤖 **Flow tests** (spec 002 AC-1.x to AC-6.2)
   `add-task`, `list` (with `data-urgency` on the due label), `done-undo`, `edit-delete`. Names start with the AC ids. `@phone` on add and done + undo.
@@ -104,3 +104,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T05 (job green) | PR #18, first CI run green. **End-to-end tests job: 1 min 44 s** (containers 15 s, `npm ci` 9 s, Chromium install 31 s on a cold cache, build + start + 7 tests 32 s). Tests: 7 passed, 0 flaky. CI log shows the same `INTERNAL_SERVER_ERROR` as locally → the T04 finding is confirmed on a second machine. Change from plan §5.8: no separate `next build` step; Playwright builds the app itself so the build and the server get the same test environment from one place. Still to show: a docs-only PR with the job **skipped** and mergeable — possible only once this workflow is on `main` and the check is required (after T06). |
 | 2026-11-23 | T06 ⛳ ✅ | PR #18 merged. PO added "End-to-end tests" to `protect-main`; checked with `gh api`: required checks are "Typecheck, lint, test" and "End-to-end tests". This docs-only PR is the AC-1.1b check for T05. |
 | 2026-11-23 | T05 ✅ | AC-1.1b shown on PR #19 (only `specs/…/tasks.md` changed): Detect code changes ✅ 5 s, Typecheck, lint, test ✅ 31 s, **End-to-end tests skipped**, PR **CLEAN / MERGEABLE** with both checks required. **Slice 2 done.** |
+| 2026-11-23 | T07 ✅ | `e2e/support/fixtures.ts`: `test` with an automatic `resetDb` fixture (midnight guard, then empties `task` and `usage_day`; users and sessions stay), `days` (Toronto yesterday / today / tomorrow / +7, read after the guard) and `seedTasks` (direct insert). `e2e/support/dates.ts` builds on `localNow` / `addDays`; midnight guard waits until 00:02 Toronto from 23:58 and extends that test's timeout. 10 Vitest tests (EST and EDT, midnight UTC ignored, month and year ends); Vitest now also runs `e2e/support/**/*.test.ts`; Playwright limited to `*.spec.ts`. Browser time zone was already `America/Toronto` (T03). `access.spec.ts` moved onto the fixtures. **AC-1.6 — PO decision:** prove order independence with Playwright's built-in `--shuffle` (one-off, CI order stays fixed so D-3's flaky signal stays clean) instead of a reversed run, which Playwright has no option for. `npm run e2e:shuffle` (`--shuffle --fully-parallel`, still 1 worker: tests inside a file are shuffled too). Seeds 1, 42, 2026 → **7 passed** each (seed 1 runs the desktop tests in exactly reversed order). Fixture callback named `provide` instead of `use`: the React Hooks lint rule flagged `use`. Typecheck, lint, 83 unit tests pass. |

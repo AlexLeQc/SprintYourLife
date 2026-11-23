@@ -3,18 +3,15 @@
  * Covers spec 001 AC-2.1 and AC-3.2, spec 002 AC-S.1, with the real session and allowlist check
  * (plan 003 §4). The Google round-trip itself stays in UAT (spec 003 OQ-1).
  */
-import { expect, test } from "@playwright/test";
-import { testDb } from "./support/db";
 import { STRANGER_STATE } from "./support/env";
-import { task } from "../src/server/db/schema";
+import { expect, test } from "./support/fixtures";
 
 const PRIVATE_TITLE = "Submit lab report";
 
 // One private task in the database, so "sees no task" means something.
-// (Reset and seed helpers move to fixtures in T07.)
-test.beforeEach(async () => {
-  await testDb().delete(task);
-  await testDb().insert(task).values({ title: PRIVATE_TITLE });
+// (The database is emptied before each test by the resetDb fixture.)
+test.beforeEach(async ({ seedTasks }) => {
+  await seedTasks([{ title: PRIVATE_TITLE }]);
 });
 
 test.describe("signed out", () => {
