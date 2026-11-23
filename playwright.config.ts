@@ -9,6 +9,8 @@ import { defineConfig, devices } from "@playwright/test";
 import { E2E_BASE_URL, E2E_PORT, OWNER_STATE, e2eAppEnv } from "./e2e/support/env";
 
 const CI = !!process.env.CI;
+const SCREENSHOTS = process.env.SCREENSHOTS === "1";
+const SCREENSHOTS_SPEC = /screenshots\.spec\.ts$/;
 
 export default defineConfig({
   testDir: "e2e",
@@ -41,9 +43,11 @@ export default defineConfig({
   },
 
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"] } },
+    { name: "desktop", use: { ...devices["Desktop Chrome"] }, testIgnore: SCREENSHOTS_SPEC },
     // Plan §5.5: Chromium with a phone viewport and touch; only tests tagged @phone.
-    { name: "phone", use: { ...devices["Pixel 7"] }, grep: /@phone/ },
+    { name: "phone", use: { ...devices["Pixel 7"] }, grep: /@phone/, testIgnore: SCREENSHOTS_SPEC },
+    // Plan §5.9: README screenshots, only with `npm run screenshots` (never in CI or `npm run e2e`).
+    ...(SCREENSHOTS ? [{ name: "screenshots", use: { ...devices["Desktop Chrome"] }, testMatch: SCREENSHOTS_SPEC }] : []),
   ],
 
   webServer: {
