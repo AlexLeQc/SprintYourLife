@@ -74,6 +74,8 @@ export function TaskList({ tasks, now }: { tasks: TaskView[]; now: LocalNow }) {
     if (!undoable) return;
     const { kind, task } = undoable;
     setUndoable(null);
+    // UAT 003 — DELIBERATELY BROKEN, never merged: Undo hides the bar but restores nothing.
+    if (kind) return;
     startTransition(async () => {
       apply({ type: "add", task: { ...task, pending: true } });
       await lastAction.current;
