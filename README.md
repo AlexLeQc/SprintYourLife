@@ -31,14 +31,21 @@ The documentation is the source of truth. Code is written only from a validated 
 
 ```mermaid
 flowchart LR
-    A["Describe the need<br/><i>PO</i>"] --> B["spec.md<br/>user stories, acceptance criteria<br/><i>PO</i>"]
-    B --> C["plan.md<br/>design, decisions, ADRs<br/><i>Claude proposes · PO decides</i>"]
-    C --> D["tasks.md<br/>small, checkable steps<br/><i>Claude</i>"]
-    D --> E["Code and tests<br/>one pull request per slice<br/><i>Claude</i>"]
-    E --> F["UAT on production<br/>real phone, checklist<br/><i>PO</i>"]
+    A["Need<br/><i>PO</i>"] --> B["Spec<br/><i>PO</i>"]
+    B --> C["Plan + ADRs<br/><i>Claude proposes,<br/>PO decides</i>"]
+    C --> D["Tasks<br/><i>Claude</i>"]
+    D --> E["Code + tests<br/><i>Claude</i>"]
+    E --> F["UAT<br/><i>PO</i>"]
     F --> G(["Delivered"])
-    F -. friction found .-> A
+    F -. friction .-> A
 ```
+
+| Step | Artifact | What it holds |
+|---|---|---|
+| Spec | `spec.md` | User stories, Given/When/Then acceptance criteria, business rules, open questions with the PO's answers, UAT checklist |
+| Plan | `plan.md` + ADRs | How it will be built, options with a recommendation, the PO's decisions, how each acceptance criterion will be verified |
+| Tasks | `tasks.md` | Small steps with a "done when", ⛳ checkpoints where work stops for the PO, a progress log with evidence |
+| UAT | spec's checklist | Run by the PO on production, on the real phone, before the spec is called Delivered |
 
 | Role | Who | Responsibilities |
 |---|---|---|
