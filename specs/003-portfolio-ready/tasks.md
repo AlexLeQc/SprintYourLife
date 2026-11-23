@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 11 / 14 (+ T00) — slice 3 done |
+| **Status** | In progress — 12 / 14 (+ T00) |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -70,8 +70,8 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Slice 4 — Screenshots and README proof
 
-- [ ] **T12** 🤖 **Screenshots** (AC-3.1 to AC-3.4, TR-6)
-  `screenshots.spec.ts` + `npm run screenshots` + manual CI job; generic fake tasks; files in `docs/screenshots/` with stable names.
+- [x] **T12** 🤖 **Screenshots** (AC-3.1 to AC-3.4, TR-6)
+  `screenshots.spec.ts` + `npm run screenshots` ~~+ manual CI job~~ (PO decision 2026-11-23: local command only); generic fake tasks; files in `docs/screenshots/` with stable names.
   *Done when:* images committed; nothing in them comes from real data.
 
 - [ ] **T13** 🤖 **README: screenshots, quality, traceability** (AC-3.x, AC-4.3, AC-5.1, AC-5.2)
@@ -114,3 +114,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T10 (fixes pushed) | **AC-6.2 shown live:** PR #22's first commit (scan only) → CI **End-to-end tests failed** (10 failed, 33 passed; 4 min 20 s because each failing scan was retried once), PR **BLOCKED**; the CI error lists A1 and A2/A3 by rule. **Fixes (markup and styles only, AC-6.4):** A1: Edit button without `aria-label`, hidden "Edit" + title + due label → name "Edit Dentist Tomorrow 9:00 a.m." (asserted in `list.spec.ts`); A2/A3: footer `dark:text-zinc-400`. Tests find the Edit button with one `editButton()` helper (name starts with "Edit <title>"). Locally: **43 passed** (23 flows + 20 scans), shuffle seeds 2026 and 7 → 43 passed; typecheck, lint, 83 unit tests pass. Still to do: CI green, merge, deploy. |
 | 2026-11-23 | T10 ✅ | PR #22 merged; CI on the PR's fix commit: **43 passed (2.6 min)**, End-to-end tests **3 min 44 s** (under 5 min, AC-1.7; the 20 scans add about 1.5 min). On `main` after merge: End-to-end tests ✅ 3 min 32 s; Vercel production deploy "Deployment has completed". The fixes are behind sign-in, so the PO sees them live in UAT (T14). |
 | 2026-11-23 | T11 ✅ | `retries: 1` + `failOnFlakyTests` were already in `playwright.config.ts` (T03, Playwright 1.65.0 has the option: no JSON-report script needed). **Proof:** throwaway branch with a test that fails on its first attempt and passes on the retry. Locally with `CI=1`: "1 flaky", exit code 1. On GitHub, draft PR #23, run 45231479117: **1 flaky, 43 passed**, End-to-end tests **failed**, PR **BLOCKED**, `playwright-report` artifact uploaded (893 KB, trace included). PR #23 closed and branch `throwaway/003-t11-flaky-proof` deleted (local and remote). **Slice 3 done.** |
+| 2026-11-23 | T12 ✅ | **PO decisions:** (1) screenshots made by the local command only, no manual CI job (plan §5.9 deviation): the app's body font is Arial, which CI's Linux runner lacks, so CI images would differ from the Mac ones, and either way the PNGs are committed by hand; (2) phone screenshots at iPhone 15/16 size (393×852, 3×, Chromium); the tests keep the Pixel 7. `npm run screenshots` (Docker running) turns on a `screenshots` Playwright project (`SCREENSHOTS=1`), so it never runs in `npm run e2e` or CI (still 43 tests in 6 files). Same harness and fixtures as the tests (TR-6): throwaway database, `owner@example.com`, 6 generic tasks with dues relative to Toronto today (red, 2 amber, plain, 2 without a date), 5 usage days → "Used 5 of the last 7 days". Files: `tasks-phone-light.png`, `tasks-phone-dark.png`, `tasks-desktop-light.png`, `tasks-desktop-dark.png`, `sign-in.png` (≈540 KB in all). Each image checked by eye: fake data only (AC-3.2). A second run the same day gives byte-identical files. Typecheck, lint, 83 unit tests pass. |
