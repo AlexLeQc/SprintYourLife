@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 5 / 14 (+ T00) |
+| **Status** | In progress — 6 / 14 (+ T00) — slice 2 done |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -38,7 +38,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   Signed out → `/sign-in` with the Google button; owner → task list; stranger → no task shown.
   *Done when:* green locally, desktop and phone projects.
 
-- [ ] **T05** 🤖 **CI job "End-to-end tests"** (AC-1.1, AC-1.1b, AC-2.1)
+- [x] **T05** 🤖 **CI job "End-to-end tests"** (AC-1.1, AC-1.1b, AC-2.1)
   `changes` job (plain `git diff`); `e2e` job with services, `/etc/hosts`, generated secret, Playwright browser cache, report uploaded on failure.
   *Done when:* green on the PR; a docs-only commit on a test branch shows the job **skipped** and the PR mergeable; job time noted.
 
@@ -103,3 +103,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T04 ✅ | Chromium headless shell for Playwright 1.65.0 installed locally. `e2e/access.spec.ts`, 4 tests (3 also on `phone`) → **7 passed in 8.7 s** on a production build: signed out → `/sign-in` with exactly one button, "Sign in with Google" (spec 001 AC-2.1); owner → usage line + seeded task in the "Tasks" region; stranger → `/sign-in`, task not shown; stranger's raw response (no redirect followed) contains the redirect and neither the task title nor the usage line (spec 002 AC-S.1, the CLAUDE.md streaming rule). **Finding (not a spec 002 AC failure → idea inbox, spec 003 §5):** every page load *with* a session cookie logs one Better Auth `INTERNAL_SERVER_ERROR` — the session query is started during Next.js's prerender pass and rejected when it ends (`HANGING_PROMISE_REJECTION`); the real render then works. Signed-out loads log nothing. Probably also in production logs; costs one abandoned database round trip per open. |
 | 2026-11-23 | T05 (job green) | PR #18, first CI run green. **End-to-end tests job: 1 min 44 s** (containers 15 s, `npm ci` 9 s, Chromium install 31 s on a cold cache, build + start + 7 tests 32 s). Tests: 7 passed, 0 flaky. CI log shows the same `INTERNAL_SERVER_ERROR` as locally → the T04 finding is confirmed on a second machine. Change from plan §5.8: no separate `next build` step; Playwright builds the app itself so the build and the server get the same test environment from one place. Still to show: a docs-only PR with the job **skipped** and mergeable — possible only once this workflow is on `main` and the check is required (after T06). |
 | 2026-11-23 | T06 ⛳ ✅ | PR #18 merged. PO added "End-to-end tests" to `protect-main`; checked with `gh api`: required checks are "Typecheck, lint, test" and "End-to-end tests". This docs-only PR is the AC-1.1b check for T05. |
+| 2026-11-23 | T05 ✅ | AC-1.1b shown on PR #19 (only `specs/…/tasks.md` changed): Detect code changes ✅ 5 s, Typecheck, lint, test ✅ 31 s, **End-to-end tests skipped**, PR **CLEAN / MERGEABLE** with both checks required. **Slice 2 done.** |
