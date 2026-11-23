@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 7 / 14 (+ T00) — T08 in review |
+| **Status** | In progress — 9 / 14 (+ T00) |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -52,11 +52,11 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   Reset before each test; seed helpers; Toronto dates from `local-date.ts`; midnight guard; browser time zone `America/Toronto`.
   *Done when:* fixtures used by T04's tests; suite passes when run in shuffled order (`npm run e2e:shuffle`, 3 seeds; PO decision 2026-11-23, replaces "reversed").
 
-- [ ] **T08** 🤖 **Flow tests** (spec 002 AC-1.x to AC-6.2)
+- [x] **T08** 🤖 **Flow tests** (spec 002 AC-1.x to AC-6.2)
   `add-task`, `list` (with `data-urgency` on the due label), `done-undo`, `edit-delete`. Names start with the AC ids. `@phone` on add and done + undo.
   *Done when:* green locally and in CI; every row of spec AC-1.3's table has a test.
 
-- [ ] **T09** 🤖 **Accessibility scan — first run** (AC-6.1)
+- [x] **T09** 🤖 **Accessibility scan — first run** (AC-6.1)
   `accessibility.spec.ts` on the states of plan §5.6, both projects, light and dark.
   *Done when:* every finding is listed below in "Accessibility findings" with page, rule and impact. If the list looks larger than the time box allows: ⛳ stop and ask (AC-6.3).
 
@@ -90,6 +90,9 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 | # | Page / state | Rule | Impact | Fix | Status |
 |---|---|---|---|---|---|
+| A1 | Home, every task with a due label (light + dark, desktop + phone) | `label-content-name-mismatch` — WCAG 2.5.3 Label in Name: the Edit button is named `Edit "Pay rent"` but shows "Pay rent" **and** "Was due Sun, Nov 22" | serious | PO decision 2026-11-23: no `aria-label`; the button is named by what it shows, with a screen-reader-only "Edit" in front ("Edit Pay rent Was due Sun, Nov 22") | Open |
+| A2 | Home, every signed-in state, **dark** (footer "Signed in as …") | `color-contrast` — WCAG 1.4.3: 4.1:1 (`#71717b` on `#0a0a0a`), 4.5:1 needed | serious | Footer `text-zinc-500` → add `dark:text-zinc-400` (the shade used everywhere else) | Open |
+| A3 | Home, every signed-in state, **dark** ("Sign out" button) | `color-contrast` — WCAG 1.4.3: 4.1:1, same cause as A2 | serious | Same fix as A2 | Open |
 
 ## Progress log
 
@@ -105,4 +108,6 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T06 ⛳ ✅ | PR #18 merged. PO added "End-to-end tests" to `protect-main`; checked with `gh api`: required checks are "Typecheck, lint, test" and "End-to-end tests". This docs-only PR is the AC-1.1b check for T05. |
 | 2026-11-23 | T05 ✅ | AC-1.1b shown on PR #19 (only `specs/…/tasks.md` changed): Detect code changes ✅ 5 s, Typecheck, lint, test ✅ 31 s, **End-to-end tests skipped**, PR **CLEAN / MERGEABLE** with both checks required. **Slice 2 done.** |
 | 2026-11-23 | T07 ✅ | `e2e/support/fixtures.ts`: `test` with an automatic `resetDb` fixture (midnight guard, then empties `task` and `usage_day`; users and sessions stay), `days` (Toronto yesterday / today / tomorrow / +7, read after the guard) and `seedTasks` (direct insert). `e2e/support/dates.ts` builds on `localNow` / `addDays`; midnight guard waits until 00:02 Toronto from 23:58 and extends that test's timeout. 10 Vitest tests (EST and EDT, midnight UTC ignored, month and year ends); Vitest now also runs `e2e/support/**/*.test.ts`; Playwright limited to `*.spec.ts`. Browser time zone was already `America/Toronto` (T03). `access.spec.ts` moved onto the fixtures. **AC-1.6 — PO decision:** prove order independence with Playwright's built-in `--shuffle` (one-off, CI order stays fixed so D-3's flaky signal stays clean) instead of a reversed run, which Playwright has no option for. `npm run e2e:shuffle` (`--shuffle --fully-parallel`, still 1 worker: tests inside a file are shuffled too). Seeds 1, 42, 2026 → **7 passed** each (seed 1 runs the desktop tests in exactly reversed order). Fixture callback named `provide` instead of `use`: the React Hooks lint rule flagged `use`. Typecheck, lint, 83 unit tests pass. |
+| 2026-11-23 | T08 ✅ | PR #21 merged. CI: **End-to-end tests 2 min 04 s**, 23 passed (1.2 min), 0 flaky. |
 | 2026-11-23 | T08 (PR open) | 4 spec files, **16 new tests** (names start with the spec 002 AC ids), every row of spec AC-1.3's table covered: `add-task` (AC-1.1 ×2, 1.2, 1.3, 1.4, 1.5), `list` (AC-2.1 to 2.6 with 6 dues: yesterday, today 00:00, today, tomorrow 9:00, +7, none; AC-2.7 with a done and a deleted task still showing "Nothing to do."), `done-undo` (AC-3.1 + 6.1, `completed_on` = Toronto today, then null), `edit-delete` (AC-4.1 + 4.3 re-sort and re-colour, Cancel and blank title, AC-4.2, AC-5.1 + 6.2 with any dialog failing the test and the row back identical). `@phone` on add (AC-1.1, AC-1.3) and done + undo. `data-urgency` on the due label (plan §5.4, markup only). Locators by role, label and text only (`e2e/support/tasks-page.ts`). **Suite: 23 passed in ~32 s** (17 desktop + 6 phone). **Mutation check:** reversed sort → the list test fails ("Pay rent" not first), restored. **Order dependence found by `--shuffle 2026`:** "the Add button works too" ended before its save reached the server, which then inserted "Call the bank" after the next test's reset → AC-2.7 red. Fixed twice: that test now waits for the save, and a new automatic `settleRequests` fixture makes every test wait for the browser's requests to finish (shown fixing seed 2026 on its own). Seeds 1, 42, 2026, 7, 99 and the fixed order → 23 passed each. Typecheck, lint, 83 unit tests pass. |
+| 2026-11-23 | T09 ✅ | `@axe-core/playwright` **4.14.0** (Oct 15) pinned, with an npm override pinning `axe-core` to 4.14.0 (4.14.1 is 7 days old). `e2e/support/accessibility.ts`: tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, no rule disabled; the full axe report is attached and the error lists one line per finding. `e2e/accessibility.spec.ts`: sign-in, mixed list, empty, edit view, undo bar × light/dark × desktop/phone = **20 scans**. **First run: 10 failed, 10 passed** → 3 findings, 2 rules, all "serious" (table above). Sign-in page clean everywhere; light mode only has A1. Small, well within the time box: no ⛳ needed (AC-6.3). |
