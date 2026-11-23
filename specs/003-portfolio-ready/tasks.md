@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 4 / 14 (+ T00) |
+| **Status** | In progress — 5 / 14 (+ T00) |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -42,7 +42,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   `changes` job (plain `git diff`); `e2e` job with services, `/etc/hosts`, generated secret, Playwright browser cache, report uploaded on failure.
   *Done when:* green on the PR; a docs-only commit on a test branch shows the job **skipped** and the PR mergeable; job time noted.
 
-- [ ] **T06** 👤 **Required check** ⛳
+- [x] **T06** 👤 **Required check** ⛳
   GitHub → Settings → Rules → `protect-main` → add **"End-to-end tests"** to the required status checks.
   *Done when:* the PO confirms; Claude checks the ruleset with `gh`.
 
@@ -102,3 +102,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T03 ✅ | `@playwright/test` **1.65.0** pinned (1.65.1 was 10 days old; kept to releases ≥ 2 weeks old). `e2e/support/test-auth.ts`: separate Better Auth instance with `testUtils`, same secret, base URL and tables as the app under test, no allowlist hook (so the stranger's session exists and the *app* has to refuse it). Global setup: migrate, truncate users/sessions/tasks, create `owner@example.com` and `stranger@example.com`, save `better-auth.session_token` cookies to `e2e/.auth/` (git-ignored). `playwright.config.ts`: 1 worker, Toronto time zone, owner signed in by default, `desktop` + `phone` (@phone) projects, retries 1 + `failOnFlakyTests` in CI, app on port 3100 with env from `e2eAppEnv()` (overrides `.env`; `PROD_READONLY_DATABASE_URL` forced empty). **Production build on the test database:** no cookie → 307 to `/sign-in`; owner → 200, "Nothing to do.", usage day written to the *test* database; stranger → streamed `NEXT_REDIRECT` to `/sign-in` with no list or usage line in the response (same partial-prerender behaviour as production; T04 checks it in a browser). **ESLint:** `testUtils` and `e2e/` imports from `src/server/` and `src/domain/` → 3 errors (demo files removed). Typecheck, lint, 73 unit tests pass. |
 | 2026-11-23 | T04 ✅ | Chromium headless shell for Playwright 1.65.0 installed locally. `e2e/access.spec.ts`, 4 tests (3 also on `phone`) → **7 passed in 8.7 s** on a production build: signed out → `/sign-in` with exactly one button, "Sign in with Google" (spec 001 AC-2.1); owner → usage line + seeded task in the "Tasks" region; stranger → `/sign-in`, task not shown; stranger's raw response (no redirect followed) contains the redirect and neither the task title nor the usage line (spec 002 AC-S.1, the CLAUDE.md streaming rule). **Finding (not a spec 002 AC failure → idea inbox, spec 003 §5):** every page load *with* a session cookie logs one Better Auth `INTERNAL_SERVER_ERROR` — the session query is started during Next.js's prerender pass and rejected when it ends (`HANGING_PROMISE_REJECTION`); the real render then works. Signed-out loads log nothing. Probably also in production logs; costs one abandoned database round trip per open. |
 | 2026-11-23 | T05 (job green) | PR #18, first CI run green. **End-to-end tests job: 1 min 44 s** (containers 15 s, `npm ci` 9 s, Chromium install 31 s on a cold cache, build + start + 7 tests 32 s). Tests: 7 passed, 0 flaky. CI log shows the same `INTERNAL_SERVER_ERROR` as locally → the T04 finding is confirmed on a second machine. Change from plan §5.8: no separate `next build` step; Playwright builds the app itself so the build and the server get the same test environment from one place. Still to show: a docs-only PR with the job **skipped** and mergeable — possible only once this workflow is on `main` and the check is required (after T06). |
+| 2026-11-23 | T06 ⛳ ✅ | PR #18 merged. PO added "End-to-end tests" to `protect-main`; checked with `gh api`: required checks are "Typecheck, lint, test" and "End-to-end tests". This docs-only PR is the AC-1.1b check for T05. |
