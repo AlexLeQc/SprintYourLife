@@ -2,7 +2,7 @@
  * Applies the committed migrations (drizzle/) to the throwaway test database, with the same
  * Neon HTTP driver the app uses in production (plan 003 §3).
  *
- * Run: npm run e2e:migrate   (after npm run e2e:db)
+ * Used by global setup; from the command line: npm run e2e:migrate (after npm run e2e:db).
  */
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
@@ -16,12 +16,3 @@ export async function migrateTestDatabase(): Promise<void> {
   await migrate(drizzle(neon(url)), { migrationsFolder: "drizzle" });
 }
 
-if (import.meta.main) {
-  try {
-    await migrateTestDatabase();
-    console.log("Test database migrated.");
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : error);
-    process.exit(1);
-  }
-}

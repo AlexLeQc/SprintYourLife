@@ -15,9 +15,10 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "e2e": "playwright test",
     "e2e:db": "docker compose -f docker-compose.e2e.yml up -d --wait",
     "e2e:db:down": "docker compose -f docker-compose.e2e.yml down",
-    "e2e:migrate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON e2e/support/migrate.ts"
+    "e2e:migrate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON e2e/support/migrate-cli.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.1",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@neon/config": "^1.14.1",
+    "@playwright/test": "1.65.0",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^24",
     "@types/react": "^19",

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 2 / 14 (+ T00) |
+| **Status** | In progress — 3 / 14 (+ T00) |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -30,7 +30,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   `docker-compose.e2e.yml` (PostgreSQL 17 + Neon HTTP proxy **pinned by digest**); `client.ts` rule for `db.localtest.me` only; `e2e/support/env.ts` guard (refuses any other host); migration with the `neon-http` migrator.
   *Done when:* `npm run e2e:db` + migration creates every table locally; the guard refuses a `*.neon.tech` URL (shown in the log).
 
-- [ ] **T03** 🤖 **Test sign-in** (OQ-1, TR-3)
+- [x] **T03** 🤖 **Test sign-in** (OQ-1, TR-3)
   `e2e/support/test-auth.ts` with Better Auth `testUtils`; global setup creates `owner@example.com` and `stranger@example.com` and saves their cookies; ESLint rule: nothing in `src/` imports `e2e/` or `testUtils`.
   *Done when:* the owner's cookie opens `/` locally on a production build; the ESLint rule fails on a deliberate bad import (shown, then reverted).
 
@@ -99,3 +99,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T01 (text) | README rewritten: true status table, pitch, "Why" in 3 points, Mermaid cycle with owners, roles and AI transparency, rules every change follows, documentation map, setup last. CI badge added now (cheap, already true) rather than in T13. No screenshot placeholders. PR #17 merged. |
 | 2026-11-23 | T01 ✅ | PR #17 merged; CI green (26 s). |
 | 2026-11-23 | T02 ✅ | `docker-compose.e2e.yml`: `postgres:17` + `local-neon-http-proxy`, both pinned by digest (proxy image is multi-arch: amd64 for CI, arm64 for the Mac); data in memory only; only the proxy port is exposed, on 127.0.0.1. `src/server/db/local-proxy.ts` + 8 unit tests: only the exact host `db.localtest.me` is routed (a Neon URL, `localhost`, `evil-db.localtest.me` and `db.localtest.me.example.com` are refused). `client.ts` sets the proxy endpoint for that host only. `npm run e2e:migrate` (Drizzle `neon-http` migrator, same driver as production) → 6 tables, 3 migrations recorded; re-run is a no-op; the database refuses a time without a date. Guard: with a Neon-style URL → "Refusing to run end-to-end setup…", exit 1. Typecheck, lint, 73 unit tests, `next build` pass. |
+| 2026-11-23 | T03 ✅ | `@playwright/test` **1.65.0** pinned (1.65.1 was 10 days old; kept to releases ≥ 2 weeks old). `e2e/support/test-auth.ts`: separate Better Auth instance with `testUtils`, same secret, base URL and tables as the app under test, no allowlist hook (so the stranger's session exists and the *app* has to refuse it). Global setup: migrate, truncate users/sessions/tasks, create `owner@example.com` and `stranger@example.com`, save `better-auth.session_token` cookies to `e2e/.auth/` (git-ignored). `playwright.config.ts`: 1 worker, Toronto time zone, owner signed in by default, `desktop` + `phone` (@phone) projects, retries 1 + `failOnFlakyTests` in CI, app on port 3100 with env from `e2eAppEnv()` (overrides `.env`; `PROD_READONLY_DATABASE_URL` forced empty). **Production build on the test database:** no cookie → 307 to `/sign-in`; owner → 200, "Nothing to do.", usage day written to the *test* database; stranger → streamed `NEXT_REDIRECT` to `/sign-in` with no list or usage line in the response (same partial-prerender behaviour as production; T04 checks it in a browser). **ESLint:** `testUtils` and `e2e/` imports from `src/server/` and `src/domain/` → 3 errors (demo files removed). Typecheck, lint, 73 unit tests pass. |

@@ -23,3 +23,40 @@ export function e2eDatabaseUrl(env: NodeJS.ProcessEnv = process.env): string {
   }
   return url;
 }
+
+/** Port of the app under test: not 3000, so a running `npm run dev` doesn't get in the way. */
+export const E2E_PORT = 3100;
+export const E2E_BASE_URL = `http://localhost:${E2E_PORT}`;
+
+/** Fake accounts (@example.com only). The owner is in the test allowlist; the stranger is not. */
+export const OWNER_EMAIL = "owner@example.com";
+export const STRANGER_EMAIL = "stranger@example.com";
+
+/** Where global setup saves each account's cookies (git-ignored). */
+export const AUTH_DIR = "e2e/.auth";
+export const OWNER_STATE = `${AUTH_DIR}/owner.json`;
+export const STRANGER_STATE = `${AUTH_DIR}/stranger.json`;
+
+/**
+ * Local fallback secret. It only signs cookies for the throwaway database, which holds fake data.
+ * CI generates a fresh one for each run instead (E2E_BETTER_AUTH_SECRET, plan §3).
+ */
+const LOCAL_THROWAWAY_SECRET = "e2e-local-throwaway-secret-signs-nothing-real";
+
+/**
+ * Environment of the app under test (`next build` and `next start`) and of the test sign-in.
+ * Variables set here take precedence over `.env`, which Next.js would otherwise load (TR-2).
+ */
+export function e2eAppEnv(env: NodeJS.ProcessEnv = process.env) {
+  return {
+    DATABASE_URL: e2eDatabaseUrl(env),
+    BETTER_AUTH_SECRET: env.E2E_BETTER_AUTH_SECRET ?? LOCAL_THROWAWAY_SECRET,
+    BETTER_AUTH_URL: E2E_BASE_URL,
+    ALLOWED_EMAILS: OWNER_EMAIL,
+    // Google is never called in tests (spec 003 OQ-1); these are placeholders, not credentials.
+    GOOGLE_CLIENT_ID: "e2e-placeholder",
+    GOOGLE_CLIENT_SECRET: "e2e-placeholder",
+    // Must not leak into the app under test, even though Next.js loads `.env` (ADR-0014).
+    PROD_READONLY_DATABASE_URL: "",
+  };
+}
