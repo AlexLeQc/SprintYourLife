@@ -12,6 +12,8 @@ const CI = !!process.env.CI;
 
 export default defineConfig({
   testDir: "e2e",
+  // Only *.spec.ts: e2e/support/*.test.ts are Vitest unit tests.
+  testMatch: "**/*.spec.ts",
   globalSetup: "./e2e/support/global-setup.ts",
 
   // Plan §5.1: tasks have no owner column, so tests share one table → one test at a time.
