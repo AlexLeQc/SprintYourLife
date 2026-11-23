@@ -6,6 +6,8 @@
  *   Users and sessions stay (global setup creates them once).
  * - `days`: Toronto yesterday / today / tomorrow / in a week, read after the guard.
  * - `seedTasks`: inserts exactly the tasks a test needs, directly in the database.
+ * - `settleRequests` (automatic): a test ends only once the browser's requests have finished, so a
+ *   save still in flight can't land in the next test's database (AC-1.6; found by `--shuffle 2026`).
  *
  * The callback is named `provide` rather than Playwright's usual `use`, so the React Hooks lint rule
  * does not mistake it for a hook.
@@ -20,6 +22,7 @@ export type SeededTask = typeof task.$inferSelect;
 
 interface Fixtures {
   resetDb: void;
+  settleRequests: void;
   days: TorontoDays;
   seedTasks: (rows: SeedTask[]) => Promise<SeededTask[]>;
 }
@@ -39,6 +42,20 @@ export const test = base.extend<Fixtures>({
       await testDb().delete(task);
       await testDb().delete(usageDay);
       await provide();
+    },
+    { auto: true },
+  ],
+
+  settleRequests: [
+    async ({ page }, provide) => {
+      let inFlight = 0;
+      page.on("request", () => inFlight++);
+      page.on("requestfinished", () => inFlight--);
+      page.on("requestfailed", () => inFlight--);
+      await provide();
+      await expect
+        .poll(() => inFlight, { message: "browser requests still running when the test ended", timeout: 10_000 })
+        .toBe(0);
     },
     { auto: true },
   ],
