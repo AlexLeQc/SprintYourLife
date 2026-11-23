@@ -30,7 +30,7 @@ The full problem statement, success metrics and design principles are in the [vi
 The documentation is the source of truth. Code is written only from a validated spec, and when the code and the spec disagree, the spec wins (or gets changed on purpose, with a new version).
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Need<br/><i>PO</i>"] --> B["Spec<br/><i>PO</i>"]
     B --> C["Plan + ADRs<br/><i>Claude proposes,<br/>PO decides</i>"]
     C --> D["Tasks<br/><i>Claude</i>"]
