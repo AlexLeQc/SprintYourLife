@@ -95,6 +95,7 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 - Purge soft-deleted tasks older than N days, if database storage ever becomes a concern (plan 002 §10: ~1.5 MB/year expected).
 - **Daily checklist** (from spec 002 UAT, 2026-11-22): a short list of routine items to tick every day, reset each morning. Close to C03 (recurring tasks). Check against principle 1: no streak, no "missed yesterday" state.
 - **Quick entry of many sidequests** (for the F02 spec): the PO already has a list of ~26 ideas to enter; adding them one by one on the phone would be the first friction of the Bank.
+- **Abandoned session query on every page load** (found by spec 003 T04, 2026-11-23): with a session cookie, the server logs a Better Auth `INTERNAL_SERVER_ERROR` (`HANGING_PROMISE_REJECTION`: the session query starts during Next.js's prerender pass and is rejected when it ends). Pages work, but it's log noise in production and one wasted database round trip per open (NFR-03). Investigate the cause (how `requireAllowedSession()` reads `headers()` under `cacheComponents`).
 - ~~Portfolio readiness~~ → E05, E06, spec 003 (PO decision 2026-11-22). Case-study page: built in the PO's website project, not here (spec 003 OQ-3).
 
 ## Revision history
