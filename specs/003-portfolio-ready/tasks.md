@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Not started — 0 / 14 (T00 done with the plan) |
+| **Status** | In progress — 4 / 14 (+ T00) |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -20,21 +20,21 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Slice 1 — README text (spec AC-4.1, AC-4.2, AC-4.4, AC-4.5)
 
-- [ ] **T01** 🤖 **README rewrite, text only**
+- [x] **T01** 🤖 **README rewrite, text only**
   True status; pitch; "Why" in 3 lines; spec-driven cycle as a Mermaid diagram with owners; roles and AI transparency; documentation map; stack; "Run locally" last. Placeholders where screenshots and the quality section will go are **not** shown (no "coming soon").
   *Done when:* PR merged; README reads correctly on GitHub in light and dark.
 
 ## Slice 2 — Harness, sign-in, smoke test (plan §3, §4)
 
-- [ ] **T02** 🤖 **Test database, locally**
+- [x] **T02** 🤖 **Test database, locally**
   `docker-compose.e2e.yml` (PostgreSQL 17 + Neon HTTP proxy **pinned by digest**); `client.ts` rule for `db.localtest.me` only; `e2e/support/env.ts` guard (refuses any other host); migration with the `neon-http` migrator.
   *Done when:* `npm run e2e:db` + migration creates every table locally; the guard refuses a `*.neon.tech` URL (shown in the log).
 
-- [ ] **T03** 🤖 **Test sign-in** (OQ-1, TR-3)
+- [x] **T03** 🤖 **Test sign-in** (OQ-1, TR-3)
   `e2e/support/test-auth.ts` with Better Auth `testUtils`; global setup creates `owner@example.com` and `stranger@example.com` and saves their cookies; ESLint rule: nothing in `src/` imports `e2e/` or `testUtils`.
   *Done when:* the owner's cookie opens `/` locally on a production build; the ESLint rule fails on a deliberate bad import (shown, then reverted).
 
-- [ ] **T04** 🤖 **`access.spec.ts`** (spec 001 AC-2.1, AC-3.2 · spec 002 AC-S.1)
+- [x] **T04** 🤖 **`access.spec.ts`** (spec 001 AC-2.1, AC-3.2 · spec 002 AC-S.1)
   Signed out → `/sign-in` with the Google button; owner → task list; stranger → no task shown.
   *Done when:* green locally, desktop and phone projects.
 
@@ -96,4 +96,9 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | Date | Tasks | Note |
 |---|---|---|
 | 2026-11-22 | Plan ✅, T00 ✅ | Spec 003 v1.1 and plan 003 v1.0 validated; ADR-0015 accepted (supersedes ADR-0010). CI triggers changed to PRs + `main` (PO request). |
-| 2026-11-23 | T01 (text) | README rewritten: true status table, pitch, "Why" in 3 points, Mermaid cycle with owners, roles and AI transparency, rules every change follows, documentation map, setup last. CI badge added now (cheap, already true) rather than in T13. No screenshot placeholders. Waiting: PR merge. |
+| 2026-11-23 | T01 (text) | README rewritten: true status table, pitch, "Why" in 3 points, Mermaid cycle with owners, roles and AI transparency, rules every change follows, documentation map, setup last. CI badge added now (cheap, already true) rather than in T13. No screenshot placeholders. PR #17 merged. |
+| 2026-11-23 | T01 ✅ | PR #17 merged; CI green (26 s). |
+| 2026-11-23 | T02 ✅ | `docker-compose.e2e.yml`: `postgres:17` + `local-neon-http-proxy`, both pinned by digest (proxy image is multi-arch: amd64 for CI, arm64 for the Mac); data in memory only; only the proxy port is exposed, on 127.0.0.1. `src/server/db/local-proxy.ts` + 8 unit tests: only the exact host `db.localtest.me` is routed (a Neon URL, `localhost`, `evil-db.localtest.me` and `db.localtest.me.example.com` are refused). `client.ts` sets the proxy endpoint for that host only. `npm run e2e:migrate` (Drizzle `neon-http` migrator, same driver as production) → 6 tables, 3 migrations recorded; re-run is a no-op; the database refuses a time without a date. Guard: with a Neon-style URL → "Refusing to run end-to-end setup…", exit 1. Typecheck, lint, 73 unit tests, `next build` pass. |
+| 2026-11-23 | T03 ✅ | `@playwright/test` **1.65.0** pinned (1.65.1 was 10 days old; kept to releases ≥ 2 weeks old). `e2e/support/test-auth.ts`: separate Better Auth instance with `testUtils`, same secret, base URL and tables as the app under test, no allowlist hook (so the stranger's session exists and the *app* has to refuse it). Global setup: migrate, truncate users/sessions/tasks, create `owner@example.com` and `stranger@example.com`, save `better-auth.session_token` cookies to `e2e/.auth/` (git-ignored). `playwright.config.ts`: 1 worker, Toronto time zone, owner signed in by default, `desktop` + `phone` (@phone) projects, retries 1 + `failOnFlakyTests` in CI, app on port 3100 with env from `e2eAppEnv()` (overrides `.env`; `PROD_READONLY_DATABASE_URL` forced empty). **Production build on the test database:** no cookie → 307 to `/sign-in`; owner → 200, "Nothing to do.", usage day written to the *test* database; stranger → streamed `NEXT_REDIRECT` to `/sign-in` with no list or usage line in the response (same partial-prerender behaviour as production; T04 checks it in a browser). **ESLint:** `testUtils` and `e2e/` imports from `src/server/` and `src/domain/` → 3 errors (demo files removed). Typecheck, lint, 73 unit tests pass. |
+| 2026-11-23 | T04 ✅ | Chromium headless shell for Playwright 1.65.0 installed locally. `e2e/access.spec.ts`, 4 tests (3 also on `phone`) → **7 passed in 8.7 s** on a production build: signed out → `/sign-in` with exactly one button, "Sign in with Google" (spec 001 AC-2.1); owner → usage line + seeded task in the "Tasks" region; stranger → `/sign-in`, task not shown; stranger's raw response (no redirect followed) contains the redirect and neither the task title nor the usage line (spec 002 AC-S.1, the CLAUDE.md streaming rule). **Finding (not a spec 002 AC failure → idea inbox, spec 003 §5):** every page load *with* a session cookie logs one Better Auth `INTERNAL_SERVER_ERROR` — the session query is started during Next.js's prerender pass and rejected when it ends (`HANGING_PROMISE_REJECTION`); the real render then works. Signed-out loads log nothing. Probably also in production logs; costs one abandoned database round trip per open. |
+| 2026-11-23 | T05 (job green) | PR #18, first CI run green. **End-to-end tests job: 1 min 44 s** (containers 15 s, `npm ci` 9 s, Chromium install 31 s on a cold cache, build + start + 7 tests 32 s). Tests: 7 passed, 0 flaky. CI log shows the same `INTERNAL_SERVER_ERROR` as locally → the T04 finding is confirmed on a second machine. Change from plan §5.8: no separate `next build` step; Playwright builds the app itself so the build and the server get the same test environment from one place. Still to show: a docs-only PR with the job **skipped** and mergeable — possible only once this workflow is on `main` and the check is required (after T06). |
