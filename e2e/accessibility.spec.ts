@@ -7,7 +7,7 @@
  */
 import { expectNoAccessibilityViolations } from "./support/accessibility";
 import { expect, test } from "./support/fixtures";
-import { taskRow, tasksRegion } from "./support/tasks-page";
+import { editButton, taskRow, tasksRegion } from "./support/tasks-page";
 
 for (const colorScheme of ["light", "dark"] as const) {
   test.describe(`${colorScheme} mode`, () => {
@@ -56,7 +56,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     }, testInfo) => {
       await seedTasks([{ title: "Dentist", dueDate: days.tomorrow, dueTime: "09:00" }, { title: "Call the bank" }]);
       await page.goto("/");
-      await page.getByRole("button", { name: 'Edit "Dentist"' }).click();
+      await editButton(page, "Dentist").click();
       await expect(tasksRegion(page).getByRole("button", { name: "Save" })).toBeVisible();
 
       await expectNoAccessibilityViolations(page, testInfo);

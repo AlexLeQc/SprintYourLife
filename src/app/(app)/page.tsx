@@ -40,7 +40,7 @@ async function Home() {
         tasks={tasks.map((task) => ({ ...task, createdAt: task.createdAt.toISOString() }))}
       />
 
-      <footer className="mt-auto flex flex-col items-center gap-2 pt-8 text-sm text-zinc-500">
+      <footer className="mt-auto flex flex-col items-center gap-2 pt-8 text-sm text-zinc-500 dark:text-zinc-400">
         <p>Signed in as {session.user.email}</p>
         <SignOutButton />
       </footer>

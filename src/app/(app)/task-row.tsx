@@ -76,8 +76,9 @@ export function TaskRow({ task, now, onComplete, onDelete, onSave }: Props) {
           disabled={locked}
           onClick={() => setEditing(true)}
           className="min-w-0 flex-1 py-2 text-left"
-          aria-label={`Edit "${task.title}"`}
         >
+          {/* WCAG 2.5.3 (spec 003 A1): the name is what the button shows, so voice control can use it. */}
+          <span className="sr-only">Edit </span>
           <span className="block break-words text-base">{task.title}</span>
           {/* data-urgency: the colour's meaning, readable by end-to-end tests (plan 003 §5.4). */}
           {label && (
