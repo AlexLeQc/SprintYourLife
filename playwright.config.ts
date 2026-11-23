@@ -45,8 +45,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    // CI builds in its own step (plan §5.8); locally, build then start.
-    command: CI ? `npx next start -p ${E2E_PORT}` : `npx next build && npx next start -p ${E2E_PORT}`,
+    // Built here, not in a separate CI step, so the build and the server get the same test
+    // environment from one place (e2eAppEnv), locally and in CI.
+    command: `npx next build && npx next start -p ${E2E_PORT}`,
     url: `${E2E_BASE_URL}/sign-in`,
     reuseExistingServer: !CI,
     timeout: 180_000,

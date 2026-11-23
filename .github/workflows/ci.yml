@@ -24,3 +24,100 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+
+  # Plan 003 §5.8, D-4: is there anything other than documentation in this change?
+  # A skipped job counts as passing for required checks, so docs-only PRs stay mergeable.
+  # (GitHub's `paths-ignore` would leave the required check waiting forever instead.)
+  changes:
+    name: Detect code changes
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          # When in doubt (first push, unknown base), run everything.
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] \
+            || ! files=$(git diff --name-only "$BASE" HEAD); then
+            echo "code=true" >> "$GITHUB_OUTPUT"; echo "No usable base: running end-to-end tests."; exit 0
+          fi
+          echo "Changed files:"; echo "$files"
+          # Documentation = anything under docs/ or specs/, or any Markdown file. Everything else is code.
+          code_files=$(echo "$files" | grep -Ev '^(docs/|specs/)|\.md$' || true)
+          if [ -n "$code_files" ] || [ -z "$files" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code=false" >> "$GITHUB_OUTPUT"; echo "Documentation only: end-to-end tests skipped."
+          fi
+
+  # Spec 003, plan 003 §3, §5.8, ADR-0015. No secret: the database lives and dies inside this job.
+  e2e:
+    name: End-to-end tests
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      # Same images and digests as docker-compose.e2e.yml.
+      postgres:
+        image: postgres@sha256:223efeb196329b55b3b9a13db144956411dbc18e727e59f681c3e0aede6475cf
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: main
+        options: >-
+          --health-cmd "pg_isready -U postgres -d main"
+          --health-interval 2s --health-timeout 5s --health-retries 15
+      neon-proxy:
+        image: ghcr.io/timowilhelm/local-neon-http-proxy@sha256:cd2ae14edf2feafbc3330492de5c80506f77274c3bd013154cdef697bdeb768a
+        env:
+          PG_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/main
+        ports:
+          - 4444:4444
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
+      - name: Resolve db.localtest.me locally (no outside DNS needed)
+        run: echo "127.0.0.1 db.localtest.me" | sudo tee -a /etc/hosts
+
+      - name: Generate a throwaway auth secret for this run
+        run: |
+          secret=$(openssl rand -hex 32)
+          echo "::add-mask::$secret"
+          echo "E2E_BETTER_AUTH_SECRET=$secret" >> "$GITHUB_ENV"
+
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Chromium system dependencies
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # Builds the app with the test environment, starts it, runs the suite (playwright.config.ts).
+      - run: npm run e2e
+
+      - name: Upload report, traces and screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
