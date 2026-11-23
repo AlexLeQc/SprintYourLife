@@ -3,7 +3,7 @@
  * AC-5.1, AC-6.2).
  */
 import { expect, test } from "./support/fixtures";
-import { expectSaved, storedTasks, taskRow, taskRows, tasksRegion } from "./support/tasks-page";
+import { editButton, expectSaved, storedTasks, taskRow, taskRows, tasksRegion } from "./support/tasks-page";
 
 test("spec 002 AC-4.1, AC-4.3 — edit title, date and time; the list re-sorts and re-colours", async ({
   page,
@@ -17,7 +17,7 @@ test("spec 002 AC-4.1, AC-4.3 — edit title, date and time; the list re-sorts a
   await page.goto("/");
   await expect(taskRows(page).first()).toContainText("Buy groceries");
 
-  await page.getByRole("button", { name: 'Edit "Renew pasport"' }).click();
+  await editButton(page, "Renew pasport").click();
   const row = taskRows(page).filter({ has: page.getByRole("button", { name: "Save" }) });
   await row.getByLabel("Title").fill("Renew passport");
   await row.getByLabel("Due date").fill(days.yesterday);
@@ -44,13 +44,13 @@ test("spec 002 AC-4.1, AC-4.3 — Cancel keeps the task; a blank title is refuse
   await page.goto("/");
 
   // Cancel: nothing changes.
-  await page.getByRole("button", { name: 'Edit "Call the bank"' }).click();
+  await editButton(page, "Call the bank").click();
   await tasksRegion(page).getByLabel("Title").fill("Something else");
   await page.getByRole("button", { name: "Cancel" }).click();
   await expect(taskRow(page, "Call the bank")).toBeVisible();
 
   // BR-1: blank title → message, still editing, nothing saved.
-  await page.getByRole("button", { name: 'Edit "Call the bank"' }).click();
+  await editButton(page, "Call the bank").click();
   await tasksRegion(page).getByLabel("Title").fill("   ");
   await page.getByRole("button", { name: "Save" }).click();
   await expect(tasksRegion(page).getByRole("alert")).toHaveText("Title is empty.");
@@ -62,7 +62,7 @@ test("spec 002 AC-4.2 — clearing the date clears the time", async ({ page, day
   await seedTasks([{ title: "Dentist", dueDate: days.tomorrow, dueTime: "09:00" }]);
   await page.goto("/");
 
-  await page.getByRole("button", { name: 'Edit "Dentist"' }).click();
+  await editButton(page, "Dentist").click();
   await expect(tasksRegion(page).getByLabel("Due time")).toHaveValue("09:00");
   await page.getByRole("button", { name: "Remove date" }).click();
   await expect(tasksRegion(page).getByLabel("Due date")).toHaveCount(0);
@@ -70,7 +70,7 @@ test("spec 002 AC-4.2 — clearing the date clears the time", async ({ page, day
   await page.getByRole("button", { name: "Save" }).click();
 
   // No label any more, and nothing stored.
-  await expect(page.getByRole("button", { name: 'Edit "Dentist"' })).toHaveText("Dentist");
+  await expect(editButton(page, "Dentist")).toHaveAccessibleName("Edit Dentist");
   await expectSaved(page, "Dentist");
   await expect
     .poll(async () => {
@@ -80,7 +80,7 @@ test("spec 002 AC-4.2 — clearing the date clears the time", async ({ page, day
     .toEqual([null, null]);
 
   // Adding a date back doesn't bring the old time back.
-  await page.getByRole("button", { name: 'Edit "Dentist"' }).click();
+  await editButton(page, "Dentist").click();
   const editing = taskRows(page).filter({ has: page.getByRole("button", { name: "Save" }) });
   await editing.getByRole("button", { name: "Add date" }).click();
   await expect(editing.getByRole("button", { name: "Add time" })).toBeVisible();
@@ -99,7 +99,7 @@ test("spec 002 AC-5.1, AC-6.2 — delete without a dialog; Undo brings it back e
   });
   await page.goto("/");
 
-  await page.getByRole("button", { name: 'Edit "Submit lab report"' }).click();
+  await editButton(page, "Submit lab report").click();
   await page.getByRole("button", { name: "Delete" }).click();
 
   await expect(taskRow(page, "Submit lab report")).toHaveCount(0);

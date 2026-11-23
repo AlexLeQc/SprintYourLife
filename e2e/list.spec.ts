@@ -7,7 +7,7 @@
 import { dueLabel } from "../src/domain/task";
 import { localNow } from "../src/domain/local-date";
 import { expect, test } from "./support/fixtures";
-import { taskRow, taskRows } from "./support/tasks-page";
+import { editButton, taskRow, taskRows } from "./support/tasks-page";
 
 test("spec 002 AC-2.1 to AC-2.6 — order, due labels and urgency with a mix of dues", async ({ page, days, seedTasks }) => {
   // Seeded in a shuffled order, so the order shown can only come from BR-3.
@@ -34,7 +34,7 @@ test("spec 002 AC-2.1 to AC-2.6 — order, due labels and urgency with a mix of 
   const order = ["Pay rent", "Submit lab report", "Buy groceries", "Dentist", "Renew passport", "Water the plants"];
   await expect(taskRows(page)).toHaveCount(order.length);
   for (const [index, title] of order.entries()) {
-    await expect(taskRows(page).nth(index).getByRole("button", { name: `Edit "${title}"`, exact: true })).toBeVisible();
+    await expect(editButton(taskRows(page).nth(index), title)).toBeVisible();
   }
 
   // AC-2.2 to AC-2.6: each due label as text, and its urgency.
@@ -56,9 +56,10 @@ test("spec 002 AC-2.1 to AC-2.6 — order, due labels and urgency with a mix of 
   }
 
   // AC-2.5: no date → no label at all, so no colour.
-  await expect(taskRow(page, "Water the plants").getByRole("button", { name: 'Edit "Water the plants"' })).toHaveText(
-    "Water the plants",
-  );
+  await expect(editButton(page, "Water the plants")).toHaveAccessibleName("Edit Water the plants");
+
+  // WCAG 2.5.3 (spec 003 A1): the button's name holds everything it shows, due label included.
+  await expect(editButton(page, "Dentist")).toHaveAccessibleName("Edit Dentist Tomorrow 9:00 a.m.");
 });
 
 test("spec 002 AC-2.7 — no open task: a calm empty state", async ({ page, days, seedTasks }) => {
