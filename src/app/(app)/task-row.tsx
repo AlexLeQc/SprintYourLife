@@ -29,7 +29,8 @@ export function TaskRow({ task, now, onComplete, onDelete, onSave }: Props) {
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const label = dueLabel(task.due, now);
-  const style = STYLES[urgency(task.due, now)];
+  const level = urgency(task.due, now);
+  const style = STYLES[level];
   // A task not yet confirmed by the server has no real id: nothing to act on yet.
   const locked = task.pending === true;
 
@@ -78,7 +79,12 @@ export function TaskRow({ task, now, onComplete, onDelete, onSave }: Props) {
           aria-label={`Edit "${task.title}"`}
         >
           <span className="block break-words text-base">{task.title}</span>
-          {label && <span className={`mt-0.5 block text-sm font-medium ${style.label}`}>{label}</span>}
+          {/* data-urgency: the colour's meaning, readable by end-to-end tests (plan 003 §5.4). */}
+          {label && (
+            <span data-urgency={level} className={`mt-0.5 block text-sm font-medium ${style.label}`}>
+              {label}
+            </span>
+          )}
         </button>
       ) : (
         <form
