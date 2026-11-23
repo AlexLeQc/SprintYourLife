@@ -6,7 +6,7 @@
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
-| **Last updated** | 2026-11-22 |
+| **Last updated** | 2026-11-23 |
 
 **Legend:** 🤖 Claude · 👤 PO (Alexis) · ⛳ checkpoint (stop until the PO confirms)
 
@@ -96,3 +96,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | Date | Tasks | Note |
 |---|---|---|
 | 2026-11-22 | Plan ✅, T00 ✅ | Spec 003 v1.1 and plan 003 v1.0 validated; ADR-0015 accepted (supersedes ADR-0010). CI triggers changed to PRs + `main` (PO request). |
+| 2026-11-23 | T01 (text) | README rewritten: true status table, pitch, "Why" in 3 points, Mermaid cycle with owners, roles and AI transparency, rules every change follows, documentation map, setup last. CI badge added now (cheap, already true) rather than in T13. No screenshot placeholders. Waiting: PR merge. |
