@@ -14,7 +14,10 @@
     "vercel-build": "drizzle-kit migrate && next build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "e2e:db": "docker compose -f docker-compose.e2e.yml up -d --wait",
+    "e2e:db:down": "docker compose -f docker-compose.e2e.yml down",
+    "e2e:migrate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON e2e/support/migrate.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.1",

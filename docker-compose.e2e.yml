@@ -1,0 +1,42 @@
+# Throwaway database for end-to-end tests (spec 003, plan §3, ADR-0015).
+# Fake data only (TR-1); nothing here can reach `dev` or production.
+#
+#   npm run e2e:db        start it
+#   npm run e2e:db:down   stop it and delete everything in it
+#
+# The app reaches it with DATABASE_URL=postgres://postgres:postgres@db.localtest.me:5432/main
+# (`db.localtest.me` resolves to 127.0.0.1). Its Neon HTTP driver talks to the proxy on port 4444;
+# PostgreSQL itself is not exposed outside Docker.
+#
+# Both images are pinned by digest so they can't change under us (plan §10).
+# To update: `docker buildx imagetools inspect <image>:<tag>` and copy the top-level Digest.
+
+name: sprintyourlife-e2e
+
+services:
+  postgres:
+    # postgres:17
+    image: postgres@sha256:223efeb196329b55b3b9a13db144956411dbc18e727e59f681c3e0aede6475cf
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: main
+    # Throwaway: data lives in memory and disappears with the container.
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d main"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  neon-proxy:
+    # ghcr.io/timowilhelm/local-neon-http-proxy:main (community image, see plan §3 and §10)
+    image: ghcr.io/timowilhelm/local-neon-http-proxy@sha256:cd2ae14edf2feafbc3330492de5c80506f77274c3bd013154cdef697bdeb768a
+    environment:
+      PG_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/main
+    ports:
+      - "127.0.0.1:4444:4444"
+    depends_on:
+      postgres:
+        condition: service_healthy

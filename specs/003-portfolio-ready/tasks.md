@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Not started — 0 / 14 (T00 done with the plan) |
+| **Status** | In progress — 2 / 14 (+ T00) |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -20,13 +20,13 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Slice 1 — README text (spec AC-4.1, AC-4.2, AC-4.4, AC-4.5)
 
-- [ ] **T01** 🤖 **README rewrite, text only**
+- [x] **T01** 🤖 **README rewrite, text only**
   True status; pitch; "Why" in 3 lines; spec-driven cycle as a Mermaid diagram with owners; roles and AI transparency; documentation map; stack; "Run locally" last. Placeholders where screenshots and the quality section will go are **not** shown (no "coming soon").
   *Done when:* PR merged; README reads correctly on GitHub in light and dark.
 
 ## Slice 2 — Harness, sign-in, smoke test (plan §3, §4)
 
-- [ ] **T02** 🤖 **Test database, locally**
+- [x] **T02** 🤖 **Test database, locally**
   `docker-compose.e2e.yml` (PostgreSQL 17 + Neon HTTP proxy **pinned by digest**); `client.ts` rule for `db.localtest.me` only; `e2e/support/env.ts` guard (refuses any other host); migration with the `neon-http` migrator.
   *Done when:* `npm run e2e:db` + migration creates every table locally; the guard refuses a `*.neon.tech` URL (shown in the log).
 
@@ -96,4 +96,6 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | Date | Tasks | Note |
 |---|---|---|
 | 2026-11-22 | Plan ✅, T00 ✅ | Spec 003 v1.1 and plan 003 v1.0 validated; ADR-0015 accepted (supersedes ADR-0010). CI triggers changed to PRs + `main` (PO request). |
-| 2026-11-23 | T01 (text) | README rewritten: true status table, pitch, "Why" in 3 points, Mermaid cycle with owners, roles and AI transparency, rules every change follows, documentation map, setup last. CI badge added now (cheap, already true) rather than in T13. No screenshot placeholders. Waiting: PR merge. |
+| 2026-11-23 | T01 (text) | README rewritten: true status table, pitch, "Why" in 3 points, Mermaid cycle with owners, roles and AI transparency, rules every change follows, documentation map, setup last. CI badge added now (cheap, already true) rather than in T13. No screenshot placeholders. PR #17 merged. |
+| 2026-11-23 | T01 ✅ | PR #17 merged; CI green (26 s). |
+| 2026-11-23 | T02 ✅ | `docker-compose.e2e.yml`: `postgres:17` + `local-neon-http-proxy`, both pinned by digest (proxy image is multi-arch: amd64 for CI, arm64 for the Mac); data in memory only; only the proxy port is exposed, on 127.0.0.1. `src/server/db/local-proxy.ts` + 8 unit tests: only the exact host `db.localtest.me` is routed (a Neon URL, `localhost`, `evil-db.localtest.me` and `db.localtest.me.example.com` are refused). `client.ts` sets the proxy endpoint for that host only. `npm run e2e:migrate` (Drizzle `neon-http` migrator, same driver as production) → 6 tables, 3 migrations recorded; re-run is a no-op; the database refuses a time without a date. Guard: with a Neon-style URL → "Refusing to run end-to-end setup…", exit 1. Typecheck, lint, 73 unit tests, `next build` pass. |
