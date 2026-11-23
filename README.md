@@ -35,8 +35,7 @@ flowchart LR
     B --> C["Plan + ADRs<br/><i>Claude proposes,<br/>PO decides</i>"]
     C --> D["Tasks<br/><i>Claude</i>"]
     D --> E["Code + tests<br/><i>Claude</i>"]
-    E --> F["UAT<br/><i>PO</i>"]
-    F --> G(["Delivered"])
+    E --> F(["UAT → Delivered<br/><i>PO</i>"])
     F -. friction .-> A
 ```
 
