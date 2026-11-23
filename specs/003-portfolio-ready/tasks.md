@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 12 / 14 (+ T00) |
+| **Status** | In progress — 13 / 14 (+ T00) — T14 UAT in progress |
 | **Spec** | [spec.md](spec.md) (v1.1) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | one per slice → pull requests into `main` |
 | **Time box** | done before **Sun 2026-12-06** |
@@ -74,7 +74,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   `screenshots.spec.ts` + `npm run screenshots` ~~+ manual CI job~~ (PO decision 2026-11-23: local command only); generic fake tasks; files in `docs/screenshots/` with stable names.
   *Done when:* images committed; nothing in them comes from real data.
 
-- [ ] **T13** 🤖 **README: screenshots, quality, traceability** (AC-3.x, AC-4.3, AC-5.1, AC-5.2)
+- [x] **T13** 🤖 **README: screenshots, quality, traceability** (AC-3.x, AC-4.3, AC-5.1, AC-5.2)
   Screenshots; "How quality is ensured" (the 4 layers + "not automated on purpose"); worked example BR-5 → unit test → e2e test → CI run; CI badge.
   *Done when:* PR merged; every link works.
 
@@ -116,3 +116,5 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-23 | T11 ✅ | `retries: 1` + `failOnFlakyTests` were already in `playwright.config.ts` (T03, Playwright 1.65.0 has the option: no JSON-report script needed). **Proof:** throwaway branch with a test that fails on its first attempt and passes on the retry. Locally with `CI=1`: "1 flaky", exit code 1. On GitHub, draft PR #23, run 45231479117: **1 flaky, 43 passed**, End-to-end tests **failed**, PR **BLOCKED**, `playwright-report` artifact uploaded (893 KB, trace included). PR #23 closed and branch `throwaway/003-t11-flaky-proof` deleted (local and remote). **Slice 3 done.** |
 | 2026-11-23 | T12 ✅ | **PO decisions:** (1) screenshots made by the local command only, no manual CI job (plan §5.9 deviation): the app's body font is Arial, which CI's Linux runner lacks, so CI images would differ from the Mac ones, and either way the PNGs are committed by hand; (2) phone screenshots at iPhone 15/16 size (393×852, 3×, Chromium); the tests keep the Pixel 7. `npm run screenshots` (Docker running) turns on a `screenshots` Playwright project (`SCREENSHOTS=1`), so it never runs in `npm run e2e` or CI (still 43 tests in 6 files). Same harness and fixtures as the tests (TR-6): throwaway database, `owner@example.com`, 6 generic tasks with dues relative to Toronto today (red, 2 amber, plain, 2 without a date), 5 usage days → "Used 5 of the last 7 days". Files: `tasks-phone-light.png`, `tasks-phone-dark.png`, `tasks-desktop-light.png`, `tasks-desktop-dark.png`, `sign-in.png` (≈540 KB in all). Each image checked by eye: fake data only (AC-3.2). A second run the same day gives byte-identical files. Typecheck, lint, 83 unit tests pass. |
 | 2026-11-23 | T13 (PR open) | README: screenshots under the pitch with `<picture>`, so GitHub's dark theme shows the dark images (AC-3.3). Seen in the browser in light and dark; the sign-in image was still white in dark, so `sign-in-dark.png` was added (`sign-in.png` unchanged, byte-identical). "How quality is ensured": 4 layers of ADR-0015 (83 unit, 23 flow, 20 accessibility scans, UAT), the CI gate, and not automated on purpose: Google round-trip, Safari/iPhone, speed (AC-4.3). "Follow one requirement": BR-5 → spec 002 §4 + AC-2.3 → `isOverdue()` → unit tests → `list.spec.ts` → green run 45231303187 on `main` (AC-5.1). Links checked: every relative file exists; line anchors land on the right lines; both heading anchors exist on GitHub. Run locally: e2e, shuffle and screenshot commands. Idea inbox: unused Geist font (PO 2026-11-23: keep Arial, remove the Geist loading as a chore). |
+| 2026-11-23 | T13 ✅ | PR #26 merged. |
+| 2026-11-23 | T14 (UAT, part 1) | **AC-1.1, AC-1.2, AC-2.1, AC-2.2 ✅:** draft PR #27 made Undo restore nothing (typecheck, lint and unit tests stayed green). Run 45236400564: **3 failed** (done + undo desktop and phone, delete + undo desktop), 40 passed, PR **BLOCKED**, `playwright-report` uploaded (2.7 MB); the PO downloaded it and opened the trace ("the report are working fine"). Revert pushed → run 45240423902: **43 passed**, CLEAN. PR #27 closed without merging, branch deleted. **UAT finding → spec 003 v1.2:** the README showed the task list twice (desktop looked like the phone image, since the app is a phone-width column); PO decision: no desktop image in the README, desktop PNGs still generated for the website (AC-3.1 changed). Also shown to the PO: Playwright UI Mode works; a test *group* has no steps, so select a single test. Remaining: AC-1.3/1.4, AC-1.5 (run after 8 p.m. Toronto), AC-1.7, AC-3.1 to 3.3, AC-4.x/5.x, AC-6.x, AC-3.4, TR-1 to TR-3/TR-6, M5. |
