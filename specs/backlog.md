@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Draft v0.1 — awaiting Product Owner validation |
-| **Last updated** | 2026-11-22 |
+| **Last updated** | 2026-11-24 |
 | **Source** | [`docs/vision.md`](../docs/vision.md) |
 
 Prioritization: **MoSCoW**, rated by **value to the user**, not by effort. Rule: at most 6 Musts in the MVP.
@@ -32,7 +32,7 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 | ID | Feature | Summary | Depends on | Status |
 |---|---|---|---|---|
 | F01 | **Tasks** | Create a task (title, optional due date and time), edit, delete, mark done with undo; urgency colours; done tasks are archived. | E01, E02 | Delivered — [002](002-tasks/spec.md) |
-| F02 | **Sidequest bank** | Create sidequests (title + category from a fixed list), browse them. | E01, E02 | Idea |
+| F02 | **Sidequest bank** | Create sidequests (title + category from a fixed list), browse them. | E01, E02 | Spec draft — [004](004-sidequest-bank/spec.md) |
 | F03 | **One-tap log** | Mark that I did a sidequest. Optional duration and free-text note (e.g. "best time 1:42"). | F02 | Idea |
 | F04 | **"What can I do now?" screen** | Phone-first screen: urgent tasks on top, a few sidequests below, nothing else. Default screen on mobile. *PO layout ideas (spec 002 OQ-3): Now content on top with tasks below on scroll, or bottom tabs "Tasks / Sidequests".* | F01, F02 | Idea |
 | F05 | **Sprint + measurable goal** | Start a 2-week sprint, pick one sidequest as its goal, which **requires** a measurable criterion. Planning view shows tasks due during the sprint. | F01, F02 | Idea |
@@ -94,7 +94,7 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 
 - Purge soft-deleted tasks older than N days, if database storage ever becomes a concern (plan 002 §10: ~1.5 MB/year expected).
 - **Daily checklist** (from spec 002 UAT, 2026-11-22): a short list of routine items to tick every day, reset each morning. Close to C03 (recurring tasks). Check against principle 1: no streak, no "missed yesterday" state.
-- **Quick entry of many sidequests** (for the F02 spec): the PO already has a list of ~26 ideas to enter; adding them one by one on the phone would be the first friction of the Bank.
+- ~~**Quick entry of many sidequests**~~ → out of F02 (PO, 2026-11-24: one-time job, done on desktop). Original note: the PO already has a list of ~26 ideas to enter; adding them one by one on the phone would be the first friction of the Bank.
 - **Abandoned session query on every page load** (found by spec 003 T04, 2026-11-23): with a session cookie, the server logs a Better Auth `INTERNAL_SERVER_ERROR` (`HANGING_PROMISE_REJECTION`: the session query starts during Next.js's prerender pass and is rejected when it ends). Pages work, but it's log noise in production and one wasted database round trip per open (NFR-03). Investigate the cause (how `requireAllowedSession()` reads `headers()` under `cacheComponents`).
 - **Unused web font** (found by spec 003 T12, 2026-11-23): `layout.tsx` loads Geist with `next/font`, but `globals.css` sets `body { font-family: Arial }`, so Geist is downloaded and never used. PO decision: keep Arial (the look on the phone); remove the Geist loading as a small chore. No visual change, so the screenshots stay valid.
 - ~~Portfolio readiness~~ → E05, E06, spec 003 (PO decision 2026-11-22). Case-study page: built in the PO's website project, not here (spec 003 OQ-3).
@@ -109,3 +109,4 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 | 0.4 | 2026-11-22 | F01 Delivered; idea inbox: daily checklist, quick sidequest entry, portfolio readiness |
 | 0.5 | 2026-11-22 | E05, E06 (spec 003) from the inbox; first G2 exception recorded |
 | 0.6 | 2026-11-23 | Idea inbox: abandoned session query (spec 003 T04), unused web font (spec 003 T12) |
+| 0.7 | 2026-11-24 | F02 → Spec draft (004); quick sidequest entry out of F02 |
