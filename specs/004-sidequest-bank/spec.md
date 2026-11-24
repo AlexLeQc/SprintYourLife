@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Spec draft v0.1 — awaiting PO validation (open questions in §7) |
+| **Status** | Spec validated — 2026-11-24 (PO decisions in §1 and §7) |
 | **Backlog items** | F02 Sidequest bank |
 | **Release** | R1 — Usable |
 | **Depends on** | [001 Foundation](../001-foundation/spec.md), [002 Tasks](../002-tasks/spec.md) (Delivered) · [003 Portfolio-ready](../003-portfolio-ready/spec.md) (In UAT — its end-to-end suite must stay green) |
@@ -45,17 +45,17 @@ Put my **sidequests** (things I want to do or learn this year) in the app, sorte
 ### US-1 — Add a sidequest
 
 - **AC-1.1** — **Given** I am on the Sidequests page, **When** I type a title, pick a category and confirm (button or Return), **Then** the sidequest appears in its category and the title input is cleared and ready for the next one.
-- **AC-1.2** — **Given** I just added a sidequest, **Then** the category I picked stays selected, so I can add several ideas of the same category in a row.
-- **AC-1.3** — **Given** no category is picked, **When** I confirm, **Then** nothing is saved and I am asked to pick a category (see OQ-2 for the default).
+- **AC-1.2** — **Given** I open the page or just added a sidequest, **Then** no category is selected: I choose one for every sidequest (OQ-2). Each choice shows the category's emoji and name (BR-6).
+- **AC-1.3** — **Given** no category is picked, **When** I confirm, **Then** nothing is saved and a short message asks me to pick a category. The title I typed is kept.
 - **AC-1.4** — **Given** the title is empty or only spaces, **When** I confirm, **Then** nothing is saved and nothing else happens (same as tasks, spec 002 AC-1.4).
 - **AC-1.5** — **Given** a title longer than 200 characters, **When** I confirm, **Then** it is refused with a short message.
 
 ### US-2 — Browse the Bank
 
-- **AC-2.1** — **Given** I have sidequests, **When** I open the Sidequests page, **Then** they are listed under a heading per category, in the category order of BR-3, and sorted inside each category per BR-4.
-- **AC-2.2** — **Given** a category with no sidequest, **Then** it is handled per OQ-3 (recommended: its heading is not shown).
-- **AC-2.3** — **Given** I have no sidequests at all, **Then** I see a calm empty state (e.g. "No sidequests yet."), not a nudge.
-- **AC-2.4** — Sidequests never show urgency colours or due labels (vision principle 1). Category colours follow OQ-1.
+- **AC-2.1** — **Given** I have sidequests, **When** I open the Sidequests page, **Then** they are listed under a heading per category, with the category's emoji and name (BR-6), in the order of BR-3, and sorted inside each category per BR-4.
+- **AC-2.2** — **Given** a category with no sidequest, **Then** its heading is still shown, **after** all the categories that have sidequests, with a calm line "No sidequest yet." (OQ-3: an empty category is an opportunity to find an idea, not a form to fill).
+- **AC-2.3** — **Given** I have no sidequests at all, **Then** the five category headings are shown in the BR-3 order, each with "No sidequest yet." No other message, no nudge.
+- **AC-2.4** — Sidequests never show urgency colours or due labels (vision principle 1). Categories have no colour; the emoji is the visual cue, always next to the category's name (OQ-1).
 - **AC-2.5** — **Given** the phone layout, **Then** adding a sidequest, picking its category and opening one for editing are reachable with the thumb, without zooming.
 
 ### US-3 — Tabs
@@ -87,9 +87,10 @@ Put my **sidequests** (things I want to do or learn this year) in the app, sorte
 |---|---|
 | BR-1 | A title is trimmed; it must be 1–200 characters after trimming (same rule as tasks). Two sidequests may have the same title. |
 | BR-2 | A category is exactly one of: **Create**, **Learn**, **Play**, **Connect**, **Move** (vision §6). It is required. |
-| BR-3 | Categories are shown in this fixed order: Create, Learn, Play, Connect, Move (the glossary order). |
-| BR-4 | Inside a category, sidequests are sorted per OQ-4 (recommended: alphabetically by title, ignoring case and accents; ties keep creation order). |
+| BR-3 | Category order: first the categories that have at least one sidequest, then the empty ones. Inside each group, the fixed glossary order: Create, Learn, Play, Connect, Move. |
+| BR-4 | Inside a category, sidequests are sorted alphabetically by title, ignoring case and accents (English/French collation); ties keep creation order. |
 | BR-5 | A deleted sidequest is excluded from every list and every count, including later features (F03 log, F04, F05, F06). |
+| BR-6 | Each category has one emoji, always shown next to its name, never alone: Create 🎨 · Learn 📚 · Play 🎲 · Connect 🤝 · Move 🚶. The emoji is decorative for screen readers (the name is read, not the emoji). |
 
 ## 5. Out of scope
 
@@ -115,23 +116,37 @@ Put my **sidequests** (things I want to do or learn this year) in the app, sorte
 
 Final columns are decided in `plan.md`.
 
-**Tests (ADR-0015).** The plan maps each AC to a layer. Expected: BR-1 to BR-4 as Vitest unit tests; each user story as a flow test in desktop and phone viewports; an axe scan of the Sidequests page empty and filled, and of the tab bar on both pages; AC-S.1 as an access test. The end-to-end job must stay under 5 minutes (spec 003 AC-1.7).
+**Tests (ADR-0015).** The plan maps each AC to a layer. Expected: BR-1 to BR-4 and BR-6 as Vitest unit tests; each user story as a flow test in desktop and phone viewports; an axe scan of the Sidequests page empty and filled, and of the tab bar on both pages; AC-S.1 as an access test. The end-to-end job must stay under 5 minutes (spec 003 AC-1.7).
 
-## 7. Open questions for the PO
+## 7. Open questions — resolved by the PO on 2026-11-24
 
-| # | Question | Options | Recommendation |
-|---|---|---|---|
-| OQ-1 | Do categories get a **colour**? (Spec 002 §5 left this to F02.) | (a) No colour, text heading only · (b) a soft colour or icon per category, always with its name | **(a)** for now. Colour on the phone already means urgency for tasks (red, amber); a second colour code on the next tab blurs that. Add an icon later if headings feel bland in use. |
-| OQ-2 | Is a **category pre-selected** when the page opens? | (a) None: I must pick one · (b) a default (e.g. Learn) | **(a)**. A default silently files ideas in the wrong category. After the first add, AC-1.2 keeps my choice, so a series costs one tap. |
-| OQ-3 | **Empty categories**: show the heading? | (a) Hide it · (b) show it with "Nothing yet" | **(a)**. Five empty headings look like a form to fill, which is pressure (principle 1). |
-| OQ-4 | **Order inside a category**? | (a) Alphabetical · (b) newest first · (c) oldest first | **(a)**. With ~30 items kept for a year, I look for an idea by name; the date I added it means nothing. |
+| # | Question | Resolution |
+|---|---|---|
+| OQ-1 | Do categories get a **colour**? (Spec 002 §5 left this to F02.) | **No colour; an emoji + the name** (BR-6). Colour already means urgency on the Tasks tab; an emoji classifies at a glance without a second colour code. |
+| OQ-2 | Is a **category pre-selected**? | **Never** — not on open, not after an add (AC-1.2). Choosing each time is wanted: it makes me ask which category fits best. Claude's draft had "keep the last category"; the PO dropped it. |
+| OQ-3 | **Empty categories**: show the heading? | **Yes, at the bottom**, after the categories that have sidequests (BR-3, AC-2.2). The PO sees an empty category as an opportunity to find a sidequest, not as pressure. |
+| OQ-4 | **Order inside a category**? | **Alphabetical** (BR-4). |
 
 ## 8. UAT checklist (for the PO)
 
-To be run on production, with the real phone. Filled in once the spec is validated.
+To be run on production, with the real phone:
+
+- [ ] AC-1.1 to AC-1.5 — add sidequests in several categories; no category is pre-selected, before or after an add; no category → message, title kept; blank title ignored; 201 characters refused
+- [ ] AC-2.1, AC-2.2 — headings with emoji and name; filled categories first, empty ones at the bottom with "No sidequest yet."; titles alphabetical inside each category (try one starting with an accent or a lowercase letter)
+- [ ] AC-2.3 — with no sidequests, five empty headings in the glossary order (Claude shows it on a test database or in the end-to-end screenshots, so the real Bank is not emptied)
+- [ ] AC-2.4 — no colours on sidequests or categories
+- [ ] AC-2.5 — everything reachable one-handed on the iPhone
+- [ ] AC-3.1 to AC-3.3 — tab bar at the bottom on both pages; the app opens on Tasks; Back and reload keep the tab
+- [ ] AC-3.4 — Claude checks a usage day recorded by opening only the Sidequests page
+- [ ] AC-3.5 — tasks still work as before; the end-to-end task tests are green on the PR
+- [ ] AC-4.1, AC-4.2 — edit a title and move a sidequest to another category
+- [ ] AC-5.1 to AC-5.3 — delete without a dialog; undo within 5 s; after the bar is gone, it is gone
+- [ ] AC-S.1 — Claude shows a direct server-action request without a session is refused
+- [ ] Enter my real sidequest list and browse it for a few days; note any friction (input for F03, F04 and the "done once" question)
 
 ## Revision history
 
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | 2026-11-24 | First draft — scope decisions of 2026-11-24; 4 open questions for the PO |
+| 1.0 | 2026-11-24 | PO decisions: emoji + name per category (BR-6), no pre-selected category ever (AC-1.2 rewritten), empty categories shown at the bottom (BR-3, AC-2.2, AC-2.3), alphabetical order (BR-4); UAT checklist; status Spec validated |
