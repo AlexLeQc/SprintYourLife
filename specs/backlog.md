@@ -32,7 +32,7 @@ Spec status values: `Idea` → `Spec draft` → `Spec validated` → `Planned` �
 | ID | Feature | Summary | Depends on | Status |
 |---|---|---|---|---|
 | F01 | **Tasks** | Create a task (title, optional due date and time), edit, delete, mark done with undo; urgency colours; done tasks are archived. | E01, E02 | Delivered — [002](002-tasks/spec.md) |
-| F02 | **Sidequest bank** | Create sidequests (title + category from a fixed list), browse them. | E01, E02 | Planned — [004](004-sidequest-bank/spec.md) |
+| F02 | **Sidequest bank** | Create sidequests (title + category from a fixed list), browse them. | E01, E02 | Delivered — [004](004-sidequest-bank/spec.md) |
 | F03 | **One-tap log** | Mark that I did a sidequest. Optional duration and free-text note (e.g. "best time 1:42"). | F02 | Idea |
 | F04 | **"What can I do now?" screen** | Phone-first screen: urgent tasks on top, a few sidequests below, nothing else. Default screen on mobile. *PO layout ideas (spec 002 OQ-3): Now content on top with tasks below on scroll, or bottom tabs "Tasks / Sidequests".* | F01, F02 | Idea |
 | F05 | **Sprint + measurable goal** | Start a 2-week sprint, pick one sidequest as its goal, which **requires** a measurable criterion. Planning view shows tasks due during the sprint. | F01, F02 | Idea |
@@ -112,3 +112,4 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 | 0.7 | 2026-11-24 | F02 → Spec validated (004); quick sidequest entry out of F02 |
 | 0.8 | 2026-11-25 | F02 → Planned (plan and tasks 004) |
 | 0.9 | 2026-11-25 | F02: change request CR-1 (spec 004 v1.1, vision v0.5): 6 categories |
+| 0.10 | 2026-11-25 | F02 Delivered |

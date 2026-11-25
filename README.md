@@ -28,7 +28,8 @@ In daily use since November 2026, installed on my phone's home screen.
 | [001 Foundation](specs/001-foundation/spec.md) | Installable app (PWA), Google sign-in restricted to an allowlist, 90-day session, usage days, CI | ✅ Delivered |
 | [002 Tasks](specs/002-tasks/spec.md) | Add, edit, complete and delete tasks, with optional due date and time, urgency colours and undo | ✅ Delivered |
 | [003 Portfolio-ready](specs/003-portfolio-ready/spec.md) | End-to-end browser tests and accessibility checks in CI; this README | 🚧 In progress |
-| Next: F02 Sidequest bank | Capture and browse sidequests by category | [Backlog](specs/backlog.md) |
+| [004 Sidequest bank](specs/004-sidequest-bank/spec.md) | A Sidequests tab: capture sidequests in six categories (emoji + name), browse them alphabetically, edit, delete with undo; floating tab bar | ✅ Delivered |
+| Next: F03 One-tap log | Mark that I did a sidequest, with an optional duration and note | [Backlog](specs/backlog.md) |
 
 ## Why
 

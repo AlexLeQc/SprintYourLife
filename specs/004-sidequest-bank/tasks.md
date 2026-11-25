@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 12 / 13 — T12 UAT next |
-| **Spec** | [spec.md](spec.md) (v1.0) · **Plan** | [plan.md](plan.md) (v1.0) |
+| **Status** | Done — 13 / 13 — spec 004 Delivered |
+| **Spec** | [spec.md](spec.md) (v1.2) · **Plan** | [plan.md](plan.md) (v1.1) |
 | **Branch** | `feat/004-bank-add` (slice 1), `feat/004-bank-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-25 |
 
@@ -65,7 +65,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   Flow tests: AC-4.1, AC-4.2 (rename, move to another category), AC-5.1 to AC-5.3 (gone after the bar disappears and a reload). Walk-through scan extended: edit open → delete → undo bar.
   *Done when:* the suite passes locally. Claude opens the PR; CI green; job time under 5 min (written in the progress log); PO merges.
 
-- [ ] **T12** 👤 **UAT** ⛳
+- [x] **T12** 👤 **UAT** ⛳
   Run the [UAT checklist in the spec](spec.md#8-uat-checklist-for-the-po). Claude shows AC-2.3 on the test database, AC-3.4 on production (read-only) and AC-S.1 with direct requests. Then README status and backlog → Delivered.
   *Done when:* every line of the checklist is ticked or has a written decision.
 
@@ -90,3 +90,5 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-25 | T10 ✅ | Reuse first, one step further than plan §5.6: `undoable-list.tsx` holds **both** the `UndoBar` and the `useUndoableList` hook (optimistic add/update/remove, one-step undo that waits for the pending action, 5 s, save errors), used by the task list and the Bank. The task list lost ~60 lines and kept its behaviour (all spec 002 e2e tests green, AC-3.5). `titleErrorMessage` moved to `ui.ts` so the browser and the server show the same BR-1 messages. `sidequest-row.tsx`: tap title → title, chips (current one checked), Save, Cancel, Delete. |
 | 2026-11-25 | T10b ✅ | CR-1: `CATEGORIES` = Sport 🏃, Explore 🧭, Learn 📚, Create 🎨, Play 🎲, Connect 🤝; unit tests updated (`move` now refused), **110 unit tests**. Migration `0004_six_categories`: drop check → `UPDATE … SET category = 'sport' WHERE category = 'move'` → new check; no titles in it (public repo). On `dev`: a seeded `move` row became `sport`; a new `move` insert is refused, `explore` accepted. Production: 18 Move rows will become Sport on merge; the PO re-files the Explore ones with Edit. |
 | 2026-11-25 | T11 ✅ (PR open) | `sidequests-edit-delete.spec.ts`: AC-4.1 (rename @phone, Cancel), AC-4.2 + CR-1 (move to Explore), AC-4.2 (201 characters refused in edit), AC-5.1 + AC-5.2 (no dialog, Undo restores the identical row @phone), AC-5.3 (bar gone after ~5 s, still gone after reload, row soft-deleted). Walk-through scan extended: edit view open, undo bar showing. Existing tests moved to the six categories; rows match on "Edit <title>" (hidden "Edit" prefix, WCAG 2.5.3). Local run: **73 passed (1.7 min)**. |
+| 2026-11-25 | T11 ✅ | PRs #32 (tab feel), #33 (CR-1 docs) and #34 (slice 2) merged in order; #34 needed one merge of `main` (no file changed), CI ✅. |
+| 2026-11-25 | T12 ⛳ ✅ | PO: every UAT line passes on production with the iPhone, including re-filing the Explore items with Edit. Production check with the read-only role: category check is the six-value list, no `move` row left, 26 sidequests (Sport 12, Explore 7, Learn 5, Play 2). AC-2.3 shown by the end-to-end walk-through scan (empty Bank, six headings) and AC-S.1 by the direct requests logged at T06 and T09. Spec 004 **Delivered**, backlog F02 Delivered. |
