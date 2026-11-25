@@ -3,10 +3,13 @@
  *
  * States: sign-in page; home with a mixed list (red, amber, none); home empty; edit view open;
  * undo bar showing. Each in light and dark, in the desktop and phone projects (all tagged @phone).
+ * Spec 004 (plan D-4): the Sidequests page states are scanned in ONE walk-through test per colour
+ * scheme and project, naming each state, to keep the e2e job under 5 minutes.
  * No rule is switched off (AC-6.2).
  */
 import { expectNoAccessibilityViolations } from "./support/accessibility";
 import { expect, test } from "./support/fixtures";
+import { addSidequest, bankRegion, expectSaved, pickCategory } from "./support/sidequests-page";
 import { editButton, taskRow, tasksRegion } from "./support/tasks-page";
 
 for (const colorScheme of ["light", "dark"] as const) {
@@ -72,6 +75,31 @@ for (const colorScheme of ["light", "dark"] as const) {
       await expect(tasksRegion(page).getByRole("status")).toContainText("Task done");
 
       await expectNoAccessibilityViolations(page, testInfo);
+    });
+    test(`spec 004 — Sidequests page walk-through has no violation (${colorScheme}) @phone`, async ({
+      page,
+      seedSidequests,
+    }, testInfo) => {
+      await page.goto("/sidequests");
+      await expect(bankRegion(page).getByText("No sidequest yet.")).toHaveCount(5);
+      await expectNoAccessibilityViolations(page, testInfo, "empty Bank");
+
+      await addSidequest(page, "Play Catan online", "Play");
+      await expect(bankRegion(page).getByRole("alert")).toHaveCount(0);
+      await page.getByRole("textbox", { name: "New sidequest" }).fill("Draw every day");
+      await page.getByRole("textbox", { name: "New sidequest" }).press("Enter");
+      await expect(bankRegion(page).getByRole("alert")).toHaveText("Pick a category.");
+      await expectNoAccessibilityViolations(page, testInfo, "no category message");
+
+      await seedSidequests([
+        { title: "Build a Lego set", category: "create" },
+        { title: "Learn the Rubik's cube", category: "learn" },
+        { title: "Call a friend", category: "connect" },
+      ]);
+      await page.reload();
+      await expectSaved(page, "Play", "Play Catan online");
+      await pickCategory(page, "Learn"); // a checked chip
+      await expectNoAccessibilityViolations(page, testInfo, "filled Bank, a chip checked");
     });
   });
 }

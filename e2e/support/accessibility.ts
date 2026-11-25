@@ -8,10 +8,14 @@ import { expect, type Page, type TestInfo } from "@playwright/test";
 
 export const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
-export async function expectNoAccessibilityViolations(page: Page, testInfo: TestInfo) {
+/**
+ * `state` names the screen state when one test scans several (spec 004 plan D-4, walk-through):
+ * it goes into the attachment's name and the failure message, so the failing state is obvious.
+ */
+export async function expectNoAccessibilityViolations(page: Page, testInfo: TestInfo, state?: string) {
   const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
 
-  await testInfo.attach("axe-violations.json", {
+  await testInfo.attach(state ? `axe-violations-${state}.json` : "axe-violations.json", {
     body: JSON.stringify(results.violations, null, 2),
     contentType: "application/json",
   });
@@ -21,5 +25,6 @@ export async function expectNoAccessibilityViolations(page: Page, testInfo: Test
     (v) =>
       `${v.id} (${v.impact}) ×${v.nodes.length}: ${v.help} — ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`,
   );
-  expect(summary, "accessibility violations (axe, WCAG 2.1 A + AA)").toEqual([]);
+  const where = state ? ` in state "${state}"` : "";
+  expect(summary, `accessibility violations${where} (axe, WCAG 2.1 A + AA)`).toEqual([]);
 }
