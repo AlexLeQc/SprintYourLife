@@ -2,7 +2,7 @@
 
 import { startTransition, useRef, useState } from "react";
 import { normalizeTitle, parseCategory } from "@/domain/sidequest";
-import { SAVE_ERROR, errorText, field, primaryButton } from "../ui";
+import { SAVE_ERROR, errorText, field, primaryButton, titleErrorMessage } from "../ui";
 import type { SidequestView } from "./bank";
 import { CategoryPicker } from "./category-picker";
 import { createSidequest } from "./sidequest-actions";
@@ -19,7 +19,7 @@ export function AddSidequestForm({ onAdd }: { onAdd: (sidequest: SidequestView) 
     const title = normalizeTitle(String(formData.get("title") ?? ""));
     if (!title.ok) {
       // AC-1.4: blank → nothing happens. AC-1.5: too long → short message, text kept.
-      setError(title.error === "too_long" ? "Title is too long (200 characters max)." : null);
+      setError(title.error === "too_long" ? titleErrorMessage(title.error) : null);
       return;
     }
     const category = parseCategory(formData.get("category"));

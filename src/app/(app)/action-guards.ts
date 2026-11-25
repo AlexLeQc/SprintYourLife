@@ -1,5 +1,4 @@
 import "server-only";
-import type { TitleError } from "@/domain/title";
 import { getAllowedSession } from "@/server/session";
 
 /**
@@ -26,7 +25,5 @@ export function assertId(id: unknown, what: string): asserts id is string {
   if (typeof id !== "string" || !UUID_PATTERN.test(id)) throw new Error(`Invalid ${what} id`);
 }
 
-/** BR-1's user-facing messages, the same for tasks and sidequests. */
-export function titleErrorMessage(error: TitleError): string {
-  return error === "too_long" ? "Title is too long (200 characters max)." : "Title is empty.";
-}
+/** BR-1's messages live in ui.ts, shared with the browser. */
+export { titleErrorMessage } from "./ui";

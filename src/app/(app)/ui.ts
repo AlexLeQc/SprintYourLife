@@ -1,3 +1,5 @@
+import type { TitleError } from "@/domain/title";
+
 /**
  * Styles and messages shared by the task and sidequest screens (reuse first, CLAUDE.md).
  * Inputs use 16 px text (text-base) so iOS doesn't zoom in (spec 002 AC-2.8).
@@ -11,3 +13,8 @@ export const secondaryButton =
 export const errorText = "text-sm text-red-700 dark:text-red-400";
 
 export const SAVE_ERROR = "Couldn't save. Check your connection and try again.";
+
+/** BR-1's user-facing messages, the same for tasks and sidequests, on the server and in the browser. */
+export function titleErrorMessage(error: TitleError): string {
+  return error === "too_long" ? "Title is too long (200 characters max)." : "Title is empty.";
+}

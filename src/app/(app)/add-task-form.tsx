@@ -3,7 +3,7 @@
 import { startTransition, useRef, useState } from "react";
 import { NO_DUE, normalizeTitle, parseDue } from "@/domain/task";
 import { DueFields } from "./due-fields";
-import { field, primaryButton } from "./ui";
+import { field, primaryButton, titleErrorMessage } from "./ui";
 import { createTask } from "./task-actions";
 import type { TaskView } from "./task-list";
 
@@ -24,7 +24,7 @@ export function AddTaskForm({ today, onAdd }: { today: string; onAdd: (task: Tas
     const title = normalizeTitle(rawTitle);
     if (!title.ok) {
       // AC-1.4: blank → nothing happens. AC-1.5: too long → short message, text kept.
-      setError(title.error === "too_long" ? "Title is too long (200 characters max)." : null);
+      setError(title.error === "too_long" ? titleErrorMessage(title.error) : null);
       return;
     }
     const due = parseDue(dueDate, dueTime);

@@ -9,7 +9,7 @@
  */
 import { expectNoAccessibilityViolations } from "./support/accessibility";
 import { expect, test } from "./support/fixtures";
-import { addSidequest, bankRegion, expectSaved, pickCategory } from "./support/sidequests-page";
+import { addSidequest, bankRegion, editForm, expectSaved, pickCategory } from "./support/sidequests-page";
 import { editButton, taskRow, tasksRegion } from "./support/tasks-page";
 
 for (const colorScheme of ["light", "dark"] as const) {
@@ -81,7 +81,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       seedSidequests,
     }, testInfo) => {
       await page.goto("/sidequests");
-      await expect(bankRegion(page).getByText("No sidequest yet.")).toHaveCount(5);
+      await expect(bankRegion(page).getByText("No sidequest yet.")).toHaveCount(6);
       await expectNoAccessibilityViolations(page, testInfo, "empty Bank");
 
       await addSidequest(page, "Play Catan online", "Play");
@@ -100,6 +100,15 @@ for (const colorScheme of ["light", "dark"] as const) {
       await expectSaved(page, "Play", "Play Catan online");
       await pickCategory(page, "Learn"); // a checked chip
       await expectNoAccessibilityViolations(page, testInfo, "filled Bank, a chip checked");
+
+      // Slice 2: edit view open, then the undo bar after a delete.
+      await editButton(bankRegion(page), "Call a friend").click();
+      await expect(editForm(page)).toBeVisible();
+      await expectNoAccessibilityViolations(page, testInfo, "edit view open");
+
+      await editForm(page).getByRole("button", { name: "Delete" }).click();
+      await expect(bankRegion(page).getByRole("status")).toContainText("Sidequest deleted");
+      await expectNoAccessibilityViolations(page, testInfo, "undo bar showing");
     });
   });
 }
