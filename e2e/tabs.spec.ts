@@ -13,12 +13,21 @@ import { tasksRegion } from "./support/tasks-page";
 const tabBar = (page: Page) => page.getByRole("navigation", { name: "Main" });
 const tab = (page: Page, name: string) => tabBar(page).getByRole("link", { name, exact: true });
 
-/** The tab bar is visible and its bottom edge is the bottom of the screen. */
+/**
+ * The tab bar floats near the bottom of the screen, lifted a little above the edge (T08 feedback),
+ * and each tab is a big thumb target.
+ */
 async function expectTabBarAtBottom(page: Page) {
   await expect(tabBar(page)).toBeVisible();
   const box = await tabBar(page).boundingBox();
-  const viewport = page.viewportSize();
-  expect(box && viewport && Math.round(box.y + box.height)).toBe(viewport?.height);
+  const height = page.viewportSize()?.height ?? 0;
+  const gapBelow = height - ((box?.y ?? 0) + (box?.height ?? 0));
+  expect(gapBelow, "lifted above the bottom edge").toBeGreaterThan(0);
+  expect(gapBelow, "but still at the bottom of the screen").toBeLessThanOrEqual(40);
+  for (const name of ["Tasks", "Sidequests"]) {
+    const target = await tab(page, name).boundingBox();
+    expect(target?.height, `${name} tab is a big thumb target`).toBeGreaterThanOrEqual(56);
+  }
 }
 
 test("spec 004 AC-3.1, AC-3.2 — the app opens on Tasks; both pages show the tab bar at the bottom, with the current tab marked @phone", async ({
