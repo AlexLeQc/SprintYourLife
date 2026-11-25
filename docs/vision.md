@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Status** | Validated v0.4 — PO, 2026-11-22 |
-| **Last updated** | 2026-11-22 |
+| **Status** | Validated v0.5 — PO, 2026-11-25 |
+| **Last updated** | 2026-11-25 |
 | **Product Owner / BA** | Alexis |
 | **Implementation** | AI-assisted (Claude Code), driven by specs in `specs/` |
 
@@ -77,7 +77,7 @@ These principles guide every spec. A feature that breaks one of them must justif
 | **Task** | An obligation (homework, appointment, job application). Title, optional due date (with optional time), done / not done. Not tied to a sprint. Archived when done. |
 | **Sidequest** | Something I'd like to do or learn (Lego, Catan online, drawing, Rubik's cube). Has a title and a category. Lives in the **Bank** by default. |
 | **Bank** | The list of all sidequests that are not the current sprint goal. Can be done freely, any time, with no deadline. |
-| **Category** | Fixed list of 5: **Create** (drawing, video editing, Lego) · **Learn** (general knowledge, Rubik's cube, reading) · **Play** (Catan online, games) · **Connect** (calling a friend, seeing people) · **Move** (walk, outdoors — not workouts, which stay in Bevel). |
+| **Category** | Fixed list of 6 (v0.5): **Sport** (trying a sport or a physical challenge: a dance class, kayak, a triathlon — not workout tracking, which stays in Bevel) · **Explore** (going somewhere to experience something: a festival, a zoo, a road trip, a concert) · **Learn** (a skill or knowledge: juggling, an instrument, a big book, Rubik's cube) · **Create** (making something: pottery, cooking, drawing, Lego) · **Play** (games: Catan online, bowling, bingo) · **Connect** (calling a friend, seeing people). |
 | **Sprint** | A 2-week period with exactly one sprint goal. Runs **Sunday to Saturday**; sprints are back-to-back. The retro of the ending sprint and the planning of the next one happen on the Sunday in between. |
 | **Usage day** | A calendar day on which the app was opened at least once. Used to measure M1. |
 | **Sprint goal** | A sidequest picked from the Bank for a sprint. **Must have a measurable success criterion** (e.g. "solve the cube in < 60 s, 3 times in a row"). |
@@ -160,3 +160,4 @@ The documentation is the source of truth. The repo is transparent about this spl
 | 0.2 | 2026-11-16 | PO feedback: M1 measured by usage days, categories, sprint calendar, backup risk accepted, open questions resolved |
 | 0.3 | 2026-11-17 | Principle 1: tasks with a due date may show urgency colours (with a text label); still none on sidequests. Task due date may have a time. Source: spec 002 OQ-5, OQ-6 |
 | 0.4 | 2026-11-22 | Goal G2 "portfolio-ready" + metric M5; priority stays G1 first, with an exception rule for dated, time-boxed G2 work; secondary user = repository reviewer; quality bar adds end-to-end tests; assumption A2. Source: PO decision after spec 002 (option A). Validated by the PO the same day |
+| 0.5 | 2026-11-25 | Categories: **Move** split into **Sport** and **Explore**; list goes from 5 to 6. Source: spec 004 UAT step T08 — with the real list entered, 18 of 26 sidequests landed in Move (trying a sport and going somewhere were mixed), 0 in Create and Connect. Change request validated by the PO the same day |
