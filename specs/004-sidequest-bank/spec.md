@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Spec validated v1.1 — 2026-11-25 (PO decisions in §1, §7 and change request CR-1) |
+| **Status** | Delivered — 2026-11-25 |
 | **Backlog items** | F02 Sidequest bank |
 | **Release** | R1 — Usable |
 | **Depends on** | [001 Foundation](../001-foundation/spec.md), [002 Tasks](../002-tasks/spec.md) (Delivered) · [003 Portfolio-ready](../003-portfolio-ready/spec.md) (In UAT — its end-to-end suite must stay green) |
@@ -141,19 +141,19 @@ Final columns are decided in `plan.md`.
 
 To be run on production, with the real phone:
 
-- [ ] AC-1.1 to AC-1.5 — add sidequests in several categories; no category is pre-selected, before or after an add; no category → message, title kept; blank title ignored; 201 characters refused
-- [ ] AC-2.1, AC-2.2 — headings with emoji and name; filled categories first, empty ones at the bottom with "No sidequest yet."; titles alphabetical inside each category (try one starting with an accent or a lowercase letter)
-- [ ] AC-2.3 — with no sidequests, six empty headings in the glossary order (Claude shows it on a test database or in the end-to-end screenshots, so the real Bank is not emptied)
-- [ ] AC-2.4 — no colours on sidequests or categories
-- [ ] AC-2.5 — everything reachable one-handed on the iPhone
-- [ ] AC-3.1 to AC-3.3 — tab bar at the bottom on both pages; the app opens on Tasks; Back and reload keep the tab
-- [ ] AC-3.4 — Claude checks a usage day recorded by opening only the Sidequests page
-- [ ] AC-3.5 — tasks still work as before; the end-to-end task tests are green on the PR
-- [ ] AC-4.1, AC-4.2 — edit a title and move a sidequest to another category
-- [ ] CR-1 — after the migration, former Move items are in Sport; re-file the Explore ones with Edit; every category has the expected emoji
-- [ ] AC-5.1 to AC-5.3 — delete without a dialog; undo within 5 s; after the bar is gone, it is gone
-- [ ] AC-S.1 — Claude shows a direct server-action request without a session is refused
-- [ ] Enter my real sidequest list and browse it for a few days; note any friction (input for F03, F04 and the "done once" question)
+- [x] AC-1.1 to AC-1.5 — add sidequests in several categories; no category is pre-selected, before or after an add; no category → message, title kept; blank title ignored; 201 characters refused
+- [x] AC-2.1, AC-2.2 — headings with emoji and name; filled categories first, empty ones at the bottom with "No sidequest yet."; titles alphabetical inside each category (try one starting with an accent or a lowercase letter)
+- [x] AC-2.3 — with no sidequests, six empty headings in the glossary order (Claude shows it on a test database or in the end-to-end screenshots, so the real Bank is not emptied)
+- [x] AC-2.4 — no colours on sidequests or categories
+- [x] AC-2.5 — everything reachable one-handed on the iPhone
+- [x] AC-3.1 to AC-3.3 — tab bar at the bottom on both pages; the app opens on Tasks; Back and reload keep the tab
+- [x] AC-3.4 — Claude checks a usage day recorded by opening only the Sidequests page
+- [x] AC-3.5 — tasks still work as before; the end-to-end task tests are green on the PR
+- [x] AC-4.1, AC-4.2 — edit a title and move a sidequest to another category
+- [x] CR-1 — after the migration, former Move items are in Sport; re-file the Explore ones with Edit; every category has the expected emoji
+- [x] AC-5.1 to AC-5.3 — delete without a dialog; undo within 5 s; after the bar is gone, it is gone
+- [x] AC-S.1 — Claude shows a direct server-action request without a session is refused
+- [x] Enter my real sidequest list and browse it for a few days; note any friction (input for F03, F04 and the "done once" question)
 
 ## Revision history
 
@@ -162,3 +162,4 @@ To be run on production, with the real phone:
 | 0.1 | 2026-11-24 | First draft — scope decisions of 2026-11-24; 4 open questions for the PO |
 | 1.0 | 2026-11-24 | PO decisions: emoji + name per category (BR-6), no pre-selected category ever (AC-1.2 rewritten), empty categories shown at the bottom (BR-3, AC-2.2, AC-2.3), alphabetical order (BR-4); UAT checklist; status Spec validated |
 | 1.1 | 2026-11-25 | CR-1 (from T08): Move split into Sport 🏃 and Explore 🧭, 6 categories in a new order (BR-2, BR-3, BR-6, AC-2.3); UAT line for CR-1 |
+| 1.2 | 2026-11-25 | UAT complete (PO: all lines pass); status Delivered |
