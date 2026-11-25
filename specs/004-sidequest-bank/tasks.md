@@ -57,6 +57,10 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   Extract `undo-bar.tsx` from `task-list.tsx` and use it in both lists. `sidequest-row.tsx`: tap title → title, picker (current category checked), Save, Cancel, Delete. "Sidequest deleted · Undo" for ~5 s.
   *Done when:* edit, delete and undo work on `dev`, and every spec 002 end-to-end test still passes (AC-3.5).
 
+- [ ] **T10b** 🤖 **CR-1: six categories** (spec v1.1 §7b)
+  Domain `CATEGORIES` (Sport, Explore, Learn, Create, Play, Connect, with emojis), BR tests updated; migration: drop the old category check, `UPDATE sidequest SET category = 'sport' WHERE category = 'move'`, add the new check. Applied to `dev`; production on merge.
+  *Done when:* unit tests pass; on `dev` the old `move` value is refused and existing rows are valid; e2e tests use the new list.
+
 - [ ] **T11** 🤖 **End-to-end tests for slice 2**
   Flow tests: AC-4.1, AC-4.2 (rename, move to another category), AC-5.1 to AC-5.3 (gone after the bar disappears and a reload). Walk-through scan extended: edit open → delete → undo bar.
   *Done when:* the suite passes locally. Claude opens the PR; CI green; job time under 5 min (written in the progress log); PO merges.
