@@ -13,3 +13,4 @@
 - **Privacy:** public repo. No real emails, secrets, or user data in code, tests, fixtures, or commits. Test data uses `@example.com`.
 - **Language:** English for UI, code, and docs. The PO may write in French.
 - **Workflow:** branch → PR → CI green → PO merges. Update the task checkboxes and progress log in `tasks.md` as tasks complete.
+- **Delivering a spec.** When the PO says a spec's UAT passes, run the `deliver-spec` skill (`.claude/skills/deliver-spec/`): status docs PR here, then follow-up sessions for the README screenshots and the website case study. The website reads the backlog's Status column, so keep its `Delivered — [NNN](…)` shape.
