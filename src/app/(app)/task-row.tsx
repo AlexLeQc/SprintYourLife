@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { dueLabel, normalizeTitle, parseDue, urgency, type Due, type Urgency } from "@/domain/task";
 import type { LocalNow } from "@/domain/local-date";
-import { DueFields, field, secondaryButton } from "./due-fields";
+import { DueFields } from "./due-fields";
+import { field, secondaryButton } from "./ui";
 import type { TaskView } from "./task-list";
 
 /**

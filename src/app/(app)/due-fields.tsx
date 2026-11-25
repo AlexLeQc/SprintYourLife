@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import type { Due } from "@/domain/task";
+import { field, secondaryButton } from "./ui";
 
-export const secondaryButton =
-  "rounded-full border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 dark:border-zinc-700 dark:text-zinc-300";
-export const field =
-  "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base dark:border-zinc-700 dark:bg-zinc-950";
 
 /**
  * Optional due date, then optional time (BR-2: no time without a date), with native iOS

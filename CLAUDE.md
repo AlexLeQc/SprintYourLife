@@ -6,6 +6,7 @@
 - **Roles.** Alexis is the Product Owner / BA and does UAT. Claude implements from `tasks.md` and stops at every ⛳ checkpoint.
 - **Read before planning:** `docs/vision.md` (design principles, NFRs), `docs/architecture.md`, `docs/decisions/` (ADRs are immutable; a change of decision = a new ADR that supersedes).
 - **Architecture:** business rules live in `src/domain/` as pure TypeScript (no Next.js, React, database, or auth imports; enforced by ESLint). Each rule has Vitest tests named after its BR/AC id.
+- **Reuse first.** Before writing a component, business rule, or test helper, check whether one already exists; reuse it, or extract it so both places share it (PO rule, plan 004 D-3). Touching delivered code is fine: that spec's end-to-end tests must stay green.
 - **Access control:** every page, server action, and route calls `requireAllowedSession()` / `getAllowedSession()` (`src/server/session.ts`) **before** reading or rendering anything private. Never rely on a layout check: Next.js renders layouts and pages in parallel, so the page's content is still produced. `src/proxy.ts` is a UX redirect only.
 - **Production data:** read it only through `PROD_READONLY_DATABASE_URL` (ADR-0014, read-only role, no sign-in secrets). Never write to production outside a merged migration. A plan that adds a table holding secrets must revoke `SELECT` on it for `claude_readonly`.
 - **Time:** every "day" uses `America/Toronto` via `src/domain/local-date.ts`, never the server's time zone.

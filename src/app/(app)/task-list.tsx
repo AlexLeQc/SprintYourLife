@@ -6,6 +6,7 @@ import type { LocalNow } from "@/domain/local-date";
 import { AddTaskForm } from "./add-task-form";
 import { completeTask, deleteTask, reopenTask, restoreTask, updateTask } from "./task-actions";
 import { TaskRow } from "./task-row";
+import { SAVE_ERROR } from "./ui";
 
 /** A task as sent from the server to the browser. */
 export interface TaskView {
@@ -33,7 +34,6 @@ function applyChange(state: TaskView[], change: Change): TaskView[] {
 type Undoable = { kind: "done" | "deleted"; task: TaskView };
 
 const UNDO_MS = 5000;
-const SAVE_ERROR = "Couldn't save. Check your connection and try again.";
 
 /**
  * The open-task list (AC-2.1) with optimistic changes (plan §5.2): adds, done, edits and
@@ -134,7 +134,8 @@ export function TaskList({ tasks, now }: { tasks: TaskView[]; now: LocalNow }) {
       )}
 
       {undoable && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-0 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        // Sits just above the tab bar (spec 004 plan §5.2), so Undo stays reachable.
+        <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--tab-bar-height)+env(safe-area-inset-bottom))] z-20 flex justify-center px-4 pb-3">
           <div
             role="status"
             className="pointer-events-auto flex items-center gap-4 rounded-full bg-zinc-900 py-2 pl-5 pr-2 text-white shadow-lg dark:bg-zinc-100 dark:text-zinc-900"

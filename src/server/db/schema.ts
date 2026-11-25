@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { check, date, pgTable, text, time, timestamp, uuid } from "drizzle-orm/pg-core";
+import { CATEGORY_IDS, type Category } from "../../domain/sidequest";
 
 /**
  * One row per local calendar date (America/Toronto) on which the app was opened.
@@ -30,6 +31,31 @@ export const task = pgTable(
     check("task_title_length", sql`char_length(${t.title}) BETWEEN 1 AND 200`),
     // BR-2: no time without a date.
     check("task_time_needs_date", sql`${t.dueTime} IS NULL OR ${t.dueDate} IS NOT NULL`),
+  ],
+);
+
+/**
+ * Spec 004 — a sidequest in the Bank (plan 004 §4). The category is one of the domain's ids
+ * (BR-2); its name and emoji live in the domain only (BR-6). Deleted rows are never listed (BR-5).
+ */
+export const sidequest = pgTable(
+  "sidequest",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    title: text("title").notNull(),
+    category: text("category", { enum: CATEGORY_IDS as [Category, ...Category[]] }).notNull(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    // Second line of defence for BR-1 (the app validates first).
+    check("sidequest_title_length", sql`char_length(${t.title}) BETWEEN 1 AND 200`),
+    // BR-2: text + CHECK rather than a PostgreSQL enum (plan 004 §4). Built from the domain's
+    // list, so the database and the rules can't disagree.
+    check(
+      "sidequest_category_valid",
+      sql`${t.category} IN (${sql.raw(CATEGORY_IDS.map((id) => `'${id}'`).join(", "))})`,
+    ),
   ],
 );
 

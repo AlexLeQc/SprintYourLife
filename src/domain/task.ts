@@ -4,10 +4,11 @@
  * BR-8 (deleted tasks excluded) is enforced by the repository.
  */
 import { addDays, type LocalDate, type LocalNow, type LocalTime } from "./local-date";
+import type { Result } from "./result";
 
-export const TITLE_MAX_LENGTH = 200;
-
-export type Result<T, E extends string> = { ok: true; value: T } | { ok: false; error: E };
+// BR-1 is shared with sidequests (plan 004 §2); re-exported so task code keeps one import.
+export type { Result } from "./result";
+export { normalizeTitle, TITLE_MAX_LENGTH, type TitleError } from "./title";
 
 /** A task's due: no date, a date, or a date + time. A time never exists without a date (BR-2). */
 export interface Due {
@@ -16,23 +17,6 @@ export interface Due {
 }
 
 export const NO_DUE: Due = { date: null, time: null };
-
-// ── BR-1 ─────────────────────────────────────────────────────────────────────
-
-export type TitleError = "empty" | "too_long";
-
-/**
- * BR-1: trims the title; it must be 1–200 characters after trimming.
- * Characters are counted as Unicode code points, like PostgreSQL's char_length (plan §4),
- * so the app and the database CHECK always agree.
- */
-export function normalizeTitle(raw: string): Result<string, TitleError> {
-  const title = raw.trim();
-  const length = Array.from(title).length;
-  if (length === 0) return { ok: false, error: "empty" };
-  if (length > TITLE_MAX_LENGTH) return { ok: false, error: "too_long" };
-  return { ok: true, value: title };
-}
 
 // ── BR-2 ─────────────────────────────────────────────────────────────────────
 

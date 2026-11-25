@@ -59,3 +59,38 @@ test.describe("signed in as a stranger (valid session, email not in the allowlis
     expect(body).not.toMatch(/Used .* of the last 7 days/);
   });
 });
+
+// ── Spec 004: the Sidequests page and its actions (AC-S.1) ──────────────────────────────
+
+const PRIVATE_SIDEQUEST = "Learn the Rubik's cube";
+
+test.describe("spec 004 — Sidequests page", () => {
+  test.beforeEach(async ({ seedSidequests }) => {
+    await seedSidequests([{ title: PRIVATE_SIDEQUEST, category: "learn" }]);
+  });
+
+  test.describe("signed out", () => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+
+    test("spec 004 AC-S.1 — /sidequests sends a signed-out visitor to /sign-in and shows no sidequest @phone", async ({ page }) => {
+      await page.goto("/sidequests");
+
+      await expect(page).toHaveURL("/sign-in");
+      await expect(page.getByText(PRIVATE_SIDEQUEST)).toHaveCount(0);
+    });
+  });
+
+  test.describe("signed in as a stranger", () => {
+    test.use({ storageState: STRANGER_STATE });
+
+    test("spec 004 AC-S.1 — is sent to /sign-in; the streamed page carries no sidequest", async ({ page, request }) => {
+      await page.goto("/sidequests");
+      await expect(page).toHaveURL("/sign-in");
+      await expect(page.getByText(PRIVATE_SIDEQUEST)).toHaveCount(0);
+
+      const body = await (await request.get("/sidequests", { maxRedirects: 0 })).text();
+      expect(body).toContain("/sign-in");
+      expect(body).not.toContain(PRIVATE_SIDEQUEST);
+    });
+  });
+});

@@ -3,25 +3,12 @@
 import { refresh } from "next/cache";
 import { localNow } from "@/domain/local-date";
 import { completionDate, normalizeTitle, parseDue, type Due } from "@/domain/task";
-import { getAllowedSession } from "@/server/session";
 import * as tasks from "@/server/task-repository";
+import { assertAllowed, assertId, titleErrorMessage, type FormResult } from "./action-guards";
 
-/** What a form needs to know. `error` is a short message for the user (AC-1.5). */
-export type TaskFormResult = { ok: true } | { ok: false; error: string };
-
-/**
- * Server actions are public HTTP endpoints: check the session FIRST (AC-S.1, plan §5.1),
- * then re-validate everything — the client is never trusted.
- */
-async function assertAllowed(): Promise<void> {
-  const session = await getAllowedSession();
-  if (!session) throw new Error("Not allowed");
-}
-
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
+// Session first, then re-validation (AC-S.1, plan 002 §5.1): see action-guards.ts.
 function assertTaskId(id: unknown): asserts id is string {
-  if (typeof id !== "string" || !UUID_PATTERN.test(id)) throw new Error("Invalid task id");
+  assertId(id, "task");
 }
 
 function asOptionalString(value: unknown): string | null {
@@ -33,9 +20,7 @@ type FormInput = { title: string; dueDate?: string | null; dueTime?: string | nu
 /** BR-1 and BR-2 on the server, with user-facing messages. */
 function validate(input: FormInput): { ok: true; title: string; due: Due } | { ok: false; error: string } {
   const title = normalizeTitle(typeof input?.title === "string" ? input.title : "");
-  if (!title.ok) {
-    return { ok: false, error: title.error === "too_long" ? "Title is too long (200 characters max)." : "Title is empty." };
-  }
+  if (!title.ok) return { ok: false, error: titleErrorMessage(title.error) };
   const due = parseDue(asOptionalString(input.dueDate), asOptionalString(input.dueTime));
   if (!due.ok) {
     return { ok: false, error: due.error === "time_without_date" ? "Pick a date before a time." : "That date or time isn't valid." };
@@ -44,7 +29,7 @@ function validate(input: FormInput): { ok: true; title: string; due: Due } | { o
 }
 
 /** AC-1.1 to AC-1.5: create a task from the add form. */
-export async function createTask(input: FormInput): Promise<TaskFormResult> {
+export async function createTask(input: FormInput): Promise<FormResult> {
   await assertAllowed();
   const valid = validate(input);
   if (!valid.ok) return valid;
@@ -54,7 +39,7 @@ export async function createTask(input: FormInput): Promise<TaskFormResult> {
 }
 
 /** AC-4.1 to AC-4.3: edit title, date and time. */
-export async function updateTask(input: FormInput & { id: string }): Promise<TaskFormResult> {
+export async function updateTask(input: FormInput & { id: string }): Promise<FormResult> {
   await assertAllowed();
   assertTaskId(input?.id);
   const valid = validate(input);
