@@ -111,3 +111,4 @@ New ideas land here first, unprioritized. They are reviewed at each retro and ei
 | 0.6 | 2026-11-23 | Idea inbox: abandoned session query (spec 003 T04), unused web font (spec 003 T12) |
 | 0.7 | 2026-11-24 | F02 → Spec validated (004); quick sidequest entry out of F02 |
 | 0.8 | 2026-11-25 | F02 → Planned (plan and tasks 004) |
+| 0.9 | 2026-11-25 | F02: change request CR-1 (spec 004 v1.1, vision v0.5): 6 categories |

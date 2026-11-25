@@ -2,18 +2,18 @@
 
 | | |
 |---|---|
-| **Status** | Spec validated — 2026-11-24 (PO decisions in §1 and §7) |
+| **Status** | Spec validated v1.1 — 2026-11-25 (PO decisions in §1, §7 and change request CR-1) |
 | **Backlog items** | F02 Sidequest bank |
 | **Release** | R1 — Usable |
 | **Depends on** | [001 Foundation](../001-foundation/spec.md), [002 Tasks](../002-tasks/spec.md) (Delivered) · [003 Portfolio-ready](../003-portfolio-ready/spec.md) (In UAT — its end-to-end suite must stay green) |
 | **Related** | [vision](../../docs/vision.md) §1 root cause, §5 principles 1, 3, 5, 6 · §6 glossary "Sidequest", "Bank", "Category" · [architecture](../../docs/architecture.md) §3 · ADR-0015 |
-| **Last updated** | 2026-11-24 |
+| **Last updated** | 2026-11-25 |
 
 ---
 
 ## 1. Goal
 
-Put my **sidequests** (things I want to do or learn this year) in the app, sorted into the five categories, so that they stop living in a note I never open.
+Put my **sidequests** (things I want to do or learn this year) in the app, sorted into the six categories, so that they stop living in a note I never open.
 
 **Why now:** F02 is next in the backlog (R1). Every later feature needs it: the log (F03), the "What can I do now?" screen (F04) and the sprint goal (F05) all pick from the Bank.
 
@@ -54,7 +54,7 @@ Put my **sidequests** (things I want to do or learn this year) in the app, sorte
 
 - **AC-2.1** — **Given** I have sidequests, **When** I open the Sidequests page, **Then** they are listed under a heading per category, with the category's emoji and name (BR-6), in the order of BR-3, and sorted inside each category per BR-4.
 - **AC-2.2** — **Given** a category with no sidequest, **Then** its heading is still shown, **after** all the categories that have sidequests, with a calm line "No sidequest yet." (OQ-3: an empty category is an opportunity to find an idea, not a form to fill).
-- **AC-2.3** — **Given** I have no sidequests at all, **Then** the five category headings are shown in the BR-3 order, each with "No sidequest yet." No other message, no nudge.
+- **AC-2.3** — **Given** I have no sidequests at all, **Then** the six category headings are shown in the BR-3 order, each with "No sidequest yet." No other message, no nudge.
 - **AC-2.4** — Sidequests never show urgency colours or due labels (vision principle 1). Categories have no colour; the emoji is the visual cue, always next to the category's name (OQ-1).
 - **AC-2.5** — **Given** the phone layout, **Then** adding a sidequest, picking its category and opening one for editing are reachable with the thumb, without zooming.
 
@@ -86,11 +86,11 @@ Put my **sidequests** (things I want to do or learn this year) in the app, sorte
 | ID | Rule |
 |---|---|
 | BR-1 | A title is trimmed; it must be 1–200 characters after trimming (same rule as tasks). Two sidequests may have the same title. |
-| BR-2 | A category is exactly one of: **Create**, **Learn**, **Play**, **Connect**, **Move** (vision §6). It is required. |
-| BR-3 | Category order: first the categories that have at least one sidequest, then the empty ones. Inside each group, the fixed glossary order: Create, Learn, Play, Connect, Move. |
+| BR-2 | A category is exactly one of: **Sport**, **Explore**, **Learn**, **Create**, **Play**, **Connect** (vision §6, v0.5). It is required. |
+| BR-3 | Category order: first the categories that have at least one sidequest, then the empty ones. Inside each group, the fixed glossary order: Sport, Explore, Learn, Create, Play, Connect. |
 | BR-4 | Inside a category, sidequests are sorted alphabetically by title, ignoring case and accents (English/French collation); ties keep creation order. |
 | BR-5 | A deleted sidequest is excluded from every list and every count, including later features (F03 log, F04, F05, F06). |
-| BR-6 | Each category has one emoji, always shown next to its name, never alone: Create 🎨 · Learn 📚 · Play 🎲 · Connect 🤝 · Move 🚶. The emoji is decorative for screen readers (the name is read, not the emoji). |
+| BR-6 | Each category has one emoji, always shown next to its name, never alone: Sport 🏃 · Explore 🧭 · Learn 📚 · Create 🎨 · Play 🎲 · Connect 🤝. The emoji is decorative for screen readers (the name is read, not the emoji). |
 
 ## 5. Out of scope
 
@@ -127,19 +127,30 @@ Final columns are decided in `plan.md`.
 | OQ-3 | **Empty categories**: show the heading? | **Yes, at the bottom**, after the categories that have sidequests (BR-3, AC-2.2). The PO sees an empty category as an opportunity to find a sidequest, not as pressure. |
 | OQ-4 | **Order inside a category**? | **Alphabetical** (BR-4). |
 
+## 7b. Change request CR-1 — categories (PO, 2026-11-25)
+
+| | |
+|---|---|
+| **Found in** | T08 (slice 1 on the phone): the real list of 26 sidequests was entered in production |
+| **Problem** | **18 of 26 in Move**, 5 in Learn, 2 in Play, 0 in Create and Connect. Move mixed two different things: *trying a sport or physical challenge* and *going somewhere to experience something*. A category holding 70 % of the list doesn't help choose. |
+| **Options** | A. Split Move into **Sport** and **Explore**, keep Connect (6 categories) · B. Same without Connect (5) · C. Categories created by the owner (a new feature, more input: against principle 3) |
+| **Decision** | **A.** Connect stays even while empty: an empty category is an opportunity (OQ-3). 6 chips still fit on two lines on the phone. |
+| **Impact** | Vision §6 v0.5 (glossary). This spec: BR-2, BR-3, BR-6, AC-2.3 (five → six). Data: a migration replaces the category check and renames `move` → `sport`; the owner re-files the Explore items with Edit (US-4), shipped in the same slice. No titles are written in the migration (public repository). |
+
 ## 8. UAT checklist (for the PO)
 
 To be run on production, with the real phone:
 
 - [ ] AC-1.1 to AC-1.5 — add sidequests in several categories; no category is pre-selected, before or after an add; no category → message, title kept; blank title ignored; 201 characters refused
 - [ ] AC-2.1, AC-2.2 — headings with emoji and name; filled categories first, empty ones at the bottom with "No sidequest yet."; titles alphabetical inside each category (try one starting with an accent or a lowercase letter)
-- [ ] AC-2.3 — with no sidequests, five empty headings in the glossary order (Claude shows it on a test database or in the end-to-end screenshots, so the real Bank is not emptied)
+- [ ] AC-2.3 — with no sidequests, six empty headings in the glossary order (Claude shows it on a test database or in the end-to-end screenshots, so the real Bank is not emptied)
 - [ ] AC-2.4 — no colours on sidequests or categories
 - [ ] AC-2.5 — everything reachable one-handed on the iPhone
 - [ ] AC-3.1 to AC-3.3 — tab bar at the bottom on both pages; the app opens on Tasks; Back and reload keep the tab
 - [ ] AC-3.4 — Claude checks a usage day recorded by opening only the Sidequests page
 - [ ] AC-3.5 — tasks still work as before; the end-to-end task tests are green on the PR
 - [ ] AC-4.1, AC-4.2 — edit a title and move a sidequest to another category
+- [ ] CR-1 — after the migration, former Move items are in Sport; re-file the Explore ones with Edit; every category has the expected emoji
 - [ ] AC-5.1 to AC-5.3 — delete without a dialog; undo within 5 s; after the bar is gone, it is gone
 - [ ] AC-S.1 — Claude shows a direct server-action request without a session is refused
 - [ ] Enter my real sidequest list and browse it for a few days; note any friction (input for F03, F04 and the "done once" question)
@@ -150,3 +161,4 @@ To be run on production, with the real phone:
 |---|---|---|
 | 0.1 | 2026-11-24 | First draft — scope decisions of 2026-11-24; 4 open questions for the PO |
 | 1.0 | 2026-11-24 | PO decisions: emoji + name per category (BR-6), no pre-selected category ever (AC-1.2 rewritten), empty categories shown at the bottom (BR-3, AC-2.2, AC-2.3), alphabetical order (BR-4); UAT checklist; status Spec validated |
+| 1.1 | 2026-11-25 | CR-1 (from T08): Move split into Sport 🏃 and Explore 🧭, 6 categories in a new order (BR-2, BR-3, BR-6, AC-2.3); UAT line for CR-1 |
