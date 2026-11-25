@@ -4,7 +4,7 @@ import { useState } from "react";
 import { dueLabel, normalizeTitle, parseDue, urgency, type Due, type Urgency } from "@/domain/task";
 import type { LocalNow } from "@/domain/local-date";
 import { DueFields } from "./due-fields";
-import { field, secondaryButton } from "./ui";
+import { field, secondaryButton, titleErrorMessage } from "./ui";
 import type { TaskView } from "./task-list";
 
 /**
@@ -39,7 +39,7 @@ export function TaskRow({ task, now, onComplete, onDelete, onSave }: Props) {
     const title = normalizeTitle(String(formData.get("title") ?? ""));
     if (!title.ok) {
       // AC-4.3: same title rules as creation (BR-1); keep editing.
-      setError(title.error === "too_long" ? "Title is too long (200 characters max)." : "Title is empty.");
+      setError(titleErrorMessage(title.error));
       return;
     }
     const due = parseDue(String(formData.get("dueDate") ?? ""), String(formData.get("dueTime") ?? ""));

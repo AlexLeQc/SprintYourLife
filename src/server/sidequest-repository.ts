@@ -1,5 +1,5 @@
 import "server-only";
-import { isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import type { Category } from "@/domain/sidequest";
 import { db } from "./db/client";
 import { sidequest } from "./db/schema";
@@ -31,4 +31,25 @@ export async function listSidequests(): Promise<BankSidequest[]> {
     })
     .from(sidequest)
     .where(isNull(sidequest.deletedAt));
+}
+
+/** Matches a sidequest still in the Bank (not deleted). */
+const inBank = (id: string) => and(eq(sidequest.id, id), isNull(sidequest.deletedAt));
+
+/** AC-4.1, AC-4.2: change title and category. A deleted sidequest can't be edited. */
+export async function updateSidequest(id: string, title: string, category: Category): Promise<void> {
+  await db.update(sidequest).set({ title, category }).where(inBank(id));
+}
+
+/** AC-5.1: soft delete. The row stays (undo, future logs) but is never listed again (BR-5). */
+export async function deleteSidequest(id: string): Promise<void> {
+  await db.update(sidequest).set({ deletedAt: new Date() }).where(inBank(id));
+}
+
+/** AC-5.2: undo "delete" — the sidequest comes back exactly as it was. */
+export async function restoreSidequest(id: string): Promise<void> {
+  await db
+    .update(sidequest)
+    .set({ deletedAt: null })
+    .where(and(eq(sidequest.id, id), isNotNull(sidequest.deletedAt)));
 }

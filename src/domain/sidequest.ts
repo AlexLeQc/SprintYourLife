@@ -10,16 +10,17 @@ export { normalizeTitle, TITLE_MAX_LENGTH, type TitleError } from "./title";
 // ── BR-2, BR-6 ───────────────────────────────────────────────────────────────
 
 /**
- * BR-2 + BR-6: the five categories, in the glossary order (vision §6), each with its emoji.
+ * BR-2 + BR-6: the six categories, in the glossary order (vision §6 v0.5, spec 004 CR-1), each with its emoji.
  * The id is what the database stores (plan 004 §4); the name and emoji are display only,
  * so changing an emoji never needs a migration. The emoji is always shown next to the name.
  */
 export const CATEGORIES = [
-  { id: "create", name: "Create", emoji: "🎨" },
+  { id: "sport", name: "Sport", emoji: "🏃" },
+  { id: "explore", name: "Explore", emoji: "🧭" },
   { id: "learn", name: "Learn", emoji: "📚" },
+  { id: "create", name: "Create", emoji: "🎨" },
   { id: "play", name: "Play", emoji: "🎲" },
   { id: "connect", name: "Connect", emoji: "🤝" },
-  { id: "move", name: "Move", emoji: "🚶" },
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number]["id"];
@@ -29,7 +30,7 @@ export const CATEGORY_IDS: readonly Category[] = CATEGORIES.map((c) => c.id);
 
 export type CategoryError = "invalid_category";
 
-/** BR-2: a category is exactly one of the five ids. Anything else (wrong case, empty, null) is refused. */
+/** BR-2: a category is exactly one of the six ids. Anything else (wrong case, empty, null) is refused. */
 export function parseCategory(value: unknown): Result<Category, CategoryError> {
   const match = CATEGORIES.find((c) => c.id === value);
   return match ? { ok: true, value: match.id } : { ok: false, error: "invalid_category" };
@@ -61,7 +62,7 @@ export interface CategoryGroup<T> {
 }
 
 /**
- * BR-3: one group per category, always all five. Categories with sidequests come first, then the
+ * BR-3: one group per category, always all six. Categories with sidequests come first, then the
  * empty ones; inside each part, the glossary order. Each group is sorted by BR-4.
  */
 export function groupByCategory<T extends SortableSidequest & { category: Category }>(

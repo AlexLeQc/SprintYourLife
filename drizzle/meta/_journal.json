@@ -29,6 +29,13 @@
       "when": 1795614198747,
       "tag": "0003_create_sidequest",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795616868709,
+      "tag": "0004_six_categories",
+      "breakpoints": true
     }
   ]
 }

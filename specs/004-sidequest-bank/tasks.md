@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 8 / 12 |
+| **Status** | In progress — 12 / 13 — T12 UAT next |
 | **Spec** | [spec.md](spec.md) (v1.0) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/004-bank-add` (slice 1), `feat/004-bank-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-25 |
@@ -49,19 +49,19 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 
 ## Slice 2 — Edit, delete, undo
 
-- [ ] **T09** 🤖 **Edit, delete and restore actions**
+- [x] **T09** 🤖 **Edit, delete and restore actions**
   `updateSidequest`, `deleteSidequest` (soft), `restoreSidequest`: session first, UUID check, BR-1, BR-2. Repository functions to match.
   *Done when:* direct POSTs without a session are refused for all four actions (AC-S.1).
 
-- [ ] **T10** 🤖 **Shared undo bar, inline edit, delete** (plan §5.6, D-3)
+- [x] **T10** 🤖 **Shared undo bar, inline edit, delete** (plan §5.6, D-3)
   Extract `undo-bar.tsx` from `task-list.tsx` and use it in both lists. `sidequest-row.tsx`: tap title → title, picker (current category checked), Save, Cancel, Delete. "Sidequest deleted · Undo" for ~5 s.
   *Done when:* edit, delete and undo work on `dev`, and every spec 002 end-to-end test still passes (AC-3.5).
 
-- [ ] **T10b** 🤖 **CR-1: six categories** (spec v1.1 §7b)
+- [x] **T10b** 🤖 **CR-1: six categories** (spec v1.1 §7b)
   Domain `CATEGORIES` (Sport, Explore, Learn, Create, Play, Connect, with emojis), BR tests updated; migration: drop the old category check, `UPDATE sidequest SET category = 'sport' WHERE category = 'move'`, add the new check. Applied to `dev`; production on merge.
   *Done when:* unit tests pass; on `dev` the old `move` value is refused and existing rows are valid; e2e tests use the new list.
 
-- [ ] **T11** 🤖 **End-to-end tests for slice 2**
+- [x] **T11** 🤖 **End-to-end tests for slice 2**
   Flow tests: AC-4.1, AC-4.2 (rename, move to another category), AC-5.1 to AC-5.3 (gone after the bar disappears and a reload). Walk-through scan extended: edit open → delete → undo bar.
   *Done when:* the suite passes locally. Claude opens the PR; CI green; job time under 5 min (written in the progress log); PO merges.
 
@@ -86,3 +86,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-25 | T07 ✅ | Reset also empties `sidequest`; `seedSidequests` fixture; `e2e/support/sidequests-page.ts` (roles and names only; tests tap a category's chip, like a user, because its radio is visually hidden). New: `sidequests-add` (AC-1.1 to AC-1.5), `sidequests-list` (AC-2.1 to AC-2.5), `tabs` (AC-3.1 to AC-3.4), 2 access tests (AC-S.1), and the D-4 walk-through scan (empty Bank → "Pick a category." → filled Bank with a chip checked), light and dark, desktop and phone. `expectNoAccessibilityViolations` takes an optional state name (attachment and failure message). Local run on a production build: **65 passed (1.4 min)**, of which 22 new; 108 unit tests ✅. |
 | 2026-11-25 | T08 ⛳ ✅ | PR #31 merged; CI ✅, **End-to-end tests 4 min 00 s** (limit 5: sharding likely with slice 2). PO entered the real list: **26 sidequests** (production, read-only check). **Friction found:** (1) a blank screen while switching tabs, not smooth; (2) the tab bar's targets feel small, flush with the bottom edge (PO sent a floating-bar reference); (3) the categories don't fit: **18 of 26 in Move** (trying a sport and going somewhere were mixed), 0 in Create and Connect. **PO decisions:** fix (1) and (2) now in a small PR; (3) is a change request on the vision and spec 004 (6 categories: Sport, Explore, Learn, Create, Play, Connect), done with slice 2 so the PO can re-file items with Edit. |
 | 2026-11-25 | T08 fixes | **(1) Cause:** each page's Suspense placeholder was an empty `<main>`; on a tab switch Next.js showed that prerendered empty shell first. **Fix:** `AppFrame` (column, usage tracker, tab bar: no private data) renders outside Suspense, with a `PageSkeleton` (header + grey rows) as the placeholder. Checked in the build: the prerendered HTML of `/` and `/sidequests` contains the tab bar and the skeleton, and no private data ("Signed in as" absent). Session checks unchanged: still first, in the streamed part. **(2)** Floating rounded tab bar, lifted 0.75 rem above the safe area, 64 px targets with an icon and a label, current tab = filled highlight + bold + `aria-current` (plan §5.2 v1.1). `--tab-bar-height` 5.625 rem. Tab test now checks "near the bottom, lifted" and targets ≥ 56 px. Local e2e: **65 passed (1.3 min)**. |
+| 2026-11-25 | T09 ✅ | Repository: `updateSidequest`, `deleteSidequest` (soft), `restoreSidequest`; a deleted sidequest can't be edited. Actions: session first, then UUID, BR-1, BR-2 (shared `validate`). **AC-S.1 on `dev`**, with a real Probe row: `updateSidequest` and `deleteSidequest` with a fake session cookie → 500 "Not allowed" thrown by `assertAllowed`, row unchanged; all four actions without a cookie → 307 to `/sign-in`. Probe row deleted. |
+| 2026-11-25 | T10 ✅ | Reuse first, one step further than plan §5.6: `undoable-list.tsx` holds **both** the `UndoBar` and the `useUndoableList` hook (optimistic add/update/remove, one-step undo that waits for the pending action, 5 s, save errors), used by the task list and the Bank. The task list lost ~60 lines and kept its behaviour (all spec 002 e2e tests green, AC-3.5). `titleErrorMessage` moved to `ui.ts` so the browser and the server show the same BR-1 messages. `sidequest-row.tsx`: tap title → title, chips (current one checked), Save, Cancel, Delete. |
+| 2026-11-25 | T10b ✅ | CR-1: `CATEGORIES` = Sport 🏃, Explore 🧭, Learn 📚, Create 🎨, Play 🎲, Connect 🤝; unit tests updated (`move` now refused), **110 unit tests**. Migration `0004_six_categories`: drop check → `UPDATE … SET category = 'sport' WHERE category = 'move'` → new check; no titles in it (public repo). On `dev`: a seeded `move` row became `sport`; a new `move` insert is refused, `explore` accepted. Production: 18 Move rows will become Sport on merge; the PO re-files the Explore ones with Edit. |
+| 2026-11-25 | T11 ✅ (PR open) | `sidequests-edit-delete.spec.ts`: AC-4.1 (rename @phone, Cancel), AC-4.2 + CR-1 (move to Explore), AC-4.2 (201 characters refused in edit), AC-5.1 + AC-5.2 (no dialog, Undo restores the identical row @phone), AC-5.3 (bar gone after ~5 s, still gone after reload, row soft-deleted). Walk-through scan extended: edit view open, undo bar showing. Existing tests moved to the six categories; rows match on "Edit <title>" (hidden "Edit" prefix, WCAG 2.5.3). Local run: **73 passed (1.7 min)**. |

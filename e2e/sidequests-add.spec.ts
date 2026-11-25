@@ -13,9 +13,10 @@ import {
   pickCategory,
   sidequestItems,
   storedSidequests,
+  itemTexts,
 } from "./support/sidequests-page";
 
-const CATEGORY_NAMES = ["Create", "Learn", "Play", "Connect", "Move"];
+const CATEGORY_NAMES = ["Sport", "Explore", "Learn", "Create", "Play", "Connect"];
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/sidequests");
@@ -35,7 +36,7 @@ test("spec 004 AC-1.1, AC-1.2 — title + category, confirmed with Return: liste
 
   // Still there after a reload: it came from the database, not only from the browser.
   await page.reload();
-  await expect(sidequestItems(page, "Create")).toHaveText(["Build a Lego set"]);
+  await expect(sidequestItems(page, "Create")).toHaveText(itemTexts(["Build a Lego set"]));
 });
 
 test("spec 004 AC-1.1 — the Add button works too", async ({ page }) => {
@@ -67,7 +68,7 @@ test("spec 004 AC-1.3 — no category: nothing saved, a message asks for one, th
 });
 
 test("spec 004 AC-1.4 — a blank title is ignored: nothing saved, no message", async ({ page }) => {
-  await addSidequest(page, "   ", "Move");
+  await addSidequest(page, "   ", "Explore");
 
   await expect(bankRegion(page).getByRole("alert")).toHaveCount(0);
   await expect(bankRegion(page).getByRole("listitem")).toHaveCount(0);
