@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft v0.1 — awaiting PO validation (decisions in §9) |
+| **Status** | Validated — 2026-11-25 (PO decisions in §9) |
 | **Spec** | [spec.md](spec.md) (Spec validated, v1.0) |
 | **Decisions used** | ADR-0003, 0007, 0009, 0014, **0015** |
 | **Last updated** | 2026-11-25 |
@@ -178,7 +178,14 @@ All in `src/domain/sidequest.ts`, tests named after the BR id (`spec 004 BR-x �
 
 None. No new account, environment variable or service.
 
-## 9. Decisions for the PO
+## 9. Decisions — resolved by the PO on 2026-11-25
+
+All four recommendations accepted:
+
+- **D-1 → A (chips).** If they don't feel right in daily use, the PO raises a change request after the MVP.
+- **D-2 → A (bottom everywhere).**
+- **D-3 → A (extract and share).** The PO made it a **project-wide rule**: reuse what is already built (components, rules, test helpers) before writing a new version.
+- **D-4 → B (walk-through scans).** Sharding (A) is the next step when the suite grows again.
 
 | # | Decision | Options | Recommendation |
 |---|---|---|---|
@@ -203,3 +210,4 @@ None. No new account, environment variable or service.
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | 2026-11-25 | First draft — 4 decisions for the PO |
+| 1.0 | 2026-11-25 | Validated by PO: chips, tab bar at the bottom, shared undo bar (reuse made a project rule), walk-through scans |
