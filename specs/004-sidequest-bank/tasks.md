@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 1 / 12 |
+| **Status** | In progress — 2 / 12 |
 | **Spec** | [spec.md](spec.md) (v1.0) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/004-bank-add` (slice 1), `feat/004-bank-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-25 |
@@ -19,7 +19,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   Move `normalizeTitle` and `TITLE_MAX_LENGTH` to `domain/title.ts`; `task.ts` re-exports them. Add the two `spec 004 BR-1` cases.
   *Done when:* all existing task tests pass unchanged, plus the new BR-1 cases.
 
-- [ ] **T02** 🤖 **BR-2, BR-3, BR-4, BR-6: categories, order, sort, emoji**
+- [x] **T02** 🤖 **BR-2, BR-3, BR-4, BR-6: categories, order, sort, emoji**
   `domain/sidequest.ts`: `CATEGORIES`, `parseCategory`, `groupByCategory`, `compareSidequests` + tests from plan §3 (wrong case refused, empty categories after filled ones, accents and case ignored, ties by creation).
   *Done when:* tests pass.
 
@@ -74,3 +74,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-24 | Spec ✅ | Spec 004 v1.0 validated (PR #29 merged): tabs with Tasks by default, one sidequest type, emoji + name per category, no pre-selected category, empty categories at the bottom, alphabetical. |
 | 2026-11-25 | Plan ✅ | Plan 004 v1.0 validated: chips (D-1), tab bar at the bottom everywhere (D-2), shared undo bar (D-3; reuse first made a project rule), walk-through scans (D-4; sharding next). |
 | 2026-11-25 | T01 ✅ | `domain/title.ts` holds BR-1 (`normalizeTitle`, `TITLE_MAX_LENGTH`); `task.ts` re-exports it, so no task file changed its import. The `Result` type moved to `domain/result.ts` too (small deviation from plan §2: sidequest rules need it, and it shouldn't come from `task.ts`). 2 `spec 004 BR-1` tests added. Typecheck ✅, lint on `src` and `e2e` ✅, **85 unit tests passed**. Found: `npm run lint` also scans the local, git-ignored `playwright-report/` folder and fails on its bundled JS (not in CI, where the folder doesn't exist). Fix later as a chore: add it to the ESLint ignores. CLAUDE.md: "Reuse first" rule added (PO, plan D-3). |
+| 2026-11-25 | T02 ✅ | `domain/sidequest.ts`: `CATEGORIES` (id, name, emoji, glossary order), `parseCategory`, `compareSidequests` (`Intl.Collator` "en", base sensitivity), `groupByCategory` (always 5 groups, filled first; doesn't change its input). Same `createdAt: Date` shape as `compareOpenTasks` (reuse first). **23 new tests** (`spec 004 BR-2/3/4/6`), 108 unit tests passed; typecheck and lint ✅. |
