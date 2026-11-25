@@ -3,15 +3,18 @@ import { localNow } from "@/domain/local-date";
 import { requireAllowedSession } from "@/server/session";
 import { listOpenTasks } from "@/server/task-repository";
 import { countUsageDays } from "@/server/usage-repository";
-import { AppShell } from "./app-shell";
+import { AppFrame, AppShell, PageSkeleton } from "./app-shell";
 import { TaskList } from "./task-list";
 
 export default function HomePage() {
-  // Reading the session is request-time work, so it streams inside Suspense (cacheComponents).
+  // The frame and tab bar render at once; reading the session is request-time work, so the
+  // content streams inside Suspense (cacheComponents), with a skeleton meanwhile.
   return (
-    <Suspense fallback={<main className="flex flex-1" aria-busy="true" />}>
-      <Home />
-    </Suspense>
+    <AppFrame current="tasks">
+      <Suspense fallback={<PageSkeleton />}>
+        <Home />
+      </Suspense>
+    </AppFrame>
   );
 }
 
@@ -24,7 +27,7 @@ async function Home() {
   const now = localNow(new Date());
 
   return (
-    <AppShell current="tasks" usedDays={usedDays} email={session.user.email}>
+    <AppShell usedDays={usedDays} email={session.user.email}>
       <TaskList
         now={now}
         tasks={tasks.map((task) => ({ ...task, createdAt: task.createdAt.toISOString() }))}

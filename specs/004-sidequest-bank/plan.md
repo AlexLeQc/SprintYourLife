@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Validated — 2026-11-25 (PO decisions in §9) |
+| **Status** | Validated — 2026-11-25 (PO decisions in §9); v1.1 after T08 |
 | **Spec** | [spec.md](spec.md) (Spec validated, v1.0) |
 | **Decisions used** | ADR-0003, 0007, 0009, 0014, **0015** |
 | **Last updated** | 2026-11-25 |
@@ -97,6 +97,7 @@ All in `src/domain/sidequest.ts`, tests named after the BR id (`spec 004 BR-x �
 - `tab-bar.tsx` is a **server component that receives the current tab as a prop** from each page: `<TabBar current="tasks" />`. That's simpler than reading the URL with `usePathname` in a client component, and it needs no extra `Suspense` boundary under `cacheComponents`.
 - Markup: `<nav aria-label="Main">` with two `<Link>`s. The current one has `aria-current="page"`, **bold text and a bar above it**, so it isn't marked by colour alone (AC-3.1, WCAG 1.4.1).
 - Fixed at the bottom, with `env(safe-area-inset-bottom)` padding for the iPhone home indicator. Each page gets enough bottom padding that the last row is never hidden behind the bar.
+- **v1.1 (after T08):** a **floating rounded bar** lifted 0.75 rem above the safe area, with 64 px targets showing an icon and a label; the current tab has a filled highlight. The page frame and the tab bar render **outside** the page's Suspense boundary, with a skeleton as placeholder, so switching tabs never shows a blank screen. The frame holds no private data; each page still checks the session first in its streamed part.
 - `<Link>` navigation keeps the browser history, so Back works and a reload keeps the tab (AC-3.3).
 
 ### 5.3 Shared header and usage days (AC-3.4)
@@ -211,3 +212,4 @@ All four recommendations accepted:
 |---|---|---|
 | 0.1 | 2026-11-25 | First draft — 4 decisions for the PO |
 | 1.0 | 2026-11-25 | Validated by PO: chips, tab bar at the bottom, shared undo bar (reuse made a project rule), walk-through scans |
+| 1.1 | 2026-11-25 | §5.2 after T08: floating tab bar with icons, frame outside Suspense (no blank screen between tabs) |

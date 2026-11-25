@@ -3,9 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  /* Spec 004: height of the fixed tab bar (without the iPhone safe area). Pages and the undo
-     bar are offset by it so nothing hides behind the bar. */
-  --tab-bar-height: 3.5rem;
+  /* Spec 004: room taken by the floating tab bar above the iPhone safe area: 4 rem targets,
+     2 × 0.375 rem padding, 2 px border and the 0.75 rem gap under it. Pages and the undo bar
+     are offset by it so nothing hides behind the bar. */
+  --tab-bar-height: 5.625rem;
 }
 
 @theme inline {
