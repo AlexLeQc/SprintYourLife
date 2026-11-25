@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress — 4 / 12 |
+| **Status** | In progress — 5 / 12 |
 | **Spec** | [spec.md](spec.md) (v1.0) · **Plan** | [plan.md](plan.md) (v1.0) |
 | **Branch** | `feat/004-bank-add` (slice 1), `feat/004-bank-manage` (slice 2) → pull requests into `main` |
 | **Last updated** | 2026-11-25 |
@@ -31,7 +31,7 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
   `sidequests/sidequest-actions.ts`: `getAllowedSession()` first, then BR-1 and BR-2 on the server, with the user messages "Title is too long (200 characters max)." and "Pick a category.".
   *Done when:* Claude shows a direct POST without a session and with a fake cookie → refused, no row added (AC-S.1).
 
-- [ ] **T05** 🤖 **Shared header and tab bar** (plan §5.2, §5.3)
+- [x] **T05** 🤖 **Shared header and tab bar** (plan §5.2, §5.3)
   `app-header.tsx` (moved from `page.tsx`), `tab-bar.tsx` (server component, `current` prop, `aria-current`, bold + bar, fixed at the bottom with safe-area padding). Used on the Tasks page.
   *Done when:* the Tasks page looks the same apart from the tab bar, and every spec 002 end-to-end test passes locally (AC-3.5).
 
@@ -77,3 +77,4 @@ Each task is small enough to review in one sitting. Tick the box when its "Done 
 | 2026-11-25 | T02 ✅ | `domain/sidequest.ts`: `CATEGORIES` (id, name, emoji, glossary order), `parseCategory`, `compareSidequests` (`Intl.Collator` "en", base sensitivity), `groupByCategory` (always 5 groups, filled first; doesn't change its input). Same `createdAt: Date` shape as `compareOpenTasks` (reuse first). **23 new tests** (`spec 004 BR-2/3/4/6`), 108 unit tests passed; typecheck and lint ✅. |
 | 2026-11-25 | T03 ✅ | `sidequest` table in `schema.ts`; the category `CHECK` is built from the domain's `CATEGORY_IDS` (one source of truth). Migration `drizzle/0003_create_sidequest.sql` reviewed: one `CREATE TABLE`, nothing else touched; applied to Neon `dev`. Repository: `createSidequest`, `listSidequests` (`deleted_at IS NULL`, BR-5). **Database check on `dev`**, each insert in a rolled-back transaction: 200-character title in `learn` accepted; `'Learn'` and `'sport'` refused by `sidequest_category_valid`; 201 characters and empty refused by `sidequest_title_length`; 0 rows left. Typecheck, lint, 108 unit tests ✅. |
 | 2026-11-25 | T04 ✅ (proof moved to T06) | Reuse first: `action-guards.ts` (not a `"use server"` file) now holds `assertAllowed`, `assertId` and BR-1's messages, shared by task and sidequest actions; `task-actions.ts` uses it with no behaviour change. `sidequests/sidequest-actions.ts`: `createSidequest` checks the session first, then BR-1 and BR-2 ("Pick a category."). Typecheck, lint, `next build` ✅. **Deviation:** the direct-POST proof needs the action's id, and Next.js only compiles an action once a page or component uses it (checked: not in the build's action manifest yet). The proof moves to T06's "Done when", where the page uses it. The spec 002 e2e tests in T05 cover the guard refactor for tasks. |
+| 2026-11-25 | T05 ✅ | Reuse first: `app-shell.tsx` holds the header, usage line, footer, `UsageTracker` and tab bar for every signed-in page (not a layout: each page still checks the session first and passes what it read). `tab-bar.tsx` per plan §5.2. `--tab-bar-height` (3.5 rem) in `globals.css`; pages pad their bottom by it, and **the task undo bar moved up to sit above the tab bar** (otherwise the fixed bar would have covered Undo). Local e2e on a production build: **43 passed (51 s)**, all spec 002 and 003 tests unchanged (AC-3.5). The known `HANGING_PROMISE_REJECTION` log (backlog inbox) still shows; not new. |

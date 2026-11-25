@@ -134,7 +134,8 @@ export function TaskList({ tasks, now }: { tasks: TaskView[]; now: LocalNow }) {
       )}
 
       {undoable && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-0 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        // Sits just above the tab bar (spec 004 plan §5.2), so Undo stays reachable.
+        <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--tab-bar-height)+env(safe-area-inset-bottom))] z-20 flex justify-center px-4 pb-3">
           <div
             role="status"
             className="pointer-events-auto flex items-center gap-4 rounded-full bg-zinc-900 py-2 pl-5 pr-2 text-white shadow-lg dark:bg-zinc-100 dark:text-zinc-900"
