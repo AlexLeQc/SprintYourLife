@@ -6,6 +6,7 @@ import type { LocalNow } from "@/domain/local-date";
 import { AddTaskForm } from "./add-task-form";
 import { completeTask, deleteTask, reopenTask, restoreTask, updateTask } from "./task-actions";
 import { TaskRow } from "./task-row";
+import { SAVE_ERROR } from "./ui";
 
 /** A task as sent from the server to the browser. */
 export interface TaskView {
@@ -33,7 +34,6 @@ function applyChange(state: TaskView[], change: Change): TaskView[] {
 type Undoable = { kind: "done" | "deleted"; task: TaskView };
 
 const UNDO_MS = 5000;
-const SAVE_ERROR = "Couldn't save. Check your connection and try again.";
 
 /**
  * The open-task list (AC-2.1) with optimistic changes (plan §5.2): adds, done, edits and

@@ -2,7 +2,8 @@
 
 import { startTransition, useRef, useState } from "react";
 import { NO_DUE, normalizeTitle, parseDue } from "@/domain/task";
-import { DueFields, field } from "./due-fields";
+import { DueFields } from "./due-fields";
+import { field, primaryButton } from "./ui";
 import { createTask } from "./task-actions";
 import type { TaskView } from "./task-list";
 
@@ -79,7 +80,7 @@ export function AddTaskForm({ today, onAdd }: { today: string; onAdd: (task: Tas
         />
         <button
           type="submit"
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-base font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+          className={primaryButton}
         >
           Add
         </button>
